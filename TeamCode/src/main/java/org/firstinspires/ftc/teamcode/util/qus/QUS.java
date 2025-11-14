@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.xcentrics.qus;
+package org.firstinspires.ftc.teamcode.util.qus;
 
 public abstract class QUS {
     boolean needs_write = false;

@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.xcentrics.components.Component;
-import org.firstinspires.ftc.teamcode.xcentrics.qus.DcMotorQUS;
+import org.firstinspires.ftc.teamcode.util.qus.DcMotorQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 @Configurable
 class IntakeConfig{

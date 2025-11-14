@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.xcentrics.components.Component;
-import org.firstinspires.ftc.teamcode.xcentrics.qus.CRServoQUS;
+import org.firstinspires.ftc.teamcode.util.qus.CRServoQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 
 public class Spindexer extends Component {
