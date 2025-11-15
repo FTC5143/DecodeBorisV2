@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util.qus;
+package org.firstinspires.ftc.teamcode.xcentrics.util.qus;
 
 import com.qualcomm.robotcore.hardware.Servo;
 

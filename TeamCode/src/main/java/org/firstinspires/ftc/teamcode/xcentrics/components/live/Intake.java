@@ -5,11 +5,14 @@ import static org.firstinspires.ftc.teamcode.xcentrics.components.live.IntakeCon
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.xcentrics.components.Component;
-import org.firstinspires.ftc.teamcode.util.qus.DcMotorQUS;
+import org.firstinspires.ftc.teamcode.xcentrics.util.qus.DcMotorQUS;
+import org.firstinspires.ftc.teamcode.xcentrics.util.qus.CRServoQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 @Configurable
 class IntakeConfig{
@@ -20,6 +23,8 @@ public class Intake extends Component {
     ///  MOTORS ///
     DcMotorQUS intake;
 
+    /// CRServos ///
+    private CRServoQUS in1,in2;
     {
         name = "intake";
     }
@@ -29,15 +34,38 @@ public class Intake extends Component {
     public void registerHardware(HardwareMap hardwareMap){
         super.registerHardware(hardwareMap);
         intake = new DcMotorQUS(hardwareMap.get(DcMotorEx.class,"intake"));
+        in1 = new CRServoQUS(hardwareMap.get(CRServo.class,"in1"));
+        in2 = new CRServoQUS(hardwareMap.get(CRServo.class,"in2"));
     }
 
     public void update(OpMode opMode){
         super.update(opMode);
-        intake.queue_power(speed);
+
+        update();
     }
 
     public void setPower(double power){
-        speed = power;
+        in1.queue_power(power);
+        in2.queue_power(power);
+        intake.queue_power(power);
+    }
+    private void update(){
+        in1.update();
+        in2.update();
+        intake.update();
+    }
+
+    public void updateTelemetry(Telemetry telemetry){
+        super.updateTelemetry(telemetry);
+
+        addData("Speed: ",speed);
+    }
+    public void intake(Spindexer spindexer){
+        spindexer.intake();
+        setPower(speed);
+    }
+    public void outtake(){
+        setPower(-speed);
     }
 
 }
