@@ -14,6 +14,7 @@ import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -33,8 +34,7 @@ class SpindexerConfig{
 enum Artifact{
     GREEN,
     PURPLE,
-    EMPTY,
-    SPINNING
+    EMPTY
 }
 
 public class Spindexer extends Component {
@@ -44,6 +44,8 @@ public class Spindexer extends Component {
     private DcMotor encoder;
     /// Camera ///
     private HuskyLens huskyLens;
+    /// Distance sensors ///
+    private DistanceSensor d1,d2,d3
     private MiniPID pid;
     public Spindexer(Robot robot) {
         super(robot);
@@ -52,8 +54,11 @@ public class Spindexer extends Component {
     public void registerHardware(HardwareMap hardwareMap){
         super.registerHardware(hardwareMap);
         spin = new CRServoQUS(hardwareMap.get(CRServo.class,"spin"));
-        huskyLens = hardwareMap.get(HuskyLens.class,"hl1");
-        encoder = hardwareMap.get(DcMotor.class,"turret");
+        huskyLens = hardwareMap.get(HuskyLens.class,"hl2");
+        encoder = hardwareMap.get(DcMotor.class,"FL");
+        d1 = hardwareMap.get(DistanceSensor.class,"d1");
+        d2 = hardwareMap.get(DistanceSensor.class,"d2");
+        d3 = hardwareMap.get(DistanceSensor.class,"d3");
     }
 
     public void startup(){
@@ -109,10 +114,10 @@ public class Spindexer extends Component {
             return artifacts[0];
         } else if(currentPosition == ballTicks[1]){
             return artifacts[1];
-        } else if(currentPosition == ballTicks[2]){
+        } else {
             return artifacts[2];
-        } else
-        return Artifact.SPINNING;
+        }
+
     }
     private void setCurrentBall(Artifact artifact){
         double currentPose = encoder.getCurrentPosition();
@@ -126,7 +131,7 @@ public class Spindexer extends Component {
     }
     private void clasify(){
         if(getBlock() == null){
-            setCurrentBall(Artifact.EMPTY);
+
         } else if(getBlock().id == 1){
             setCurrentBall(Artifact.PURPLE);
         } else if(getBlock().id == 2){

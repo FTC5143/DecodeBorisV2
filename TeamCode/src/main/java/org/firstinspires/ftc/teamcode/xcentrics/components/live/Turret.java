@@ -74,9 +74,9 @@ public class Turret extends Component {
         super.registerHardware(hardwareMap);
         fly =           hardwareMap.get(DcMotorEx.class,"fly");
         turret =        new DcMotorQUS(hardwareMap.get(DcMotorEx.class,"turret"));
-        huskyLens =     hardwareMap.get(HuskyLens.class,"hl2");
-        hood1 =         new ServoQUS(hardwareMap.get(Servo.class,"hood1"));
-        hood2 =         new ServoQUS(hardwareMap.get(Servo.class,"hood2"));
+        huskyLens =     hardwareMap.get(HuskyLens.class,"hl1");
+        hood1 =         new ServoQUS(hardwareMap.get(Servo.class,"H1"));
+        hood2 =         new ServoQUS(hardwareMap.get(Servo.class,"H2"));
         kicker =        new ServoQUS(hardwareMap.get(Servo.class,"kicker"));
         safety =        new ServoQUS(hardwareMap.get(Servo.class,"safety"));
     }
