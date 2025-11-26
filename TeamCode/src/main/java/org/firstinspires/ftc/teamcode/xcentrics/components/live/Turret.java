@@ -9,7 +9,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.xcentrics.util.control.MiniPID;
+import org.firstinspires.ftc.teamcode.xcentrics.util.math.ShooterTrajectoryCalculator;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.DcMotorQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.ServoQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.components.Component;
@@ -25,14 +27,13 @@ import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretCon
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.flyP;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.flyI;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.flyD;
-import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.flySpeedProportion;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.flyTolerance;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.focalLength;
-import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.hoodAngleProportion;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.kickPos;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.redGoalTagID;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.safetyOff;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.safetyOn;
+import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.servoRange;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.tagHeight;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.targetVelocity;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.turretError;
@@ -47,8 +48,7 @@ class TurretConfig{
     public static double flyP = 0,flyI = 0,flyD = 0;
     public static int targetVelocity = 0;
     public static int redGoalTagID = 1,blueGoalTagID = 2;
-    public static double hoodAngleProportion = 0;
-    public static double flySpeedProportion = 0;
+    public static int servoRange = 360;
     public static double focalLength, distance, tagHeight;
     public static double turretOffset = 0;
     public static double kickPos = 0,safetyOff = 0, safetyOn = 1;
@@ -63,6 +63,7 @@ public class Turret extends Component {
     private HuskyLens huskyLens;
     private ServoQUS hood1,hood2, kicker,safety;
     private MiniPID pid;
+
 
     {
         name = "turret";
@@ -104,14 +105,14 @@ public class Turret extends Component {
             //update distance
             getDistance();
 
-            //set target velocity
-            calcFlySpeed();
-
             //update turret position
             calcTurretHeading();
 
             //update hood angle
             calcHoodAngle();
+
+            //set target velocity
+            calcFlySpeed();
         }
         //stop turret from moving to prevent damage to the robot when not updating pid
         else {
@@ -143,7 +144,7 @@ public class Turret extends Component {
         fly.setVelocityPIDFCoefficients(p,i,d,0);
     }
     private void setVelocity(double velocity){
-        fly.setVelocity(velocity);
+        fly.setVelocity(velocity, AngleUnit.RADIANS);
     }
 
     //get the current tag
@@ -166,8 +167,8 @@ public class Turret extends Component {
     }
     //calc hood angle
     private void calcHoodAngle(){
-        hood1.queue_position(distance * hoodAngleProportion);
-        hood2.queue_position(-(distance * hoodAngleProportion));
+        hood1.queue_position(servoRange/ ShooterTrajectoryCalculator.calculateOptimalTrajectory(distance,0.660447,9.82).getLaunchAngleDegrees());
+        hood2.queue_position(-(servoRange/ ShooterTrajectoryCalculator.calculateOptimalTrajectory(distance,0.660447,9.82).getLaunchAngleDegrees()));
     }
     //calculate turret heading
     private void calcTurretHeading(){
@@ -177,9 +178,8 @@ public class Turret extends Component {
         }
     }
     //calculate the fly speed
-    private void calcFlySpeed(){
-        flyError = Math.abs(fly.getVelocity() - targetVelocity);
-        setVelocity(distance * flySpeedProportion);
+    private void calcFlySpeed() {
+        ShooterTrajectoryCalculator.setFlywheelVelocity(fly,ShooterTrajectoryCalculator.calculateOptimalTrajectory(distance,0.660447,9.82).getInitialVelocityMs(),0.050356);
     }
     //update qus
     private void update(){
