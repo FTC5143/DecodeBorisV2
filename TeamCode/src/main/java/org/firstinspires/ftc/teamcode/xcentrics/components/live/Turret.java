@@ -44,6 +44,20 @@ class TurretConfig {
     public static double turretTarget;    // ENCODER TICKS target
 
     public static double maxRotation = 270, minRotation = 0;
+    public static double hoodMinAngle = 10;      // degrees
+    public static double hoodMaxAngle = 45;      // degrees
+
+    public static double shooterHeight = 0.30;   // meters (robot launch height)
+    public static double goalHeight = 1.22;      // meters (center of high goal)
+
+    public static double ballMass = 0.060;       // kg    (adjust for allowed game element)
+    public static double coeffDrag = 0.03;       // tuning constant
+
+    public static double wheelRadius = 0.045;    // meters
+    public static double rpmToVelocity = 0.0012; // exit velocity per RPM (MEASURE THIS)
+
+    public static double hoodOffset = 0;         // mechanical trim
+
 }
 
 public class Turret extends Component {
@@ -191,12 +205,53 @@ public class Turret extends Component {
     }
 
     private void computeFlySpeed() {
-        // implement formula here
+
+        double D = distance;  // meters
+
+        // linear model (tune these)
+        double k1 = 6.0;
+        double k2 = 12.0;
+
+        double targetExitVelocity = k1 * D + k2; // m/s
+
+        // convert to RPM
+        double targetRPM = targetExitVelocity / rpmToVelocity;
+
+        fly.setVelocity(targetRPM, AngleUnit.RADIANS);
     }
 
+
     private void computeHoodAngle() {
-        // implement formula here
+
+        double D = distance; // meters
+
+        double h0 = shooterHeight;
+        double h1 = goalHeight;
+
+        double v = fly.getVelocity() * rpmToVelocity;  // m/s exit velocity estimate
+
+        double g = 9.81;
+
+        // Safe low-speed fallback
+        if (v < 1) v = 1;
+
+        // FTC-stable trajectory formula
+        double term = (g * D * D) / (2 * v * v);
+        double linear = (h1 - h0) / D;
+
+        double angleRad = Math.atan(term + linear);
+        double angleDeg = Math.toDegrees(angleRad) + hoodOffset;
+
+        // clamp to hood limits
+        angleDeg = Math.max(hoodMinAngle, Math.min(hoodMaxAngle, angleDeg));
+
+        // convert to servo positions (0–1)
+        double pos = angleDeg / servoRange;
+
+        hood1.queue_position(pos);
+        hood2.queue_position(pos);
     }
+
 
     private void computeDistance() {
         Pose pose = robot.follower.getPose();
