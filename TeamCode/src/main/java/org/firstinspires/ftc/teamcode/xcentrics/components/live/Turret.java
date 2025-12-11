@@ -171,19 +171,30 @@ public class Turret extends Component {
         //implament formula here
     }
     //calculate turret heading
-    private void calcTurretHeading(){
-        if(robot.isRed()){
-            setTarget(Math.atan2((redGoal.getY() - robot.follower.getPose().getY()),
-                    (redGoal.getX() - robot.follower.getPose().getX())));
+    private void calcTurretHeading() {
+
+        Pose robotPose = robot.follower.getPose();
+        double targetRadians;
+
+        if (robot.isRed()) {
+            targetRadians = Math.atan2(
+                    redGoal.getY() - robotPose.getY(),
+                    redGoal.getX() - robotPose.getX());
         } else {
-            setTarget(Math.atan2((blueGoal.getY() - robot.follower.getPose().getY()),
-                    (blueGoal.getX() - robot.follower.getPose().getX())));
+            targetRadians = Math.atan2(
+                    blueGoal.getY() - robotPose.getY(),
+                    blueGoal.getX() - robotPose.getX());
         }
-        if(turretTarget >= minRotation && turretTarget <= maxRotation){
-            turret.queue_power(pid.getOutput(turretHeading,turretTarget));
+
+        setTarget(targetRadians);
+
+        // PID output is power
+        double output = pid.getOutput(turretHeading, turretTarget);
+
+        if (turretTarget >= minRotation && turretTarget <= maxRotation) {
+            turret.queue_power(output);
         } else {
-            setTarget(50);
-            turret.queue_power(pid.getOutput(turretHeading,turretTarget));
+            turret.queue_power(0);  // don't damage turret
         }
     }
     //calculate the fly speed
