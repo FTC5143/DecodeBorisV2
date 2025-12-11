@@ -45,6 +45,9 @@ public class Spindexer extends Component {
     /// Camera ///
     private HuskyLens huskyLens;
     private MiniPID pid;
+    {
+        name = "Spindexer";
+    }
     public Spindexer(Robot robot) {
         super(robot);
     }

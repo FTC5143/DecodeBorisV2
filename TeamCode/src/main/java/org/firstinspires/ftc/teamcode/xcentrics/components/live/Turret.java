@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.xcentrics.util.control.MiniPID;
-import org.firstinspires.ftc.teamcode.xcentrics.util.math.ShooterTrajectoryCalculator;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.DcMotorQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.ServoQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.components.Component;
@@ -167,8 +166,7 @@ public class Turret extends Component {
     }
     //calc hood angle
     private void calcHoodAngle(){
-        hood1.queue_position(servoRange/ ShooterTrajectoryCalculator.calculateOptimalTrajectory(distance,0.660447,9.82).getLaunchAngleDegrees());
-        hood2.queue_position(-(servoRange/ ShooterTrajectoryCalculator.calculateOptimalTrajectory(distance,0.660447,9.82).getLaunchAngleDegrees()));
+        //implament formula here
     }
     //calculate turret heading
     private void calcTurretHeading(){
@@ -179,7 +177,7 @@ public class Turret extends Component {
     }
     //calculate the fly speed
     private void calcFlySpeed() {
-        ShooterTrajectoryCalculator.setFlywheelVelocity(fly,ShooterTrajectoryCalculator.calculateOptimalTrajectory(distance,0.660447,9.82).getInitialVelocityMs(),0.050356);
+        //implaent formula here
     }
     //update qus
     private void update(){

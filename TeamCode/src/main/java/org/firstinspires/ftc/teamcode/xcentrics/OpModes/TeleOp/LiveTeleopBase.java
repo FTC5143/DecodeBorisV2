@@ -22,6 +22,7 @@ public abstract class LiveTeleopBase extends LinearOpMode {
 
         waitForStart();
         on_start();
+        robot.follower.startTeleOpDrive();
 
         while(opModeIsActive() && !isStopRequested()) {
 
