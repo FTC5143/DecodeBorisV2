@@ -24,7 +24,7 @@ public class LiveRobot extends Robot{
         follower    = Constants.createFollower(hwmap);
         intake      = new Intake(this);
         spindexer   = new Spindexer(this);
-        turret      = new Turret(this);
+        turret      = new Turret(this,this);
     }
 
     @Override

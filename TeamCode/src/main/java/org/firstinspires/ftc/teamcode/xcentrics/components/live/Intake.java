@@ -34,8 +34,8 @@ public class Intake extends Component {
     public void registerHardware(HardwareMap hardwareMap){
         super.registerHardware(hardwareMap);
         intake = new DcMotorQUS(hardwareMap.get(DcMotorEx.class,"intake"));
-        in1 = new CRServoQUS(hardwareMap.get(CRServo.class,"in1"));
-        in2 = new CRServoQUS(hardwareMap.get(CRServo.class,"in2"));
+        in1 = new CRServoQUS(hardwareMap.get(CRServo.class,"Lin"));
+        in2 = new CRServoQUS(hardwareMap.get(CRServo.class,"Rin"));
     }
 
     public void update(OpMode opMode){

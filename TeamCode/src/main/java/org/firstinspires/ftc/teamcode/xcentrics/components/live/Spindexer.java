@@ -5,9 +5,8 @@ import static org.firstinspires.ftc.teamcode.xcentrics.components.live.Spindexer
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.SpindexerConfig.artifacts;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.SpindexerConfig.ballTicks;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.SpindexerConfig.currentPosition;
-import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.blueGoalTagID;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.canSpin;
-import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.redGoalTagID;
+
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
@@ -54,7 +53,7 @@ public class Spindexer extends Component {
 
     public void registerHardware(HardwareMap hardwareMap){
         super.registerHardware(hardwareMap);
-        spin = new CRServoQUS(hardwareMap.get(CRServo.class,"spin"));
+        spin = new CRServoQUS(hardwareMap.get(CRServo.class,"Spin"));
         huskyLens = hardwareMap.get(HuskyLens.class,"hl2");
         encoder = hardwareMap.get(DcMotor.class,"FL");
     }
@@ -97,14 +96,14 @@ public class Spindexer extends Component {
         canSpin = false;
     }
     private HuskyLens.Block getBlock(){
-        HuskyLens.Block[] blocks = huskyLens.blocks();
-        for(HuskyLens.Block block: blocks){
-            if(robot.isRed() && block.id == redGoalTagID){
-                return block;
-            } else if(!robot.isRed() && block.id == blueGoalTagID){
-                return block;
-            }
-        }
+//        HuskyLens.Block[] blocks = huskyLens.blocks();
+//        for(HuskyLens.Block block: blocks){
+//            if(robot.isRed() && block.id == redGoalTagID){
+//                return block;
+//            } else if(!robot.isRed() && block.id == blueGoalTagID){
+//                return block;
+//            }
+//        }
         return null;
     }
     private Artifact getCurrentBall(){

@@ -39,12 +39,6 @@ public class TeleopLive extends LiveTeleopBase{
 
         //check to see if the robot is within a triangle and do the apropreate thing
         robotPose = robot.follower.getPose();
-        if(triangleChecker.isInsideAnyTriangle(robotPose)){
-            robot.turret.aim();
-            robot.turret.disengageSafety();
-        } else {
-            robot.turret.engageSafety();
-        }
         //gamepad controls
 
         //gamepad 1 controls
