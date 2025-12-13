@@ -61,7 +61,7 @@ public class Robot {
     Runnable update_thread;
 
     List<LynxModule> expansion_hubs;
-    static TelemetryManager panelsTelemetry;
+    public TelemetryManager panelsTelemetry;
 
     // The Update Thread
     // Should be called as fast as possible. Does all reads and writes to the rev hub
@@ -143,7 +143,7 @@ public class Robot {
             updateTelemetry();
 
             for (Component component : components) {
-                component.updateTelemetry(telemetry,panelsTelemetry);
+                component.updateTelemetry(telemetry);
             }
 
             telemetry.update();

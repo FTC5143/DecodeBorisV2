@@ -57,7 +57,7 @@ public class Intake extends Component {
     }
 
     public void updateTelemetry(Telemetry telemetry, TelemetryManager telemetryManager){
-        super.updateTelemetry(telemetry,telemetryManager);
+        super.updateTelemetry(telemetry);
 
         addData("Speed: ",speed);
     }

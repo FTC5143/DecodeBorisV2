@@ -203,8 +203,8 @@ public class Turret extends Component {
     // Telemetry
     // ------------------------------
     @Override
-    public void updateTelemetry(Telemetry telemetry, TelemetryManager telemetryManager) {
-        super.updateTelemetry(telemetry,telemetryManager);
+    public void updateTelemetry(Telemetry telemetry) {
+        super.updateTelemetry(telemetry);
 
         addLine("Shooter Ready: " + shooterReady);
         addLine("Velocity Ready: " + velocityReady);
