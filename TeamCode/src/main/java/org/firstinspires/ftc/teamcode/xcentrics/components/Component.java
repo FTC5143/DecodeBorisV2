@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.xcentrics.components;
 
 
 import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
@@ -67,11 +68,13 @@ public abstract class Component {
     }
     public void addData(String caption,Object vaule){
         telemetry.addData(caption,vaule);
-        PanelsTelemetry.INSTANCE.getTelemetry().addData(caption,vaule);
+        TelemetryManager telemetryManager = PanelsTelemetry.INSTANCE.getTelemetry();
+        telemetryManager.addData(caption,vaule);
     }
     public void addLine(String caption){
         telemetry.addLine(caption);
-        PanelsTelemetry.INSTANCE.getTelemetry().addLine(caption);
+        TelemetryManager telemetryManager = PanelsTelemetry.INSTANCE.getTelemetry();
+        telemetryManager.addLine(caption);
     }
     public volatile double time = 0.0;
 

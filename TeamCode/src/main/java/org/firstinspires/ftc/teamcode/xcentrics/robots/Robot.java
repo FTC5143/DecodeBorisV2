@@ -7,9 +7,11 @@ import static org.firstinspires.ftc.teamcode.xcentrics.robots.RobotConfig.BULK_R
 import static org.firstinspires.ftc.teamcode.xcentrics.robots.RobotConfig.COMPONENT_UPDATE_CYCLE;
 import static org.firstinspires.ftc.teamcode.xcentrics.robots.RobotConfig.FREQ_CHECK_CYCLE;
 import static org.firstinspires.ftc.teamcode.xcentrics.robots.RobotConfig.TELEMETRY_CYCLE;
+import com.bylazar.telemetry.TelemetryManager;
 import static org.firstinspires.ftc.teamcode.xcentrics.robots.RobotConfig.isRed;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.ftcontrol.panels.Panels;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -60,7 +62,7 @@ public class Robot {
     Runnable update_thread;
 
     List<LynxModule> expansion_hubs;
-    PanelsTelemetry panelsTelemetry;
+    static TelemetryManager panelsTelemetry;
 
     // The Update Thread
     // Should be called as fast as possible. Does all reads and writes to the rev hub
@@ -89,6 +91,7 @@ public class Robot {
         registerHardware(this.hwmap);
 
         this.telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE); // Begone jumpy telemetry
+        panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
     }
 
     public void startup() {
@@ -105,7 +108,6 @@ public class Robot {
         update_thread = new UpdateThread(this);
 
         new Thread(update_thread).start();
-        panelsTelemetry = PanelsTelemetry.INSTANCE;
     }
 
     public void shutdown() {
@@ -146,7 +148,7 @@ public class Robot {
             }
 
             telemetry.update();
-            PanelsTelemetry.INSTANCE.getTelemetry().update();
+            panelsTelemetry.update();
         }
 
         // Recalculate our update thread frequency
@@ -177,7 +179,7 @@ public class Robot {
     }
     public void addData(String caption, Object value){
         telemetry.addData(caption,value);
-        PanelsTelemetry.INSTANCE.getTelemetry().addData(caption,value);
+        panelsTelemetry.debug(caption + ":" + value);
     }
 
     public void registerComponent(Component component) {
