@@ -9,6 +9,7 @@ import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretCon
 
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -78,8 +79,8 @@ public class Spindexer extends Component {
         }
     }
 
-    public void updateTelemetry(Telemetry telemetry){
-        super.updateTelemetry(telemetry);
+    public void updateTelemetry(Telemetry telemetry, TelemetryManager telemetryManager){
+        super.updateTelemetry(telemetry,telemetryManager);
 
         addData("Can spin: ", canSpin);
         addData("Current position: ",currentPosition);

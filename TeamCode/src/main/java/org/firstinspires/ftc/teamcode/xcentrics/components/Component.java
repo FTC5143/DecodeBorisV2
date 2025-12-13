@@ -25,6 +25,7 @@ public abstract class Component {
     // The robot that we are a part of
     protected Robot robot;
     protected Telemetry telemetry;
+    protected TelemetryManager telemetryManager;
 
     protected final DecimalFormat TELEMETRY_DECIMAL = new DecimalFormat("##.00");
 
@@ -59,21 +60,20 @@ public abstract class Component {
         status = STATUS_OFFLINE;
     }
 
-    public void updateTelemetry(Telemetry telemetry) {
+    public void updateTelemetry(Telemetry telemetry,TelemetryManager telemetryManager) {
         /**
          * Called on every update. Used for outputting information about the component to the phone for debug purposes
          */
         this.telemetry = telemetry;
+        this.telemetryManager = telemetryManager;
         addData("[CMP "+name+"]", status == STATUS_ONLINE ? "ONLINE": "OFFLINE");
     }
     public void addData(String caption,Object vaule){
         telemetry.addData(caption,vaule);
-        TelemetryManager telemetryManager = PanelsTelemetry.INSTANCE.getTelemetry();
         telemetryManager.addData(caption,vaule);
     }
     public void addLine(String caption){
         telemetry.addLine(caption);
-        TelemetryManager telemetryManager = PanelsTelemetry.INSTANCE.getTelemetry();
         telemetryManager.addLine(caption);
     }
     public volatile double time = 0.0;

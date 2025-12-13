@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.xcentrics.components.live;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.IntakeConfig.speed;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -55,8 +56,8 @@ public class Intake extends Component {
         intake.update();
     }
 
-    public void updateTelemetry(Telemetry telemetry){
-        super.updateTelemetry(telemetry);
+    public void updateTelemetry(Telemetry telemetry, TelemetryManager telemetryManager){
+        super.updateTelemetry(telemetry,telemetryManager);
 
         addData("Speed: ",speed);
     }

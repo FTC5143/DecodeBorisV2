@@ -11,7 +11,6 @@ import com.bylazar.telemetry.TelemetryManager;
 import static org.firstinspires.ftc.teamcode.xcentrics.robots.RobotConfig.isRed;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.ftcontrol.panels.Panels;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -144,7 +143,7 @@ public class Robot {
             updateTelemetry();
 
             for (Component component : components) {
-                component.updateTelemetry(telemetry);
+                component.updateTelemetry(telemetry,panelsTelemetry);
             }
 
             telemetry.update();

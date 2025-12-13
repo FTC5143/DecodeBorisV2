@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.xcentrics.components.live;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -202,8 +203,8 @@ public class Turret extends Component {
     // Telemetry
     // ------------------------------
     @Override
-    public void updateTelemetry(Telemetry t) {
-        super.updateTelemetry(t);
+    public void updateTelemetry(Telemetry telemetry, TelemetryManager telemetryManager) {
+        super.updateTelemetry(telemetry,telemetryManager);
 
         addLine("Shooter Ready: " + shooterReady);
         addLine("Velocity Ready: " + velocityReady);
