@@ -29,15 +29,6 @@ public class DcMotorQUS extends QUS {
         needs_write = true;
         first_cache = true;
     }
-    public void queue_velocity(double velocity){
-        if (do_cache && velocity == queued_power && first_cache) {
-            return;
-        }
-
-        queued_power = velocity;
-        needs_write = true;
-        first_cache = true;
-    }
 
     @Override
     protected void write() {

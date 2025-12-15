@@ -2,10 +2,14 @@ package org.firstinspires.ftc.teamcode.xcentrics.components.live;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.TelemetryManager;
+import com.pedropathing.control.PIDFCoefficients;
+import com.pedropathing.control.PIDFController;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -38,7 +42,7 @@ class TurretConfig {
     public static double hoodMaxAngle = 45;       // degrees
     public static double hoodOffset = 0;          // calibration offset
 
-    public static double wheelRadius = 0.045;     // meters
+   // public static double wheelRadius = 0.045;     // meters
     public static double rpmToVelocity = 0.0012;  // conversion factor
 
     // ------------------------------
@@ -58,23 +62,23 @@ class TurretConfig {
     // Anti-Hit System
     // ------------------------------
     public static boolean hitDetected = false;        // is turret frozen due to hit
-    public static double hitFreezeTime = 0.35;        // time to stop turret (s)
+   /* public static double hitFreezeTime = 0.35;        // time to stop turret (s)
     public static double hitCooldown = 0.20;          // slow ramp time after hit
     public static long lastHitTime = 0;
 
     public static double jerkThreshold = 0.25;        // rad/s² for heading jerk
     public static double transJerkThreshold = 0.40;   // m/s² for translation jerk
     public static double backlashThreshold = 15;      // ticks/sec spike threshold
-
+*/
     // ------------------------------
     // Turret Encoder Configuration
     // ------------------------------
     public static double turretOffset = 0;            // calibration offset
-    public static double ticksPerTurretRotation;      // encoder ticks per 360°
+    public static double ticksPerTurretRotation = 6610;      // encoder ticks per 360°
     public static double turretHeading;               // current turret heading (deg)
     public static double turretTarget;                // target turret heading (ticks)
-    public static double minRotation = 0;             // min turret angle
-    public static double maxRotation = 270;           // max turret angle
+    public static double minRotation = 15;             // min turret angle 15
+    public static double maxRotation = 360 - 15;           // max turret angle
 
     // ------------------------------
     // Other Servo Positions
@@ -82,9 +86,13 @@ class TurretConfig {
     public static double kickPos = 0, safetyOff = 0, safetyOn = 1;
     public static boolean aim = false;               // is turret tracking target
     public static boolean canSpin = true;           // flywheel allowed to spin
-    public static double turretTolerance = 0, flyTolerance = 0; // error tolerances
+    //public static double turretTolerance = 0, flyTolerance = 0; // error tolerances
     public static double turretError, flyError;       // current errors
+    public static Pose testPose = new Pose(72,23,Math.toRadians(0));
+    public static  double power = 0;
+    public static PIDFCoefficients turretPIDCoef = new PIDFCoefficients(0.001,0,0,0);
 }
+@Configurable
 
 public class Turret extends Component {
 
@@ -97,14 +105,17 @@ public class Turret extends Component {
 
     private ServoQUS hood1, hood2, kicker, safety;
 
-    private MiniPID turretPID, flyPID;   // PID controllers
+    private MiniPID flyPID;   // PID controllers
+    private PIDFController turretPID;
+
     private LiveRobot robot;             // reference to robot
 
-    private Pose redGoal, blueGoal;      // goal positions
-    private double distance;             // distance to goal
+    private Pose redGoal = new Pose(131,137), blueGoal = new Pose(12,136);      // goal positions
+    public static double distance;             // distance to goal
 
     private double lastHoodCmd = 0;     // previous hood angle
     private double prevFilteredTarget = 0; // for low-pass filtering
+    public  boolean autoAim = true;
 
     // ------------------------------
     // Kinematics History (Pedro Pathing)
@@ -117,6 +128,8 @@ public class Turret extends Component {
     private double k_vx, k_vy;
     private double k_ax, k_ay;
     private double k_headingVel, k_headingAcc;
+    private double flyPower = 0;
+    public static boolean Debug = false;
 
     {
         name = "turret";
@@ -136,6 +149,7 @@ public class Turret extends Component {
 
         fly = map.get(DcMotorEx.class, "fly");
         turret = new DcMotorQUS(map.get(DcMotorEx.class, "turret"));
+        turret.motor.setDirection(DcMotorSimple.Direction.REVERSE);
         husky = map.get(HuskyLens.class, "hl1");
 
         hood1 = new ServoQUS(map.get(Servo.class, "H1"));
@@ -151,11 +165,15 @@ public class Turret extends Component {
     public void startup() {
         super.startup();
 
-        turretPID = new MiniPID(TurretP, TurretI, TurretD);
+        turretPID = new PIDFController(turretPIDCoef);
         flyPID = new MiniPID(flyP, flyI, flyD);
 
         fly.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         husky.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+
+        turret.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turret.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turret.motor.setPower(0);
     }
 
     // ------------------------------
@@ -165,35 +183,30 @@ public class Turret extends Component {
     public void update(OpMode opMode) {
         super.update(opMode);
 
-        turretPID.setPID(TurretP, TurretI, TurretD);
+        turretPID.setCoefficients(turretPIDCoef);
         flyPID.setPID(flyP, flyI, flyD);
 
         updateTurretHeading();  // update turret heading relative to robot
         updateKinematics();     // compute internal velocity/acceleration
-        detectHit();            // freeze turret if hit detected
+        //detectHit();            // freeze turret if hit detected
 
-        // Handle freeze during hit
-        if (hitDetected) {
-            long dt = System.currentTimeMillis() - lastHitTime;
-            if (dt < hitFreezeTime * 1000) {
-                turret.queue_power(0);
-                updateAll();
-                return;
-            } else if (dt < (hitFreezeTime + hitCooldown) * 1000) {
-                turretPID.setOutputRampRate(0.1); // ramp slowly
-            } else {
-                turretPID.setOutputRampRate(0.0); // resume normal control
-            }
-        }
 
-        if (aim) {
+
+
             computeDistance();
-            computeTurretTarget();
+
+            if(autoAim) {
+                computeTurretTarget();
+            }
+            if(Debug){
+                robot.follower.setPose(testPose);
+            }
             computeHoodAngle();
             computeFlySpeed();
-        } else {
-            turret.queue_power(0);
-        }
+            turretPID.setTargetPosition(turretTarget);
+            turretPID.updatePosition(turret.motor.getCurrentPosition());
+        power = turretPID.run();
+        turret.queue_power(turretPID.run());
 
         computeReadyState();
         updateAll();
@@ -215,6 +228,11 @@ public class Turret extends Component {
         addData("TargetTicks", turretTarget);
         addData("Distance", distance);
         addData("FlyVel", fly.getVelocity());
+
+        addData("TurretTicks",turret.motor.getCurrentPosition());
+        addData("TurretPower",power);
+        addData("ActualPower",turret.motor.getPower());
+        addData("FlyPower",fly.getPower());
     }
 
     // ------------------------------
@@ -246,23 +264,11 @@ public class Turret extends Component {
                 targetDegField - robotHeadingDeg - turretOffset
         );
 
-        // Motion compensation for robot movement
-        targetDegTurret += k_vy * 0.05;
-        targetDegTurret += Math.toDegrees(k_headingVel) * 0.1;
-
-        // Smooth target if hit detected
-        if (hitDetected) {
-            targetDegTurret = lowPass(targetDegTurret, 0.4);
-        }
-
         double rawTicks = targetDegTurret * (ticksPerTurretRotation / 360.0);
-        double minTicks = minRotation * (ticksPerTurretRotation / 360.0);
-        double maxTicks = maxRotation * (ticksPerTurretRotation / 360.0);
+        double minTicks = -4633;
+        double maxTicks = 3917;
 
         turretTarget = Math.max(minTicks, Math.min(maxTicks, rawTicks));
-
-        double power = turretPID.getOutput(turret.motor.getCurrentPosition(), turretTarget);
-        turret.queue_power(power);
     }
 
     // ------------------------------
@@ -294,7 +300,10 @@ public class Turret extends Component {
 
         lastHoodCmd = hoodDeg;
     }
-
+    public void manualTurret(){
+        autoAim = false;
+        turretTarget = 0;
+    }
     private void computeFlySpeed() {
         // Distance-based flywheel speed
         double D = distance;
@@ -305,13 +314,10 @@ public class Turret extends Component {
         double currentRPM = fly.getVelocity();
 
         double diff = targetRPM - currentRPM;
-        if (Math.abs(diff) > 500)
-            targetRPM = currentRPM + Math.signum(diff) * 500; // limit RPM step
 
-        double ff = targetRPM * 0.0008; // feed-forward
         double pid = flyPID.getOutput(currentRPM, targetRPM);
 
-        fly.setPower(ff + pid);
+        fly.setPower(pid);
 
         flyError = Math.abs(currentRPM - targetRPM);
         velocityReady = flyError < readyVelocityTolerance;
@@ -353,23 +359,23 @@ public class Turret extends Component {
         prevTime = now;
     }
 
-    private void detectHit() {
-        long now = System.currentTimeMillis();
-
-        boolean imuHit = Math.abs(k_headingAcc) > jerkThreshold;
-        boolean transHit = Math.abs(k_ax) > transJerkThreshold || Math.abs(k_ay) > transJerkThreshold;
-        double tickVel = turret.motor.getVelocity();
-        boolean backlash = Math.abs(tickVel) > backlashThreshold;
-
-        if (imuHit || transHit || backlash) {
-            hitDetected = true;
-            lastHitTime = now;
-        }
-
-        if (hitDetected && now - lastHitTime > (hitFreezeTime + hitCooldown) * 1000.0) {
-            hitDetected = false;
-        }
-    }
+//    private void detectHit() {
+//        long now = System.currentTimeMillis();
+//
+//        boolean imuHit = Math.abs(k_headingAcc) > jerkThreshold;
+//        boolean transHit = Math.abs(k_ax) > transJerkThreshold || Math.abs(k_ay) > transJerkThreshold;
+//        double tickVel = turret.motor.getVelocity();
+//        boolean backlash = Math.abs(tickVel) > backlashThreshold;
+//
+//        if (imuHit || transHit || backlash) {
+//            hitDetected = true;
+//            lastHitTime = now;
+//        }
+//
+//        if (hitDetected && now - lastHitTime > (hitFreezeTime + hitCooldown) * 1000.0) {
+//            hitDetected = false;
+//        }
+//    }
 
     // ------------------------------
     // Ready State

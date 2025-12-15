@@ -76,9 +76,7 @@ public class Robot {
 
         @Override
         public void run() {
-            while(robot.running) {
-                robot.update();
-            }
+            robot.update();
         }
     }
 
