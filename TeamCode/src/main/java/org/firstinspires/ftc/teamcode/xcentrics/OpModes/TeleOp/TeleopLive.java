@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.xcentrics.OpModes.TeleOp;
 
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.math.Vector;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+
 import org.firstinspires.ftc.teamcode.xcentrics.util.Math.TriangleZoneChecker;
-import org.firstinspires.ftc.teamcode.xcentrics.util.Math.TriangleZoneChecker;
+
 @TeleOp(name = "TeleOp")
 
 public class TeleopLive extends LiveTeleopBase{
