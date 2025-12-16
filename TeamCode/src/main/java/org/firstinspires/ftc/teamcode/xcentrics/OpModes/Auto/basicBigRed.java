@@ -5,6 +5,7 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+
 @Autonomous(name = "basicBigRed")
 public class basicBigRed extends LiveAutoBase {
     private final Pose startPose = new Pose(116.6,131.7,r(37)),
@@ -37,7 +38,7 @@ public class basicBigRed extends LiveAutoBase {
     private int pathState = 0;
     @Override
     public void on_init() {
-
+        robot.isRed = true;
     }
 
     @Override
@@ -66,25 +67,9 @@ public class basicBigRed extends LiveAutoBase {
 
             case 1:
                 if(!robot.follower.isBusy()){
-                    robot.intake.setPower(1);
-                    robot.turret.launch();
-                    robot.intake.setPower(0);
-
-                    halt(0.5);
-
-                    robot.intake.setPower(1);
-                    halt(0.5);
-                    robot.intake.setPower(0);
-                    robot.turret.launch();
-
-                    halt(0.5);
-
-                    robot.intake.setPower(1);
-                    halt(0.5);
-                    robot.intake.setPower(0);
-                    robot.turret.launch();
-
-                    halt(0.5);
+                    shoot1ball();
+                    shoot1ball();
+                    shoot1ball();
 
                     pathState++;
                     break;
@@ -105,25 +90,9 @@ public class basicBigRed extends LiveAutoBase {
 
             case 4:
                 if(!robot.follower.isBusy()){
-                    robot.intake.setPower(1);
-                    robot.turret.launch();
-                    robot.intake.setPower(0);
-
-                    halt(0.5);
-
-                    robot.intake.setPower(1);
-                    halt(0.5);
-                    robot.intake.setPower(0);
-                    robot.turret.launch();
-
-                    halt(0.5);
-
-                    robot.intake.setPower(1);
-                    halt(0.5);
-                    robot.intake.setPower(0);
-                    robot.turret.launch();
-
-                    halt(0.5);
+                    shoot1ball();
+                    shoot1ball();
+                    shoot1ball();
 
                     pathState++;
                     break;
@@ -134,5 +103,12 @@ public class basicBigRed extends LiveAutoBase {
                 pathState++;
                 break;
         }
+    }
+    public void shoot1ball(){
+        robot.intake.setPower(1);
+        robot.turret.launch();
+        robot.intake.setPower(0);
+        robot.turret.resetKicker();
+        halt(0.5);
     }
 }

@@ -28,6 +28,11 @@ public class TeleopLive extends LiveTeleopBase{
     @Override
     public void on_start() {
         robot.follower.startTeleOpDrive();
+        if(!robot.isRed()) {
+            robot.follower.setStartingPose(new Pose(63 ,9,Math.toRadians(180)));
+        } else {
+            robot.follower.setStartingPose(new Pose(81,9,Math.toRadians(0)));
+        }
     }
 
     @Override
@@ -42,32 +47,55 @@ public class TeleopLive extends LiveTeleopBase{
         robotPose = robot.follower.getPose();
         //gamepad controls
                     robot.follower.setTeleOpDrive(
-                -gamepad1.left_stick_y ,
+                -gamepad1.right_stick_x ,
                 -gamepad1.left_stick_x,
-                -gamepad1.right_stick_x,
-                true // Robot Centric
+                           - gamepad1.left_stick_y,
+                            true
+                            // Robot Centric
         );
+                    if(gamepad1.x){
+                        if(robot.isRed()){
+                            robot.follower.setPose(new Pose(9,9,Math.toRadians(0)));
+                        } else {
+                            robot.follower.setPose(new Pose(135, 9, Math.toRadians(180)));
+                        }
+                    }
+                    if(gamepad1.left_bumper){
+                        robot.isRed = false;
+                    } else if (gamepad1.right_bumper){
+                        robot.isRed = true;
+                    }
         //gamepad 1 controls
 
         if(gamepad2.dpad_up){
-            robot.intake.setPower(-0.5);
+            robot.intake.setPower(-1);
         } else if(gamepad2.dpad_down){
-            robot.intake.setPower(0.5);
+            robot.intake.setPower(1);
         } else {
             robot.intake.setPower(0);
         }
 
-        if(gamepad2.dpad_left && !b1){
-            robot.turret.manualTurret();
-        } else if(gamepad2.dpad_left && b1){
-            robot.turret.autoAim = true;
-        }
 
         //launch ball(s)
-        if(gamepad2.x) {
+
+        if(gamepad2.a){
             robot.turret.launch();
         }
 
+        if(gamepad2.dpad_left) {
+           robot.turret.turretOffset +=1;
+        } else if(gamepad2.dpad_right){
+            robot.turret.turretOffset -= 1;
+        }
 
+
+
+    }
+    public void shoot1ball(){
+        robot.intake.setPower(1);
+        robot.turret.launch();
+        robot.intake.setPower(0);
+        robot.turret.resetKicker();
+        halt(0.5);
     }
 }

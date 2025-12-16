@@ -8,6 +8,7 @@ import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -37,6 +38,8 @@ public class Intake extends Component {
         intake = new DcMotorQUS(hardwareMap.get(DcMotorEx.class,"intake"));
         in1 = new CRServoQUS(hardwareMap.get(CRServo.class,"Lin"));
         in2 = new CRServoQUS(hardwareMap.get(CRServo.class,"Rin"));
+        in1.servo.setDirection(DcMotorSimple.Direction.REVERSE);
+        in2.servo.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void update(OpMode opMode){

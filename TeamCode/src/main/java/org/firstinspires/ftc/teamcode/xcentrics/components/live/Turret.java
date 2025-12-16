@@ -47,7 +47,7 @@ class TurretConfig {
     // ------------------------------
     // Turret Encoder Configuration
     // ------------------------------
-    public static double turretOffset = 0;            // calibration offset
+
     public static double ticksPerTurretRotation = 6610;      // encoder ticks per 360°
     public static double turretHeading;               // current turret heading (deg)
     public static double turretTarget;                // target turret heading (ticks)
@@ -58,14 +58,12 @@ class TurretConfig {
     public static double kickPos = 0, safetyOff = 0, safetyOn = 1;
     //public static boolean aim = false;               // is turret tracking target
     public static boolean canSpin = true;           // flywheel allowed to spin
-    //public static double turretTolerance = 0, flyTolerance = 0; // error tolerances
-    //public static double turretError, flyError;       // current errors
     public static Pose testPose = new Pose(9,9,Math.toRadians(0));
     public static  double power = 0;
     public static PIDFCoefficients turretPIDCoef = new PIDFCoefficients(0.001,0,0,0),
     flyPIDFCoef = new PIDFCoefficients(0,0,0,0);
-    public static double targetVelocity = 999999999;
-    public static double k1 = 6.0, k2 = 12.0;
+    public static double targetVelocity = 999999999;;
+    public static double a = 49.69,b =-0.31465 ,c = 0.000501507;
 }
 @Configurable
 
@@ -77,7 +75,7 @@ public class Turret extends Component {
     private DcMotorEx fly;
     private DcMotorQUS turret;
     private HuskyLens husky;
-
+    public double turretOffset = 0;            // calibration offset
     private ServoQUS hood1, hood2, kicker, safety;
 
    // private MiniPID flyPID;   // PID controllers
@@ -134,10 +132,12 @@ public class Turret extends Component {
 
         fly.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         husky.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+        kicker.queue_position(1);
 
         turret.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turret.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.motor.setPower(0);
+        updateAll();
     }
 
     // ------------------------------
@@ -198,7 +198,6 @@ public class Turret extends Component {
 
         addData("TurretTicks",turret.motor.getCurrentPosition());
         addData("TurretPower",power);
-        addData("ActualPower",turret.motor.getPower());
         addData("FlyPower",fly.getPower());
     }
 
@@ -242,32 +241,7 @@ public class Turret extends Component {
     // Hood / Flywheel Physics
     // ------------------------------
     private void computeHoodAngle() {
-        /*
-        // Simple ballistic formula for hood angle
-        double D = distance;
-        double h0 = shooterHeight;
-        double h1 = goalHeight;
-
-        double v = fly.getVelocity() * rpmToVelocity;
-        if (v < 1) v = 1; // prevent division by zero
-
-        double g = 9.81;
-        double term = (g * D * D) / (2 * v * v);
-        double linear = (h1 - h0) / D;
-
-        double hoodRad = Math.atan(term + linear);
-        double hoodDeg = Math.toDegrees(hoodRad) + hoodOffset;
-        hoodDeg = clamp(hoodDeg, hoodMinAngle, hoodMaxAngle);
-
-        double servoPos = hoodDeg / 180.0;
-        hood1.queue_position(servoPos);
-        hood2.queue_position(servoPos);
-
-        double hoodErr = Math.abs(hoodDeg - lastHoodCmd);
-        angleReady = hoodErr < readyAngleTolerance;
-
-        lastHoodCmd = hoodDeg;
-        */
+        servoPos = a + (b * distance) + (c * c * distance);
         hood1.queue_position(servoPos);
         hood2.queue_position(-servoPos);
     }
@@ -294,16 +268,16 @@ public class Turret extends Component {
     // Launch / Kicker
     // ------------------------------
     public void launch() {
-        if (!shooterReady) return;
-        if (safety.servo.getPosition() == safetyOff) {
-            kicker.queue_position(kickPos);
-            canSpin = false;
-        }
+        kicker.queue_position(0);
+        updateAll();
+        halt(0.5);
+        kicker.queue_position(1);
+        updateAll();
     }
 
     public void resetKicker() {
         if (!canSpin) {
-            kicker.queue_position(0);
+            kicker.queue_position(1);
             canSpin = true;
         }
     }

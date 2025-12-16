@@ -8,8 +8,6 @@ import static org.firstinspires.ftc.teamcode.xcentrics.robots.RobotConfig.COMPON
 import static org.firstinspires.ftc.teamcode.xcentrics.robots.RobotConfig.FREQ_CHECK_CYCLE;
 import static org.firstinspires.ftc.teamcode.xcentrics.robots.RobotConfig.TELEMETRY_CYCLE;
 import com.bylazar.telemetry.TelemetryManager;
-import static org.firstinspires.ftc.teamcode.xcentrics.robots.RobotConfig.isRed;
-
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -35,13 +33,13 @@ class RobotConfig {
     // Interval in cycles at which we calculate cycle frequency
     public static int FREQ_CHECK_CYCLE = 40;
     //what aliance we are on
-    public static boolean isRed = false;
 }
 
 public class Robot {
 
     HardwareMap hwmap;
     public LinearOpMode opmode;
+    public static boolean isRed = false;
 
     ArrayList<Component> components = new ArrayList<>();
 
@@ -65,7 +63,7 @@ public class Robot {
 
     // The Update Thread
     // Should be called as fast as possible. Does all reads and writes to the rev hub
-    class UpdateThread implements Runnable {
+    class UpdateThread implements Runnable{
 
         Robot robot;
 
@@ -76,7 +74,9 @@ public class Robot {
 
         @Override
         public void run() {
-            robot.update();
+            if(!(cycle <= 1)) {
+                robot.update();
+            }
         }
     }
 
