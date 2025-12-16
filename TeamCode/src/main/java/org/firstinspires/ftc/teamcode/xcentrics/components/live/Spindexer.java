@@ -77,7 +77,7 @@ public class Spindexer extends Component {
         }
     }
 
-    public void updateTelemetry(Telemetry telemetry, TelemetryManager telemetryManager){
+    /*public void updateTelemetry(Telemetry telemetry){
         super.updateTelemetry(telemetry);
 
         addData("Can spin: ", canSpin);
@@ -89,7 +89,7 @@ public class Spindexer extends Component {
 
 
     }
-
+*/
     public void shutdown(){
         super.shutdown();
         canSpin = false;
