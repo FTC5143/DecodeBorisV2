@@ -14,10 +14,10 @@ public class basic extends LinearOpMode {
         DcMotor Fl = hardwareMap.get(DcMotor.class,"FL"),Bl = hardwareMap.get(DcMotor.class,"BL"),Br = hardwareMap.get(DcMotor.class,"BR"),Fr = hardwareMap.get(DcMotor.class,"FR");
 
         waitForStart();
-        Fl.setPower(-1);
-        Bl.setPower(-1);
-        Br.setPower(1);
-        Fr.setPower(1);
+        Fl.setPower(1);
+        Bl.setPower(1);
+        Br.setPower(-1);
+        Fr.setPower(-1);
         sleep(500);
         Fl.setPower(0);
         Bl.setPower(0);

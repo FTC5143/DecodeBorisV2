@@ -26,17 +26,17 @@ public class Constants {
                 .build();
     }
     public static ThreeWheelIMUConstants localizerConstants = new ThreeWheelIMUConstants()
-            .forwardTicksToInches(.001989436789)
-            .strafeTicksToInches(.001989436789)
-            .turnTicksToInches(.001989436789)
-            .leftPodY(1)
-            .rightPodY(-1)
-            .strafePodX(-2.5)
-            .leftEncoder_HardwareMapName("FL")
-            .rightEncoder_HardwareMapName("BR")
-            .strafeEncoder_HardwareMapName("FR")
-            .leftEncoderDirection(Encoder.REVERSE)
-            .rightEncoderDirection(Encoder.REVERSE)
+            .forwardTicksToInches(.004634574217659694)
+            .strafeTicksToInches(0.001954888478995178)
+            .turnTicksToInches(0.001971553435306175)
+            .leftPodY(7)
+            .rightPodY(-7)
+            .strafePodX(-7)
+            .leftEncoder_HardwareMapName("FR")
+            .rightEncoder_HardwareMapName("FL")
+            .strafeEncoder_HardwareMapName("BR")
+            .leftEncoderDirection(Encoder.FORWARD)
+            .rightEncoderDirection(Encoder.FORWARD)
             .strafeEncoderDirection(Encoder.REVERSE)
             .IMU_HardwareMapName("imu")
             .IMU_Orientation(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
@@ -49,6 +49,6 @@ public class Constants {
             .leftFrontMotorName("FL")
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE);
+            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD);
 }

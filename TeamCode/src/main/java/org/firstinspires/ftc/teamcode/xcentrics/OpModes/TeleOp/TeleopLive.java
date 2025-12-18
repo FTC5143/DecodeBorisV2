@@ -48,12 +48,11 @@ public class TeleopLive extends LiveTeleopBase{
         robotPose = robot.follower.getPose();
         //gamepad controls
                     robot.follower.setTeleOpDrive(
-                -gamepad1.right_stick_x ,
-                -gamepad1.left_stick_x,
-                           - gamepad1.left_stick_y,
-                            true
-                            // Robot Centric
-        );
+                            -gamepad1.left_stick_y,
+                            -gamepad1.left_stick_x,
+                            -gamepad1.right_stick_x,
+                            true // Robot Centric
+                    );
                     if(gamepad1.x){
                         if(robot.isRed()){
                             robot.follower.setPose(new Pose(9,9,Math.toRadians(0)));

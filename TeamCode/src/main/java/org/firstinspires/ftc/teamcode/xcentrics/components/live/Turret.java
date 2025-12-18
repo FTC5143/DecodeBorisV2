@@ -164,12 +164,13 @@ public class Turret extends Component {
 
             if(autoAim) {
                 computeTurretTarget();
+                computeFlySpeed();
             }
             if(Debug){
                 robot.follower.setPose(testPose);
             }
             computeHoodAngle();
-            computeFlySpeed();
+
             turretPID.setTargetPosition(turretTarget);
             turretPID.updatePosition(turret.motor.getCurrentPosition());
         power = turretPID.run();
@@ -177,6 +178,7 @@ public class Turret extends Component {
             turret.queue_power(turretPID.run());
         } else {
             turret.queue_power(0);
+            fly.setVelocity(0);
         }
         computeReadyState();
         updateAll();
