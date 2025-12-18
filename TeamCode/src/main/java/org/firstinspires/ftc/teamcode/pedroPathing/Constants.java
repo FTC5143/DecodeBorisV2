@@ -35,9 +35,9 @@ public class Constants {
             .leftEncoder_HardwareMapName("FL")
             .rightEncoder_HardwareMapName("BR")
             .strafeEncoder_HardwareMapName("FR")
-            .leftEncoderDirection(Encoder.FORWARD)
-            .rightEncoderDirection(Encoder.FORWARD)
-            .strafeEncoderDirection(Encoder.FORWARD)
+            .leftEncoderDirection(Encoder.REVERSE)
+            .rightEncoderDirection(Encoder.REVERSE)
+            .strafeEncoderDirection(Encoder.REVERSE)
             .IMU_HardwareMapName("imu")
             .IMU_Orientation(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
 

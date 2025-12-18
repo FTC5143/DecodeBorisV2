@@ -39,7 +39,7 @@ public class Robot {
 
     HardwareMap hwmap;
     public LinearOpMode opmode;
-    public static boolean isRed = false;
+    public static boolean isRed = true;
 
     ArrayList<Component> components = new ArrayList<>();
 

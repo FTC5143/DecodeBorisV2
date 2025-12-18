@@ -60,14 +60,14 @@ class TurretConfig {
     public static boolean canSpin = true;           // flywheel allowed to spin
     public static Pose testPose = new Pose(9,9,Math.toRadians(0));
     public static  double power = 0;
-    public static PIDFCoefficients turretPIDCoef = new PIDFCoefficients(0.001,0,0,0),
+    public static PIDFCoefficients turretPIDCoef = new PIDFCoefficients(0.01,0,0,0),
     flyPIDFCoef = new PIDFCoefficients(0,0,0,0);
     public static double targetVelocity = 999999999;;
-    public static double a = 49.69,b =-0.31465 ,c = 0.000501507;
 }
 @Configurable
 
 public class Turret extends Component {
+    public static double a = 0.5 ,b =0 ,c = 0.0;
 
     // ------------------------------
     // Hardware
@@ -173,8 +173,11 @@ public class Turret extends Component {
             turretPID.setTargetPosition(turretTarget);
             turretPID.updatePosition(turret.motor.getCurrentPosition());
         power = turretPID.run();
-        turret.queue_power(turretPID.run());
-
+        if (autoAim) {
+            turret.queue_power(turretPID.run());
+        } else {
+            turret.queue_power(0);
+        }
         computeReadyState();
         updateAll();
     }

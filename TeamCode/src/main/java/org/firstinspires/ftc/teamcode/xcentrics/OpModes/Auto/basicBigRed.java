@@ -6,6 +6,7 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 
+
 @Autonomous(name = "basicBigRed")
 public class basicBigRed extends LiveAutoBase {
     private final Pose startPose = new Pose(116.6,131.7,r(37)),
@@ -17,24 +18,7 @@ public class basicBigRed extends LiveAutoBase {
     private double r(double r){
         return Math.toRadians(r);
     }
-    private final PathChain scorePreload = robot.follower.pathBuilder()
-            .addPath(new BezierLine(startPose, scorePose))
-            .setLinearHeadingInterpolation(startPose.getHeading(),scorePose.getHeading())
-            .build()
-            ,travelToPattern = robot.follower.pathBuilder()
-            .addPath(new BezierLine(scorePose,travlePose))
-            .setConstantHeadingInterpolation(travlePose.getHeading())
-            .addPath(new BezierLine(travlePose,patternPose))
-            .setConstantHeadingInterpolation(patternPose.getHeading())
-            .build()
-            , scorePattern = robot.follower.pathBuilder()
-            .addPath(new BezierLine(patternPose,scorePose))
-            .setConstantHeadingInterpolation(scorePose.getHeading())
-            .build()
-            ,park = robot.follower.pathBuilder()
-            .addPath(new BezierLine(scorePose,parkPose))
-            .setConstantHeadingInterpolation(parkPose.getHeading())
-            .build();
+
     private int pathState = 0;
     @Override
     public void on_init() {
@@ -43,7 +27,8 @@ public class basicBigRed extends LiveAutoBase {
 
     @Override
     public void on_start() {
-
+        robot.follower.setStartingPose(startPose);
+        robot.intake.setPower(1);
     }
 
     @Override
@@ -54,11 +39,33 @@ public class basicBigRed extends LiveAutoBase {
     @Override
     public void on_loop() {
         autoPathUpdate();
+
         robot.addData("PathState",pathState);
         robot.follower.setMaxPower(0.5);
+        robot.follower.update();
     }
 
     public void autoPathUpdate(){
+        final PathChain scorePreload = robot.follower.pathBuilder()
+                .addPath(new BezierLine(startPose, scorePose))
+                .setLinearHeadingInterpolation(startPose.getHeading(),
+                        scorePose.getHeading())
+                .build()
+                ,travelToPattern = robot.follower.pathBuilder()
+                .addPath(new BezierLine(scorePose,travlePose))
+                .setConstantHeadingInterpolation(travlePose.getHeading())
+                .addPath(new BezierLine(travlePose,patternPose))
+                .setConstantHeadingInterpolation(patternPose.getHeading())
+                .build()
+                , scorePattern = robot.follower.pathBuilder()
+                .addPath(new BezierLine(patternPose,scorePose))
+                .setConstantHeadingInterpolation(scorePose.getHeading())
+                .build()
+                ,park = robot.follower.pathBuilder()
+                .addPath(new BezierLine(scorePose,parkPose))
+                .setConstantHeadingInterpolation(parkPose.getHeading())
+                .build();
+
         switch (pathState){
             case 0:
                 robot.follower.followPath(scorePreload);
@@ -105,10 +112,6 @@ public class basicBigRed extends LiveAutoBase {
         }
     }
     public void shoot1ball(){
-        robot.intake.setPower(1);
         robot.turret.launch();
-        robot.intake.setPower(0);
-        robot.turret.resetKicker();
-        halt(0.5);
     }
 }

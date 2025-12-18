@@ -21,25 +21,7 @@ public class basicBigBlue extends LiveAutoBase{
         private double r(double r){
             return Math.toRadians(r);
         }
-        private Follower follower = Constants.createFollower(hardwareMap);
-        private final PathChain scorePreload = follower.pathBuilder()
-                .addPath(new BezierLine(startPose, scorePose))
-                .setLinearHeadingInterpolation(startPose.getHeading(),scorePose.getHeading())
-                .build()
-                ,travelToPattern = follower.pathBuilder()
-                .addPath(new BezierLine(scorePose,travlePose))
-                .setConstantHeadingInterpolation(travlePose.getHeading())
-                .addPath(new BezierLine(travlePose,patternPose))
-                .setConstantHeadingInterpolation(patternPose.getHeading())
-                .build()
-                , scorePattern = follower.pathBuilder()
-                .addPath(new BezierLine(patternPose,scorePose))
-                .setConstantHeadingInterpolation(scorePose.getHeading())
-                .build()
-                ,park = follower.pathBuilder()
-                .addPath(new BezierLine(scorePose,parkPose))
-                .setConstantHeadingInterpolation(parkPose.getHeading())
-                .build();
+
         private int pathState = 0;
         @Override
         public void on_init() {
@@ -48,7 +30,8 @@ public class basicBigBlue extends LiveAutoBase{
 
         @Override
         public void on_start() {
-
+            robot.follower.setStartingPose(startPose);
+            robot.intake.setPower(1);
         }
 
         @Override
@@ -58,20 +41,42 @@ public class basicBigBlue extends LiveAutoBase{
 
         @Override
         public void on_loop() {
-            autoPathUpdate();
-            robot.addData("PathState",pathState);
-            robot.follower.setMaxPower(0.5);
+            while(opModeIsActive() && !isStopRequested()) {
+                robot.follower.update();
+                autoPathUpdate();
+                robot.addData("PathState", pathState);
+                robot.follower.setMaxPower(0.5);
+            }
         }
 
         public void autoPathUpdate(){
+             final PathChain scorePreload = robot.follower.pathBuilder()
+                    .addPath(new BezierLine(startPose, scorePose))
+                    .setLinearHeadingInterpolation(startPose.getHeading(),scorePose.getHeading())
+                    .build()
+                    ,travelToPattern = robot.follower.pathBuilder()
+                    .addPath(new BezierLine(scorePose,travlePose))
+                    .setConstantHeadingInterpolation(travlePose.getHeading())
+                    .addPath(new BezierLine(travlePose,patternPose))
+                    .setConstantHeadingInterpolation(patternPose.getHeading())
+                    .build()
+                    , scorePattern = robot.follower.pathBuilder()
+                    .addPath(new BezierLine(patternPose,scorePose))
+                    .setConstantHeadingInterpolation(scorePose.getHeading())
+                    .build()
+                    ,park = robot.follower.pathBuilder()
+                    .addPath(new BezierLine(scorePose,parkPose))
+                    .setConstantHeadingInterpolation(parkPose.getHeading())
+                    .build();
+
             switch (pathState){
                 case 0:
-                    follower.followPath(scorePreload);
+                    robot.follower.followPath(scorePreload);
                     pathState++;
                     break;
 
                 case 1:
-                    if(!follower.isBusy()){
+                    if(!robot.follower.isBusy()){
                         shoot1ball();
                         shoot1ball();
                         shoot1ball();
@@ -81,20 +86,20 @@ public class basicBigBlue extends LiveAutoBase{
                     }
 
                 case 2:
-                    follower.followPath(travelToPattern);
+                    robot.follower.followPath(travelToPattern);
                     robot.intake.setPower(1);
                     pathState++;
                     break;
 
                 case 3:
-                    if(!follower.isBusy()){
-                        follower.followPath(scorePattern);
+                    if(!robot.follower.isBusy()){
+                        robot.follower.followPath(scorePattern);
                         pathState++;
                         break;
                     }
 
                 case 4:
-                    if(!follower.isBusy()){
+                    if(!robot.follower.isBusy()){
                         shoot1ball();
                         shoot1ball();
                         shoot1ball();
@@ -104,15 +109,12 @@ public class basicBigBlue extends LiveAutoBase{
                     }
 
                 case 5:
-                    follower.followPath(park);
+                    robot.follower.followPath(park);
                     pathState++;
                     break;
             }
         }
         public void shoot1ball(){
-            robot.intake.setPower(1);
             robot.turret.launch();
-            robot.intake.setPower(0);
-            halt(0.5);
         }
     }

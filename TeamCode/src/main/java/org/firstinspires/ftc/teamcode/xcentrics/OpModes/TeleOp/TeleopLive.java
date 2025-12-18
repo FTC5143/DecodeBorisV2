@@ -33,6 +33,7 @@ public class TeleopLive extends LiveTeleopBase{
         } else {
             robot.follower.setStartingPose(new Pose(81,9,Math.toRadians(0)));
         }
+        robot.turret.autoAim = false;
     }
 
     @Override
@@ -68,26 +69,39 @@ public class TeleopLive extends LiveTeleopBase{
         //gamepad 1 controls
 
         if(gamepad2.dpad_up){
-            robot.intake.setPower(-1);
+            robot.turret.a += 0.1;
+            halt(0.1);
         } else if(gamepad2.dpad_down){
+            robot.turret.a -= 0.1;
+            halt(0.1);
+        }
+
+        if(gamepad2.left_bumper){
+            robot.intake.setPower(-1);
+        } else if(gamepad2.right_bumper){
             robot.intake.setPower(1);
         } else {
             robot.intake.setPower(0);
         }
-
 
         //launch ball(s)
 
         if(gamepad2.a){
             robot.turret.launch();
         }
+        if(gamepad2.x && !robot.turret.autoAim){
+            robot.turret.autoAim = true;
+        } else if(gamepad2.x && robot.turret.autoAim){
+            robot.turret.autoAim = false;
+        }
 
         if(gamepad2.dpad_left) {
            robot.turret.turretOffset +=1;
+           halt(0.005);
         } else if(gamepad2.dpad_right){
             robot.turret.turretOffset -= 1;
+            halt(0.005);
         }
-
 
 
     }
