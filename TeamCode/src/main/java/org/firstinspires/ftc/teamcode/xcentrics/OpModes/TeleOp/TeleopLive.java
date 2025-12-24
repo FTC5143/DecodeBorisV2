@@ -10,8 +10,6 @@ import org.firstinspires.ftc.teamcode.xcentrics.util.Math.TriangleZoneChecker;
 @TeleOp(name = "TeleOp")
 
 public class TeleopLive extends LiveTeleopBase{
-    private static boolean isInTriangle = false; //Are we within a triangle we can shoot in?
-    private static boolean b1 = false;
 
     //small triangle points
     Pose sA, sB = new Pose(72,31), sC;
@@ -77,6 +75,7 @@ public class TeleopLive extends LiveTeleopBase{
 
         if(gamepad2.left_bumper){
             robot.intake.setPower(-1);
+            robot.spin.intakeOne();
         } else if(gamepad2.right_bumper){
             robot.intake.setPower(1);
         } else {
@@ -86,7 +85,7 @@ public class TeleopLive extends LiveTeleopBase{
         //launch ball(s)
 
         if(gamepad2.a){
-            robot.turret.launch();
+            robot.spin.shoot();
         }
         if(gamepad2.x && !robot.turret.autoAim){
             robot.turret.autoAim = true;
@@ -103,12 +102,5 @@ public class TeleopLive extends LiveTeleopBase{
         }
 
 
-    }
-    public void shoot1ball(){
-        robot.intake.setPower(1);
-        robot.turret.launch();
-        robot.intake.setPower(0);
-        robot.turret.resetKicker();
-        halt(0.5);
     }
 }

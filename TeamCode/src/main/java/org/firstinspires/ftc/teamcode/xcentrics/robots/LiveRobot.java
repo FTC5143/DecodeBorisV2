@@ -7,15 +7,19 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Camera;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Intake;
+import org.firstinspires.ftc.teamcode.xcentrics.components.live.Spin;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Spindexer;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Turret;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 public class LiveRobot extends Robot{
     public Follower follower;
     public Intake intake;
     public Spindexer spindexer;
     public Turret turret;
     public Camera camera;
+    public Spin spin;
+    public JSONObject robotJson;
     {
         name = "BORISV2";
     }
@@ -23,8 +27,9 @@ public class LiveRobot extends Robot{
         super(opMode);
         follower    = Constants.createFollower(hwmap);
         intake      = new Intake(this);
-        spindexer   = new Spindexer(this);
+        //spindexer   = new Spindexer(this);
         turret      = new Turret(this,this);
+        spin        = new Spin(this,this);
     }
 
     @Override
@@ -32,9 +37,30 @@ public class LiveRobot extends Robot{
         super.update();
         follower.update();
     }
+    public void startup(){
+        try {
+            isRed = robotJson.getBoolean("isRed");
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Override
     public void updateTelemetry(){
         super.updateTelemetry();
+    }
+    public void switchAlliance(boolean b) throws JSONException {
+        robotJson.put("isRed",b);
+    }
+    public void setPattern(Camera.Pattern pattern) throws JSONException{
+        robotJson.put("pattern",pattern);
+    }
+    public Camera.Pattern getPattern(){
+        try {
+            return (Camera.Pattern) robotJson.get("pattern");
+        } catch (JSONException e){
+            return Camera.Pattern.PPG;
+        }
     }
 }

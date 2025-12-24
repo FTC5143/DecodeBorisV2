@@ -7,6 +7,9 @@ repositories {
 }
 
 dependencies {
+    //json
+    implementation 'org.json:json:20210307' // Update to the latest version
+
     implementation 'org.firstinspires.ftc:Inspection:11.0.0'
     implementation 'org.firstinspires.ftc:Blocks:11.0.0'
     implementation 'org.firstinspires.ftc:RobotCore:11.0.0'

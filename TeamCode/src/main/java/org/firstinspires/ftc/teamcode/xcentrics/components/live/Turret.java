@@ -42,9 +42,6 @@ class TurretConfig {
     public static boolean angleReady = false;
 
     // ------------------------------
-    // Anti-Hit System
-    // ------------------------------
-    // ------------------------------
     // Turret Encoder Configuration
     // ------------------------------
 

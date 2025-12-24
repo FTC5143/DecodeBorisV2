@@ -4,16 +4,22 @@ import static org.firstinspires.ftc.teamcode.xcentrics.components.live.Spindexer
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.SpindexerConfig.I;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.SpindexerConfig.artifacts;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.SpindexerConfig.ballTicks;
+import static org.firstinspires.ftc.teamcode.xcentrics.components.live.SpindexerConfig.blueID;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.SpindexerConfig.currentPosition;
+import static org.firstinspires.ftc.teamcode.xcentrics.components.live.SpindexerConfig.redID;
+import static org.firstinspires.ftc.teamcode.xcentrics.components.live.SpindexerConfig.spinPIDcoef;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.canSpin;
 
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.TelemetryManager;
+import com.pedropathing.control.PIDFCoefficients;
+import com.pedropathing.control.PIDFController;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -23,26 +29,27 @@ import org.firstinspires.ftc.teamcode.xcentrics.util.qus.CRServoQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.SpindexerConfig.P;
 @Configurable
-class SpindexerConfig{
-    public static int[] ballTicks = {0,1000,2000};
+class SpindexerConfig {
+    public static int[] ballTicks = {0, 1000, 2000};
     public static double P = 0, I = 0, D = 0;
     public static Artifact[] artifacts = new Artifact[3];
     public static double currentPosition = 0;
+    public static double blueID = 0, redID = 1;
+    public static PIDFCoefficients spinPIDcoef = new PIDFCoefficients(0,0,0,0);
 }
-enum Artifact{
-    GREEN,
-    PURPLE,
-    EMPTY
-}
+
+enum Artifact{GREEN, PURPLE, EMPTY}
+enum spinPos{ONE,TWO,TREE,SPINING}
 
 public class Spindexer extends Component {
     /// CRServos ///
     private CRServoQUS spin;
     /// Encoders ///
-    private DcMotor encoder;
+    private DcMotorEx encoder;
     /// Camera ///
     private HuskyLens huskyLens;
-    private MiniPID pid;
+
+    private PIDFController pid;
     {
         name = "Spindexer";
     }
@@ -54,13 +61,13 @@ public class Spindexer extends Component {
         super.registerHardware(hardwareMap);
         spin = new CRServoQUS(hardwareMap.get(CRServo.class,"Spin"));
         huskyLens = hardwareMap.get(HuskyLens.class,"hl2");
-        encoder = hardwareMap.get(DcMotor.class,"FL");
+        encoder = hardwareMap.get(DcMotorEx.class,"FL");
     }
 
     public void startup(){
         super.startup();
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
-        pid = new MiniPID(P,I,D,0);
+        pid.setCoefficients(spinPIDcoef);
     }
 
     public void update(OpMode opMode){
@@ -77,7 +84,7 @@ public class Spindexer extends Component {
         }
     }
 
-    /*public void updateTelemetry(Telemetry telemetry){
+    public void updateTelemetry(Telemetry telemetry){
         super.updateTelemetry(telemetry);
 
         addData("Can spin: ", canSpin);
@@ -89,20 +96,20 @@ public class Spindexer extends Component {
 
 
     }
-*/
+
     public void shutdown(){
         super.shutdown();
         canSpin = false;
     }
     private HuskyLens.Block getBlock(){
-//        HuskyLens.Block[] blocks = huskyLens.blocks();
-//        for(HuskyLens.Block block: blocks){
-//            if(robot.isRed() && block.id == redGoalTagID){
-//                return block;
-//            } else if(!robot.isRed() && block.id == blueGoalTagID){
-//                return block;
-//            }
-//        }
+        HuskyLens.Block[] blocks = huskyLens.blocks();
+        for(HuskyLens.Block block: blocks){
+            if(robot.isRed() && block.id == redID){
+                return block;
+            } else if(!robot.isRed() && block.id == blueID){
+                return block;
+            }
+        }
         return null;
     }
     private Artifact getCurrentBall(){
@@ -117,17 +124,18 @@ public class Spindexer extends Component {
     }
     private void setCurrentBall(Artifact artifact){
         double currentPose = encoder.getCurrentPosition();
-        if(currentPose == ballTicks[1]){
+        if(currentPose % ballTicks[0] >= 2 || currentPose % ballTicks[0] <=2){
             artifacts[0] = artifact;
-        } else if(currentPose == ballTicks[2]){
+        } else if(currentPose == ballTicks[1]){
             artifacts[1] = artifact;
-        } else if(currentPose == ballTicks[3]){
+        } else if(currentPose == ballTicks[2]){
             artifacts[2] = artifact;
         }
     }
     private void clasify(){
+        halt(0.5);
         if(getBlock() == null){
-
+            setCurrentBall(Artifact.EMPTY);
         } else if(getBlock().id == 1){
             setCurrentBall(Artifact.PURPLE);
         } else if(getBlock().id == 2){
@@ -135,8 +143,9 @@ public class Spindexer extends Component {
         }
     }
     public void goToBall(int id){
-        if(id <= 2) {
-            spin.queue_power(pid.getOutput(encoder.getCurrentPosition(), ballTicks[id]));
+        if(id <= 0) {
+            pid.updateError(encoder.getCurrentPosition() % ballTicks[id] - encoder.getCurrentPosition());
+            spin.queue_power(pid.run());
         }
     }
     private void update(){
@@ -163,5 +172,6 @@ public class Spindexer extends Component {
     public void intake(){
         spin.queue_power(0.5);
     }
+
 
 }
