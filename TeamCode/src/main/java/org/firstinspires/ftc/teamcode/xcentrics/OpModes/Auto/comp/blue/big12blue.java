@@ -6,6 +6,7 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 
 import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.LiveAutoBase;
+import org.firstinspires.ftc.teamcode.xcentrics.components.live.Spin;
 
 public class big12blue extends LiveAutoBase {
     public static double wait = 2;
@@ -93,6 +94,7 @@ public class big12blue extends LiveAutoBase {
     @Override
     public void on_init() {
         robot.follower.setStartingPose(startPose);
+        robot.spin.setBalls(Spin.Ball.PURPLE, Spin.Ball.PURPLE,Spin.Ball.GREEN);
     }
 
     @Override

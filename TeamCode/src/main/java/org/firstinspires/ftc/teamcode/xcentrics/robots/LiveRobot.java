@@ -28,7 +28,7 @@ public class LiveRobot extends Robot{
     public LiveRobot(LinearOpMode opMode){
         super(opMode);
         follower    = Constants.createFollower(hwmap);
-        intake      = new Intake(this);
+        intake      = new Intake(this,this);
         //spindexer   = new Spindexer(this);
         turret      = new Turret(this,this);
         spin        = new Spin(this,this);

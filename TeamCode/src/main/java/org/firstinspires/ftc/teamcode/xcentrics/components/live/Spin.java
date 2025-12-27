@@ -61,6 +61,11 @@ public class Spin extends Component {
         encoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         zeroCount = 0;
     }
+    public void setBalls(Ball b1,Ball b2,Ball b3){
+        slots[0] = b1;
+        slots[1] = b2;
+        slots[2] = b3;
+    }
     public void startup(){
         super.startup();
         accum = 0;
@@ -70,7 +75,7 @@ public class Spin extends Component {
 
     public void update(OpMode opMode){
         super.update(opMode);
-
+        intakeOne();
         spin.queue_power(spinPID.run());
         spin.update();
     }

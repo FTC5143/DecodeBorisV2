@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.xcentrics.components.Component;
+import org.firstinspires.ftc.teamcode.xcentrics.robots.LiveRobot;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.DcMotorQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.CRServoQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
@@ -27,11 +28,13 @@ public class Intake extends Component {
 
     /// CRServos ///
     private CRServoQUS in1,in2;
+    private LiveRobot liveRobot;
     {
         name = "intake";
     }
-    public Intake(Robot robot) {
+    public Intake(Robot robot, LiveRobot liveRobot) {
         super(robot);
+        this.liveRobot = liveRobot;
     }
     public void registerHardware(HardwareMap hardwareMap){
         super.registerHardware(hardwareMap);
