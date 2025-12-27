@@ -210,7 +210,7 @@ public class Spin extends Component {
         goTo(mid);
 
         robot.turret.launch();
-
+        halt(0.5);
         if(slots[slotIndex] == Ball.PURPLE){
             purple--;
         }else if(slots[slotIndex] == Ball.GREEN){
