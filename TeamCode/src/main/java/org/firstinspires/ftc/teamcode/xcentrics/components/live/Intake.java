@@ -64,12 +64,23 @@ public class Intake extends Component {
 
         addData("Speed: ",speed);
     }
-    public void intake(Spindexer spindexer){
-        spindexer.intake();
-        setPower(speed);
-    }
     public void outtake(){
         setPower(-speed);
     }
-
+    public Runnable intake(){
+        return new Runnable() {
+            @Override
+            public void run() {
+                setPower(1);
+            }
+        };
+    }
+    public Runnable stopIntake(){
+        return new Runnable() {
+            @Override
+            public void run() {
+                setPower(0);
+            }
+        };
+    }
 }

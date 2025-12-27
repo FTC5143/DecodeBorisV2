@@ -69,7 +69,7 @@ public class Turret extends Component {
     // ------------------------------
     // Hardware
     // ------------------------------
-    private DcMotorEx fly;
+    private DcMotorEx fly1,fly2;
     private DcMotorQUS turret;
     private HuskyLens husky;
     public double turretOffset = 0;            // calibration offset
@@ -106,7 +106,8 @@ public class Turret extends Component {
     public void registerHardware(HardwareMap map) {
         super.registerHardware(map);
 
-        fly = map.get(DcMotorEx.class, "fly");
+        fly1 = map.get(DcMotorEx.class, "fly1");
+        fly2 = map.get(DcMotorEx.class,"fly2");
         turret = new DcMotorQUS(map.get(DcMotorEx.class, "turret"));
         turret.motor.setDirection(DcMotorSimple.Direction.REVERSE);
         husky = map.get(HuskyLens.class, "hl1");
@@ -127,7 +128,10 @@ public class Turret extends Component {
         turretPID = new PIDFController(turretPIDCoef);
         flyPID = new PIDFController(flyPIDFCoef);
 
-        fly.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        fly1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fly1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        fly2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         husky.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
         kicker.queue_position(1);
 
@@ -145,8 +149,8 @@ public class Turret extends Component {
         super.update(opMode);
 
         turretPID.setCoefficients(turretPIDCoef);
-        flyPID.setCoefficients(flyPIDFCoef);
-        fly.setVelocityPIDFCoefficients(flyP,flyI,flyD,0);
+        fly1.setVelocityPIDFCoefficients(flyP,flyI,flyD,0);
+        fly2.setVelocityPIDFCoefficients(flyP,flyI,flyD,0);
 
         updateTurretHeading();  // update turret heading relative to robot
 
@@ -175,7 +179,8 @@ public class Turret extends Component {
             turret.queue_power(turretPID.run());
         } else {
             turret.queue_power(0);
-            fly.setVelocity(0);
+            fly1.setVelocity(0);
+            fly2.setVelocity(0);
         }
         computeReadyState();
         updateAll();
@@ -195,12 +200,11 @@ public class Turret extends Component {
         addData("Turret Heading", turretHeading);
         addData("TargetTicks", turretTarget);
         addData("Distance", distance);
-        addData("FlyVel", fly.getVelocity());
+        addData("Fly1Vel", fly1.getVelocity());
+        addData("Fly2Vel",fly2.getVelocity());
         addData("FlyTargetVel",targetVelocity);
 
         addData("TurretTicks",turret.motor.getCurrentPosition());
-        addData("TurretPower",power);
-        addData("FlyPower",fly.getPower());
     }
 
     // ------------------------------
@@ -252,7 +256,8 @@ public class Turret extends Component {
         turretTarget = 0;
     }
     private void computeFlySpeed() {
-        fly.setVelocity(targetVelocity);
+        fly1.setVelocity(targetVelocity);
+        fly2.setVelocity(targetVelocity);
     }
     public void resetEncoder(){
         turret.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -277,12 +282,6 @@ public class Turret extends Component {
         updateAll();
     }
 
-    public void resetKicker() {
-        if (!canSpin) {
-            kicker.queue_position(1);
-            canSpin = true;
-        }
-    }
 
     // ------------------------------
     // Utilities
@@ -299,18 +298,25 @@ public class Turret extends Component {
         kicker.update();
         safety.update();
     }
-
-    private double lowPass(double input, double alpha) {
-        return prevFilteredTarget = alpha * input + (1 - alpha) * prevFilteredTarget;
-    }
-
-    private double clamp(double v, double min, double max) {
-        return Math.max(min, Math.min(max, v));
-    }
-
     @Override
     public void shutdown() {
         super.shutdown();
         safety.queue_position(safetyOn);
+    }
+    public Runnable aim(){
+        return new Runnable() {
+            @Override
+            public void run() {
+                autoAim = true;
+            }
+        };
+    }
+    public Runnable stopAim(){
+        return new Runnable() {
+            @Override
+            public void run() {
+                autoAim = false;
+            }
+        };
     }
 }

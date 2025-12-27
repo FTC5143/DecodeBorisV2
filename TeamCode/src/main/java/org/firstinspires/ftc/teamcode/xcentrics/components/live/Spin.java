@@ -101,6 +101,23 @@ public class Spin extends Component {
         targetCounts = target;
         spinPID.setTargetPosition(targetCounts);
     }
+    public void ejectPattern(){
+        if(robot.getPattern() == Camera.Pattern.PPG){
+            robot.spin.ejectPPG();
+        } else if(robot.getPattern() == Camera.Pattern.PGP){
+            robot.spin.ejectPGP();
+        } else {
+            robot.spin.ejectGPP();
+        }
+    }
+    public Runnable shootPattern(){
+        return new Runnable() {
+            @Override
+            public void run() {
+                ejectPattern();
+            }
+        };
+    }
 
     private Ball readColorAtIntake(){
         if(!ballPresentAtIntake()) return Ball.EMPTY;
