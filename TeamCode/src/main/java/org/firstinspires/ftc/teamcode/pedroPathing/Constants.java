@@ -33,7 +33,7 @@ public class Constants {
             .rightPodY(-7)
             .strafePodX(-7)
             .leftEncoder_HardwareMapName("FR")
-            .rightEncoder_HardwareMapName("FL")
+            .rightEncoder_HardwareMapName("BL")
             .strafeEncoder_HardwareMapName("BR")
             .leftEncoderDirection(Encoder.FORWARD)
             .rightEncoderDirection(Encoder.FORWARD)
@@ -47,8 +47,8 @@ public class Constants {
             .rightRearMotorName("BR")
             .leftRearMotorName("BL")
             .leftFrontMotorName("FL")
-            .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD);
 }

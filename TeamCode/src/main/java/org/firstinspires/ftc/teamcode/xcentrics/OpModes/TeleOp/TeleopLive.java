@@ -53,10 +53,9 @@ public class TeleopLive extends LiveTeleopBase{
         //driving
         if(!autoDrive) {
             robot.follower.setTeleOpDrive(
-                    -gamepad1.left_stick_y,
-                    -gamepad1.left_stick_x,
-                    -gamepad1.right_stick_x,
-                    true // Robot Centric
+                    0 + gamepad1.left_stick_y,
+                    0 + gamepad1.left_stick_x,
+                    0 + gamepad1.right_stick_x
             );
             if (gamepad1.x) {
                 if (robot.isRed()) {

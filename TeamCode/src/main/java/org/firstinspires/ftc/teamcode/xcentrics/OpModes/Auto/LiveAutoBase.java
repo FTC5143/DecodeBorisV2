@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.xcentrics.robots.LiveRobot;
+import org.json.JSONException;
 
 public abstract class LiveAutoBase extends LinearOpMode {
 
@@ -10,7 +11,11 @@ public abstract class LiveAutoBase extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new LiveRobot(this);
+        try {
+            robot = new LiveRobot(this);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
         // Start up the robot as soon as the program is initialized
         robot.startup();
         on_init();

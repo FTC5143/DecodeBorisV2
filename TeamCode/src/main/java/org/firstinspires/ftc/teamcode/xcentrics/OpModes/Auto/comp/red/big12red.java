@@ -57,7 +57,7 @@ public class big12red extends LiveAutoBase {
             .addPoseCallback(new Pose(43,85),robot.turret.aim(), 0.6)
 
             .build();
-    private final PathChain getSecondPattern = robot.follower.pathBuilder()
+   /* private final PathChain getSecondPattern = robot.follower.pathBuilder()
             .addPath(new BezierCurve(scorePose,
                     p21,
                     p22,
@@ -72,7 +72,7 @@ public class big12red extends LiveAutoBase {
                     new BezierLine()
             )
 
-            .build();
+            .build(); */
     private final PathChain emptyGate = robot.follower.pathBuilder()
             .addPath(
                     new BezierCurve(
@@ -185,7 +185,7 @@ public class big12red extends LiveAutoBase {
                 if(!robot.follower.isBusy()){
                     robot.spin.ejectPattern();
                     halt(wait);
-                    robot.follower.followPath(getSecondPattern);
+                   // robot.follower.followPath(getSecondPattern);
                     pathState++;
                     break;
                 }

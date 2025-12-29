@@ -31,7 +31,7 @@ class TurretConfig {
     // PID Configuration
     // ------------------------------
     //public static double TurretP = 0, TurretI = 0, TurretD = 0;
-  public static double flyP = 13, flyI = 0, flyD = 0;
+  public static double flyP = 25, flyI = 5, flyD = 0;
 
 
     // ------------------------------
@@ -52,14 +52,11 @@ class TurretConfig {
     // ------------------------------
     // Other Servo Positions
     // ------------------------------
-    public static double kickPos = 0, safetyOff = 0, safetyOn = 1;
-    //public static boolean aim = false;               // is turret tracking target
-    public static boolean canSpin = true;           // flywheel allowed to spin
+    //public static boolean aim = false;               // is turret tracking target     // flywheel allowed to spin
     public static Pose testPose = new Pose(9,9,Math.toRadians(0));
     public static  double power = 0;
-    public static PIDFCoefficients turretPIDCoef = new PIDFCoefficients(0.01,0,0,0),
-    flyPIDFCoef = new PIDFCoefficients(0,0,0,0);
-    public static double targetVelocity = 999999999;;
+    public static PIDFCoefficients turretPIDCoef = new PIDFCoefficients(0.01,0,0,0);
+    public static double targetVelocity = 2500;
 }
 @Configurable
 
@@ -74,18 +71,13 @@ public class Turret extends Component {
     private HuskyLens husky;
     public double turretOffset = 0;            // calibration offset
     private ServoQUS hood1, hood2, kicker, safety;
-
-   // private MiniPID flyPID;   // PID controllers
-    private PIDFController turretPID,flyPID;
+    private PIDFController turretPID = new PIDFController(turretPIDCoef);;
 
     private LiveRobot robot;             // reference to robot
 
     private Pose redGoal = new Pose(131,137), blueGoal = new Pose(12,136);      // goal positions
     public static double distance;             // distance to goal
-
-    private double lastHoodCmd = 0;     // previous hood angle
-    private double prevFilteredTarget = 0; // for low-pass filtering
-    public  boolean autoAim = true;
+    public static boolean autoAim = true;
     public static boolean resetEncoder = false;
     public static boolean Debug = false;
     public static double servoPos = 0;
@@ -125,8 +117,6 @@ public class Turret extends Component {
     public void startup() {
         super.startup();
 
-        turretPID = new PIDFController(turretPIDCoef);
-        flyPID = new PIDFController(flyPIDFCoef);
 
         fly1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fly1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -147,10 +137,8 @@ public class Turret extends Component {
     @Override
     public void update(OpMode opMode) {
         super.update(opMode);
-
         turretPID.setCoefficients(turretPIDCoef);
         fly1.setVelocityPIDFCoefficients(flyP,flyI,flyD,0);
-        fly2.setVelocityPIDFCoefficients(flyP,flyI,flyD,0);
 
         updateTurretHeading();  // update turret heading relative to robot
 
@@ -180,7 +168,6 @@ public class Turret extends Component {
         } else {
             turret.queue_power(0);
             fly1.setVelocity(0);
-            fly2.setVelocity(0);
         }
         computeReadyState();
         updateAll();
@@ -257,7 +244,6 @@ public class Turret extends Component {
     }
     private void computeFlySpeed() {
         fly1.setVelocity(targetVelocity);
-        fly2.setVelocity(targetVelocity);
     }
     public void resetEncoder(){
         turret.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -301,22 +287,11 @@ public class Turret extends Component {
     @Override
     public void shutdown() {
         super.shutdown();
-        safety.queue_position(safetyOn);
     }
     public Runnable aim(){
-        return new Runnable() {
-            @Override
-            public void run() {
-                autoAim = true;
-            }
-        };
+        return () -> autoAim = true;
     }
     public Runnable stopAim(){
-        return new Runnable() {
-            @Override
-            public void run() {
-                autoAim = false;
-            }
-        };
+        return () -> autoAim = false;
     }
 }

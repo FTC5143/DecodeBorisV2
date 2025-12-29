@@ -6,6 +6,7 @@ import android.util.ArrayMap;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.xcentrics.robots.LiveRobot;
+import org.json.JSONException;
 
 public abstract class LiveTeleopBase extends LinearOpMode {
 
@@ -15,7 +16,11 @@ public abstract class LiveTeleopBase extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new LiveRobot(this);
+        try {
+            robot = new LiveRobot(this);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
         robot.startup();
 
         on_init();

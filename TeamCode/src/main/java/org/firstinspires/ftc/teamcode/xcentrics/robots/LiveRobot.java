@@ -9,29 +9,31 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Camera;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Intake;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Spin;
-import org.firstinspires.ftc.teamcode.xcentrics.components.live.Spindexer;
+//import org.firstinspires.ftc.teamcode.xcentrics.components.live.Spindexer;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Turret;
 import org.json.JSONException;
 import org.json.JSONObject;
 public class LiveRobot extends Robot{
     public  Follower follower;
     public  Intake intake;
-    public  Spindexer spindexer;
+    //public  Spindexer spindexer;
     public  Turret turret;
     public  Camera camera;
     public  Spin spin;
-    public static JSONObject robotJson;
+    public static JSONObject robotJson = new JSONObject();
     public static Pose lastPose;
     {
         name = "BORISV2";
     }
-    public LiveRobot(LinearOpMode opMode){
+    public LiveRobot(LinearOpMode opMode) throws JSONException {
         super(opMode);
+        switchAlliance(true);
+        setPattern(Camera.Pattern.PPG);
         follower    = Constants.createFollower(hwmap);
         intake      = new Intake(this,this);
         //spindexer   = new Spindexer(this);
         turret      = new Turret(this,this);
-        spin        = new Spin(this,this);
+        //spin        = new Spin(this,this);
     }
 
     @Override
