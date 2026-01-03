@@ -1,30 +1,25 @@
-package org.firstinspires.ftc.teamcode.xcentrics.OpModes.TeleOp;
+package org.firstinspires.ftc.teamcode.xcentrics.OpModes.TeleOp.Comp;
 
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.Pose;
 
-import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
-import org.firstinspires.ftc.teamcode.xcentrics.components.live.Camera;
+import org.firstinspires.ftc.teamcode.xcentrics.OpModes.TeleOp.LiveTeleopBase;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Turret;
-import org.firstinspires.ftc.teamcode.xcentrics.robots.LiveRobot;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
-import org.firstinspires.ftc.teamcode.xcentrics.util.Math.TriangleZoneChecker;
 
 @TeleOp(name = "TeleOp")
 
-public class TeleopLive extends LiveTeleopBase{
+public class TeleopLive extends LiveTeleopBase {
 
     //small triangle points
-    Pose sA, sB = new Pose(72,31), sC;
 
     //robot pose
-    private Pose robotPose,redScorePose,blueScorePose;
+    private Pose redScorePose,blueScorePose;
     private boolean autoDrive = false,f1 = false;
     //triangle Checker
-    TriangleZoneChecker triangleChecker = new TriangleZoneChecker();
     @Override
     public void on_init() {
 
@@ -49,8 +44,6 @@ public class TeleopLive extends LiveTeleopBase{
     @Override
     public void on_loop() {
 
-        //check to see if the robot is within a triangle and do the apropreate thing
-        robotPose = robot.follower.getPose();
         //gamepad
         //driving
         if(!autoDrive) {

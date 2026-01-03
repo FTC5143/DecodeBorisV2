@@ -3,16 +3,11 @@ package org.firstinspires.ftc.teamcode.xcentrics.robots;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.teamcode.xcentrics.components.live.Camera;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Intake;
 
-//import org.firstinspires.ftc.teamcode.xcentrics.components.live.Spindexer;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Turret;
-import org.json.JSONException;
-import org.json.JSONObject;
 public class LiveRobot extends Robot{
     public  Follower follower;
     public  Intake intake;

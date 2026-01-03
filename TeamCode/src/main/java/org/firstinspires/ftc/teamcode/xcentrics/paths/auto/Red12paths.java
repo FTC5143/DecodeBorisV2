@@ -6,8 +6,6 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 
-import org.firstinspires.ftc.teamcode.xcentrics.paths.PathBase;
-
 public class Red12paths{
     public final Pose startPose = new Pose(116.5,132,Math.toRadians(36));
     Follower follower;
@@ -27,7 +25,7 @@ public class Red12paths{
     public double Wait14;
     public PathChain park;
 
-    public void  Paths(Follower follower) {
+    public void Paths() {
         scorePreload = follower
                 .pathBuilder()
                 .addPath(
@@ -139,5 +137,6 @@ public class Red12paths{
 
     public Red12paths(Follower follower){
         this.follower = follower;
+        Paths();
     }
 }
