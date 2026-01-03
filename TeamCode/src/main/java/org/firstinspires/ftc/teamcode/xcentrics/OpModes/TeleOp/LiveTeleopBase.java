@@ -17,7 +17,7 @@ public abstract class LiveTeleopBase extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot = new LiveRobot(this);
-
+        LiveRobot.isAuto = false;
 
             robot.startup();
             robot.intake.startup();
@@ -26,6 +26,7 @@ public abstract class LiveTeleopBase extends LinearOpMode {
             on_init();
 
         waitForStart();
+        robot.follower.setStartingPose(robot.getLastPose());
         on_start();
 
         while(opModeIsActive() && !isStopRequested()) {

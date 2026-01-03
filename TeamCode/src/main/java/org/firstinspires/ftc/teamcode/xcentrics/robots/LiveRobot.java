@@ -16,11 +16,7 @@ import org.json.JSONObject;
 public class LiveRobot extends Robot{
     public  Follower follower;
     public  Intake intake;
-    //public  Spindexer spindexer;
     public  Turret turret;
-    public  Camera camera;
-   // public  Spin spin;
-    public static JSONObject robotJson = new JSONObject();
     public static Pose lastPose;
     {
         name = "BORISV2";
@@ -38,6 +34,7 @@ public class LiveRobot extends Robot{
     public void update(){
         super.update();
         follower.update();
+        setLastPose(follower.getPose());
     }
     public void startup(){
         isRed = true;

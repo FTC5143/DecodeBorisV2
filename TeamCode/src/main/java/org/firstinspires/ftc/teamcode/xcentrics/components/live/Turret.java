@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.xcentrics.components.live;
 
 import com.bylazar.configurables.annotations.Configurable;
-;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.control.PIDFController;
 import com.pedropathing.geometry.Pose;
@@ -16,7 +15,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.LiveRobot;
-import org.firstinspires.ftc.teamcode.xcentrics.util.control.MiniPID;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.DcMotorQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.ServoQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.components.Component;
@@ -39,7 +37,6 @@ class TurretConfig {
     // ------------------------------
     public static boolean shooterReady = false;
     public static boolean velocityReady = false;
-    public static boolean angleReady = false;
 
     // ------------------------------
     // Turret Encoder Configuration
@@ -53,8 +50,8 @@ class TurretConfig {
     // Other Servo Positions
     // ------------------------------
     //public static boolean aim = false;               // is turret tracking target     // flywheel allowed to spin
-    public static Pose testPose = new Pose(9,9,Math.toRadians(0));
-    public static  double power = 0;
+   // public static Pose testPose = new Pose(9,9,Math.toRadians(0));
+    //public static  double power = 0;
     public static PIDFCoefficients turretPIDCoef = new PIDFCoefficients(0.01,0,0,0);
     public static double targetVelocity = 2500;
 }
@@ -66,20 +63,18 @@ public class Turret extends Component {
     // ------------------------------
     // Hardware
     // ------------------------------
-    private DcMotorEx fly1,fly2;
+    private DcMotorEx fly1;
     private DcMotorQUS turret;
-    private HuskyLens husky;
     public double turretOffset = 0;            // calibration offset
     private ServoQUS hood1, hood2, kicker, safety;
-    private PIDFController turretPID = new PIDFController(turretPIDCoef);;
+    private final PIDFController turretPID = new PIDFController(turretPIDCoef);
 
-    private LiveRobot robot;             // reference to robot
+    private final LiveRobot robot;             // reference to robot
 
-    private Pose redGoal = new Pose(131,137), blueGoal = new Pose(12,136);      // goal positions
+    private final Pose redGoal = new Pose(131,137), blueGoal = new Pose(12,136);      // goal positions
     public static double distance;             // distance to goal
     public static boolean autoAim = true;
     public static boolean resetEncoder = false;
-    public static boolean Debug = false;
     public static double servoPos = 0;
 
     {
@@ -99,10 +94,8 @@ public class Turret extends Component {
         super.registerHardware(map);
 
         fly1 = map.get(DcMotorEx.class, "fly1");
-        fly2 = map.get(DcMotorEx.class,"fly2");
         turret = new DcMotorQUS(map.get(DcMotorEx.class, "turret"));
         turret.motor.setDirection(DcMotorSimple.Direction.REVERSE);
-        husky = map.get(HuskyLens.class, "hl1");
 
         hood1 = new ServoQUS(map.get(Servo.class, "H1"));
         hood2 = new ServoQUS(map.get(Servo.class, "H2"));
@@ -120,13 +113,14 @@ public class Turret extends Component {
 
         fly1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fly1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        fly2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        husky.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+        fly1.setVelocityPIDFCoefficients(flyP,flyI,flyD,0);
         kicker.queue_position(1);
 
-        turret.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if(LiveRobot.isAuto) {
+            turret.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
         turret.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turretPID.setCoefficients(turretPIDCoef);
         turret.motor.setPower(0);
         updateAll();
     }
@@ -137,30 +131,20 @@ public class Turret extends Component {
     @Override
     public void update(OpMode opMode) {
         super.update(opMode);
-        turretPID.setCoefficients(turretPIDCoef);
-        fly1.setVelocityPIDFCoefficients(flyP,flyI,flyD,0);
+
+//        turretPID.setCoefficients(turretPIDCoef);
+//        fly1.setVelocityPIDFCoefficients(flyP,flyI,flyD,0);
 
         updateTurretHeading();  // update turret heading relative to robot
+        computeDistance(); //see how far we are
+        computeTurretTarget();
 
 
             if(resetEncoder){
                 resetEncoder();
                 resetEncoder = false;
             }
-
-
-            computeDistance();
-            computeTurretTarget();
-
-
-            if(Debug){
-                robot.follower.setPose(testPose);
-            }
             computeHoodAngle();
-
-            turretPID.setTargetPosition(turretTarget);
-            turretPID.updatePosition(turret.motor.getCurrentPosition());
-        power = turretPID.run();
 
         if (autoAim) {
             turret.queue_power(turretPID.run());
@@ -169,7 +153,7 @@ public class Turret extends Component {
             turret.queue_power(0);
             fly1.setVelocity(0);
         }
-        computeReadyState();
+
         updateAll();
     }
 
@@ -182,17 +166,16 @@ public class Turret extends Component {
 
         addLine("Shooter Ready: " + shooterReady);
         addLine("Velocity Ready: " + velocityReady);
-        addLine("Angle Ready: " + angleReady);
 
         addData("Turret Heading", turretHeading);
         addData("TargetTicks", turretTarget);
+        addData("TurretTicks",turret.motor.getCurrentPosition());
         addData("Distance", distance);
         addData("Fly1Vel", fly1.getVelocity());
-        addData("Fly2Vel",fly2.getVelocity());
         addData("FlyTargetVel",targetVelocity);
         addData("autoAim:", autoAim);
 
-        addData("TurretTicks",turret.motor.getCurrentPosition());
+
     }
 
     // ------------------------------
@@ -229,6 +212,11 @@ public class Turret extends Component {
         double maxTicks = 3917;
 
         turretTarget = Math.max(minTicks, Math.min(maxTicks, rawTicks));
+        turretPID.setTargetPosition(turretTarget);
+        turretPID.updatePosition(turret.motor.getCurrentPosition());
+        shooterReady = (turretPID.getError() <= 10);
+
+
     }
 
     // ------------------------------
@@ -239,24 +227,15 @@ public class Turret extends Component {
         hood1.queue_position(servoPos);
         hood2.queue_position(-servoPos);
     }
-    public void manualTurret(){
-        autoAim = false;
-        turretTarget = 0;
-    }
     private void computeFlySpeed() {
         fly1.setVelocity(targetVelocity);
+        velocityReady = Math.abs(fly1.getVelocity() - targetVelocity) <= 100;
     }
     public void resetEncoder(){
         turret.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turret.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-
-    // ------------------------------
-    // Ready State
-    // ------------------------------
-    private void computeReadyState() {
-    }
 
     // ------------------------------
     // Launch / Kicker
