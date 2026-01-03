@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Camera;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Intake;
-import org.firstinspires.ftc.teamcode.xcentrics.components.live.Spin;
+
 //import org.firstinspires.ftc.teamcode.xcentrics.components.live.Spindexer;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Turret;
 import org.json.JSONException;
@@ -19,16 +19,14 @@ public class LiveRobot extends Robot{
     //public  Spindexer spindexer;
     public  Turret turret;
     public  Camera camera;
-    public  Spin spin;
+   // public  Spin spin;
     public static JSONObject robotJson = new JSONObject();
     public static Pose lastPose;
     {
         name = "BORISV2";
     }
-    public LiveRobot(LinearOpMode opMode) throws JSONException {
+    public LiveRobot(LinearOpMode opMode) {
         super(opMode);
-        switchAlliance(true);
-        setPattern(Camera.Pattern.PPG);
         follower    = Constants.createFollower(hwmap);
         intake      = new Intake(this,this);
         //spindexer   = new Spindexer(this);
@@ -42,30 +40,13 @@ public class LiveRobot extends Robot{
         follower.update();
     }
     public void startup(){
-        try {
-            isRed = robotJson.getBoolean("isRed");
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+        isRed = true;
     }
 
 
     @Override
     public  void updateTelemetry(){
         super.updateTelemetry();
-    }
-    public void switchAlliance(boolean b) throws JSONException {
-        robotJson.put("isRed",b);
-    }
-    public void setPattern(Camera.Pattern pattern) throws JSONException{
-        robotJson.put("pattern",pattern);
-    }
-    public Camera.Pattern getPattern(){
-        try {
-            return (Camera.Pattern) robotJson.get("pattern");
-        } catch (JSONException e){
-            return Camera.Pattern.PPG;
-        }
     }
     public void setLastPose(Pose p){
         lastPose = p;

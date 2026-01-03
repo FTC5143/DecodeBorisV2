@@ -15,15 +15,16 @@ public abstract class LiveTeleopBase extends LinearOpMode {
     private ArrayMap<Double, Runnable> todo_tasks = new ArrayMap<>();
 
     @Override
-    public void runOpMode() throws InterruptedException {
-        try {
-            robot = new LiveRobot(this);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        robot.startup();
+    public void runOpMode() {
+        robot = new LiveRobot(this);
 
-        on_init();
+
+            robot.startup();
+            robot.intake.startup();
+            robot.turret.startup();
+            robot.addData("WORKS","Works");
+            on_init();
+
         waitForStart();
         on_start();
 

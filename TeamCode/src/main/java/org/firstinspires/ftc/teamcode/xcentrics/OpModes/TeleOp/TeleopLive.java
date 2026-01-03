@@ -8,7 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Camera;
+import org.firstinspires.ftc.teamcode.xcentrics.components.live.Turret;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.LiveRobot;
+import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 import org.firstinspires.ftc.teamcode.xcentrics.util.Math.TriangleZoneChecker;
 
 @TeleOp(name = "TeleOp")
@@ -19,7 +21,7 @@ public class TeleopLive extends LiveTeleopBase{
     Pose sA, sB = new Pose(72,31), sC;
 
     //robot pose
-    Pose robotPose,redScorePose,blueScorePose;
+    private Pose robotPose,redScorePose,blueScorePose;
     private boolean autoDrive = false,f1 = false;
     //triangle Checker
     TriangleZoneChecker triangleChecker = new TriangleZoneChecker();
@@ -36,7 +38,7 @@ public class TeleopLive extends LiveTeleopBase{
         } else {
             robot.follower.setStartingPose(new Pose(81,9,Math.toRadians(0)));
         }
-        robot.turret.autoAim = false;
+        Turret.autoAim = false;
     }
 
     @Override
@@ -53,9 +55,9 @@ public class TeleopLive extends LiveTeleopBase{
         //driving
         if(!autoDrive) {
             robot.follower.setTeleOpDrive(
-                    0 + gamepad1.left_stick_y,
-                    0 + gamepad1.left_stick_x,
-                    0 + gamepad1.right_stick_x
+                    0 - gamepad1.left_stick_y,
+                    0 - gamepad1.left_stick_x,
+                    0 - gamepad1.right_stick_x
             );
             if (gamepad1.x) {
                 if (robot.isRed()) {
@@ -65,9 +67,9 @@ public class TeleopLive extends LiveTeleopBase{
                 }
             }
             if (gamepad1.left_bumper) {
-                robot.isRed = false;
+                Robot.isRed = false;
             } else if (gamepad1.right_bumper) {
-                robot.isRed = true;
+                Robot.isRed = true;
             }
         } else if(!f1){
             if(robot.isRed()) {
@@ -96,16 +98,16 @@ public class TeleopLive extends LiveTeleopBase{
         //gamepad 1 controls
 
         if(gamepad2.dpad_up){
-            robot.turret.a += 0.1;
+            Turret.a += 0.1;
             halt(0.1);
         } else if(gamepad2.dpad_down){
-            robot.turret.a -= 0.1;
+            Turret.a -= 0.1;
             halt(0.1);
         }
 
         if(gamepad2.left_bumper){
             robot.intake.setPower(-1);
-            robot.spin.intakeOne();
+
         } else if(gamepad2.right_bumper){
             robot.intake.setPower(1);
         } else {
@@ -115,14 +117,16 @@ public class TeleopLive extends LiveTeleopBase{
         //launch ball(s)
 
         if(gamepad2.a){
-            robot.spin.shoot();
+            robot.turret.launch();
         }
 
         //auto aim
-        if(gamepad2.x && !robot.turret.autoAim){
-            robot.turret.autoAim = true;
-        } else if(gamepad2.x && robot.turret.autoAim){
-            robot.turret.autoAim = false;
+        if(gamepad2.x && !Turret.autoAim){
+            Turret.autoAim = true;
+            halt(0.2);
+        } else if(gamepad2.x && Turret.autoAim){
+            Turret.autoAim = false;
+            halt(0.2);
         }
 
         //turret offset
@@ -134,10 +138,6 @@ public class TeleopLive extends LiveTeleopBase{
             halt(0.005);
         }
 
-        //shoot pattern
-        if(gamepad2.a && gamepad2.left_bumper){
-            robot.spin.ejectPattern();
-        }
 
 
     }

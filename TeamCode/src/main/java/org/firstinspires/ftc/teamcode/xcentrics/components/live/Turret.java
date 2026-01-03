@@ -150,11 +150,9 @@ public class Turret extends Component {
 
 
             computeDistance();
+            computeTurretTarget();
 
-            if(autoAim) {
-                computeTurretTarget();
-                computeFlySpeed();
-            }
+
             if(Debug){
                 robot.follower.setPose(testPose);
             }
@@ -163,8 +161,10 @@ public class Turret extends Component {
             turretPID.setTargetPosition(turretTarget);
             turretPID.updatePosition(turret.motor.getCurrentPosition());
         power = turretPID.run();
+
         if (autoAim) {
             turret.queue_power(turretPID.run());
+            computeFlySpeed();
         } else {
             turret.queue_power(0);
             fly1.setVelocity(0);
@@ -190,6 +190,7 @@ public class Turret extends Component {
         addData("Fly1Vel", fly1.getVelocity());
         addData("Fly2Vel",fly2.getVelocity());
         addData("FlyTargetVel",targetVelocity);
+        addData("autoAim:", autoAim);
 
         addData("TurretTicks",turret.motor.getCurrentPosition());
     }

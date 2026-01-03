@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.xcentrics.components.live;
 
-import static org.firstinspires.ftc.teamcode.xcentrics.components.live.SpindexerConfig.blueID;
-import static org.firstinspires.ftc.teamcode.xcentrics.components.live.SpindexerConfig.redID;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.CameraConfig.*;
 
 import com.qualcomm.hardware.dfrobot.HuskyLens;

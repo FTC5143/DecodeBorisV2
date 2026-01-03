@@ -10,12 +10,8 @@ public abstract class LiveAutoBase extends LinearOpMode {
     protected LiveRobot robot;
 
     @Override
-    public void runOpMode() throws InterruptedException {
-        try {
+    public void runOpMode() {
             robot = new LiveRobot(this);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
         // Start up the robot as soon as the program is initialized
         robot.startup();
         on_init();
@@ -30,7 +26,6 @@ public abstract class LiveAutoBase extends LinearOpMode {
 
     // Called when init is pressed, runs once
     public abstract void on_init();
-
     // Called when start is pressed, runs once
     public abstract void on_start();
 

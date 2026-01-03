@@ -1,15 +1,17 @@
 //package org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.comp.blue;
 //
+//import com.bylazar.configurables.annotations.Configurable;
 //import com.pedropathing.geometry.BezierCurve;
 //import com.pedropathing.geometry.BezierLine;
 //import com.pedropathing.geometry.Pose;
 //import com.pedropathing.paths.PathChain;
 //
 //import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.LiveAutoBase;
-//import org.firstinspires.ftc.teamcode.xcentrics.components.live.Spin;
 //
+//@Configurable
 //public class big12blue extends LiveAutoBase {
 //    public static double wait = 2;
+//    public static double launchWait = 0.3;
 //    private final Pose startPose = new Pose(27.5,131.6,r(144));
 //
 //    //line endpoints
@@ -64,7 +66,8 @@
 //                    new BezierCurve(scorePose,s1,goToSecondPatternPose)
 //            )
 //            .setLinearHeadingInterpolation(scorePose.getHeading(), goToSecondPatternPose.getHeading())
-//            .addParametricCallback(0,setMaxPower(1))
+//            .build();
+//    private final PathChain goToSecondPattern = robot.follower.pathBuilder()
 //            .addPath(
 //                    new BezierLine(goToSecondPatternPose,pickup2ndPatternPose)
 //            )
@@ -72,17 +75,23 @@
 //            .addParametricCallback(0,robot.intake.intake())
 //            .addParametricCallback(0,setMaxPower(0.5))
 //            .build();
-//  /*  private final PathChain scoreSecondPattern = robot.follower.pathBuilder()
+//    private final PathChain scoreSecondPattern = robot.follower.pathBuilder()
 //            .addPath(
-//                    new BezierCurve()
+//                    new BezierCurve(pickup2ndPatternPose,scorePose)
 //            )
-//*/
+//            .setConstantHeadingInterpolation(pickup2ndPatternPose.getHeading())
+//            .addParametricCallback(0.2,robot.intake.stopIntake())
+//            .build();
+//    private final PathChain getThirdPattern = robot.follower.pathBuilder()
+//            .addPath(
+//                    new BezierLine(scorePose,goToThirdPatternPose)
+//            )
+//
 //    private static int pathState = 0;
 //
 //    @Override
 //    public void on_init() {
 //        robot.follower.setStartingPose(startPose);
-//        robot.spin.setBalls(Spin.Ball.PURPLE, Spin.Ball.PURPLE,Spin.Ball.GREEN);
 //    }
 //
 //    @Override
@@ -113,8 +122,7 @@
 //            case 1:
 //                if(!robot.follower.isBusy()){
 //                    if(robot.getPattern() != null){
-//                        robot.spin.ejectPattern();
-//                        halt(wait);
+//                        shoot3();
 //                        robot.follower.followPath(getFirstPattern);
 //                        pathState++;
 //                        break;
@@ -123,23 +131,22 @@
 //
 //            case 2:
 //                if(!robot.follower.isBusy()){
-//                    robot.follower.followPath(scoreFirstPattern);
+//                    robot.follower.followPath(emptyGate);
 //                    pathState++;
 //                    break;
 //                }
 //
 //            case 3:
-//                if(!robot.follower.isBusy()){
-//                    robot.spin.ejectPattern();
-//                    halt(wait);
-//                    robot.follower.followPath(getSecondPattern);
+//                if(!robot.follower.isBusy()){;
+//                    robot.follower.followPath(scoreFirstPattern);
 //                    pathState++;
 //                    break;
 //                }
 //
 //            case 4:
 //                if(!robot.follower.isBusy()){
-//                    robot.follower.followPath(emptyGate);
+//                    shoot3();
+//                    robot.follower.followPath(getSecondPattern);
 //                    pathState++;
 //                    break;
 //                }
@@ -153,8 +160,7 @@
 //
 //            case 6:
 //                if(!robot.follower.isBusy()){
-//                    robot.spin.ejectPattern();
-//                    halt(wait);
+//                    shoot3();
 //                    robot.follower.followPath(getThirdPattern);
 //                    pathState++;
 //                    break;
@@ -169,8 +175,7 @@
 //
 //            case 8:
 //                if(!robot.follower.isBusy()){
-//                    robot.spin.ejectPattern();
-//                    halt(wait);
+//                    shoot3();
 //                    robot.follower.followPath(park);
 //                    pathState++;
 //                    break;
@@ -188,5 +193,25 @@
 //
 //    private Runnable setMaxPower(double maxPower){
 //        return () -> robot.follower.setMaxPower(maxPower);
+//    }
+//    private void shoot3(){
+//        // 1
+//        robot.turret.launch();
+//        halt(launchWait);
+//        //get next one ready
+//        robot.intake.intake().run();
+//        halt(launchWait);
+//        //launch 2
+//        robot.intake.stopIntake().run();
+//        robot.turret.launch();
+//        halt(launchWait);
+//        //get next one ready
+//        robot.intake.intake().run();
+//        halt(launchWait);
+//
+//        //launch third one
+//        robot.intake.stopIntake().run();
+//        robot.turret.launch();
+//        halt(launchWait);
 //    }
 //}
