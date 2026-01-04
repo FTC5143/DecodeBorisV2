@@ -66,7 +66,7 @@ public class Turret extends Component {
     private DcMotorEx fly1;
     private DcMotorQUS turret;
     public double turretOffset = 0;            // calibration offset
-    private ServoQUS hood1, hood2, kicker, safety;
+    private ServoQUS hood1, kicker;
     private final PIDFController turretPID = new PIDFController(turretPIDCoef);
 
     private final LiveRobot robot;             // reference to robot
@@ -81,9 +81,9 @@ public class Turret extends Component {
         name = "turret";
     }
 
-    public Turret(Robot robot, LiveRobot live) {
+    public Turret(LiveRobot robot) {
         super(robot);
-        this.robot = live;
+        this.robot = robot;
     }
 
     // ------------------------------
@@ -98,9 +98,7 @@ public class Turret extends Component {
         turret.motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         hood1 = new ServoQUS(map.get(Servo.class, "H1"));
-        hood2 = new ServoQUS(map.get(Servo.class, "H2"));
         kicker = new ServoQUS(map.get(Servo.class, "kicker"));
-        safety = new ServoQUS(map.get(Servo.class, "safety"));
     }
 
     // ------------------------------
@@ -225,7 +223,6 @@ public class Turret extends Component {
     private void computeHoodAngle() {
         servoPos = a + (b * distance) + (c * c * distance);
         hood1.queue_position(servoPos);
-        hood2.queue_position(-servoPos);
     }
     private void computeFlySpeed() {
         fly1.setVelocity(targetVelocity);
@@ -260,9 +257,7 @@ public class Turret extends Component {
     private void updateAll() {
         turret.update();
         hood1.update();
-        hood2.update();
         kicker.update();
-        safety.update();
     }
     @Override
     public void shutdown() {

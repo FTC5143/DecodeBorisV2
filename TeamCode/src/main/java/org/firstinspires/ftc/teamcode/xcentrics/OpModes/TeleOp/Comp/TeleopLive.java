@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.xcentrics.OpModes.TeleOp.Comp;
 
-import com.pedropathing.geometry.BezierCurve;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.xcentrics.components.live.Turret;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 
 @TeleOp(name = "TeleOp")
-
 public class TeleopLive extends LiveTeleopBase {
 
     //small triangle points
@@ -52,27 +51,33 @@ public class TeleopLive extends LiveTeleopBase {
                     0 - gamepad1.left_stick_x,
                     0 - gamepad1.right_stick_x
             );
+
+
             if (gamepad1.x) {
-                if (robot.isRed()) {
+                if (Robot.isRed) {
                     robot.follower.setPose(new Pose(9, 9, Math.toRadians(0)));
                 } else {
                     robot.follower.setPose(new Pose(135, 9, Math.toRadians(180)));
                 }
             }
-            if (gamepad1.left_bumper) {
+
+            if (gamepad1.left_bumper && gamepad1.right_bumper && Robot.isRed) {
                 Robot.isRed = false;
-            } else if (gamepad1.right_bumper) {
+                halt(0.2);
+            } else if (gamepad1.right_bumper && gamepad1.left_bumper &&!Robot.isRed) {
                 Robot.isRed = true;
+                halt(0.2);
             }
+
         } else if(!f1){
             if(robot.isRed()) {
                 robot.follower.followPath(robot.follower.pathBuilder()
-                        .addPath(new BezierCurve(robot.follower::getPose,redScorePose))
+                        .addPath(new BezierLine(robot.follower::getPose,redScorePose))
                         .setLinearHeadingInterpolation(robot.follower.getPose().getHeading(), redScorePose.getHeading())
                         .build());
             } else {
                 robot.follower.followPath(robot.follower.pathBuilder()
-                        .addPath(new BezierCurve(robot.follower :: getPose, blueScorePose))
+                        .addPath(new BezierLine(robot.follower :: getPose, blueScorePose))
                         .setLinearHeadingInterpolation(robot.follower.getPose().getHeading(), blueScorePose.getHeading())
                         .build());
             }

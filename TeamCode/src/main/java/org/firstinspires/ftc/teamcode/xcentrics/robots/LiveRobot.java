@@ -14,15 +14,13 @@ public class LiveRobot extends Robot{
     public  Turret turret;
     public static Pose lastPose;
     {
-        name = "BORISV2";
+        name = "Daniel"; //from the writing on the wall (daniel chapter 5)
     }
     public LiveRobot(LinearOpMode opMode) {
         super(opMode);
         follower    = Constants.createFollower(hwmap);
-        intake      = new Intake(this,this);
-        //spindexer   = new Spindexer(this);
-        turret      = new Turret(this,this);
-        //spin        = new Spin(this,this);
+        intake      = new Intake(this);
+        turret      = new Turret(this);
     }
 
     @Override

@@ -28,13 +28,11 @@ public class Intake extends Component {
 
     /// CRServos ///
     private CRServoQUS in1,in2;
-    private LiveRobot liveRobot;
     {
         name = "intake";
     }
-    public Intake(Robot robot, LiveRobot liveRobot) {
+    public Intake(Robot robot) {
         super(robot);
-        this.liveRobot = liveRobot;
     }
     public void registerHardware(HardwareMap hardwareMap){
         super.registerHardware(hardwareMap);
@@ -62,7 +60,7 @@ public class Intake extends Component {
         intake.update();
     }
 
-    public void updateTelemetry(Telemetry telemetry, TelemetryManager telemetryManager){
+    public void updateTelemetry(Telemetry telemetry){
         super.updateTelemetry(telemetry);
 
         addData("Speed: ",speed);
@@ -71,19 +69,9 @@ public class Intake extends Component {
         setPower(-speed);
     }
     public Runnable intake(){
-        return new Runnable() {
-            @Override
-            public void run() {
-                setPower(1);
-            }
-        };
+        return () -> setPower(1);
     }
     public Runnable stopIntake(){
-        return new Runnable() {
-            @Override
-            public void run() {
-                setPower(0);
-            }
-        };
+        return () -> setPower(0);
     }
 }
