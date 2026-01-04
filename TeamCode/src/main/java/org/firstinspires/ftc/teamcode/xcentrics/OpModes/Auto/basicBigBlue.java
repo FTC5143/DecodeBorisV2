@@ -9,6 +9,7 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 
 @Autonomous(name = "basicBigBlue")
 public class basicBigBlue extends LiveAutoBase{
@@ -25,7 +26,7 @@ public class basicBigBlue extends LiveAutoBase{
         private int pathState = 0;
         @Override
         public void on_init() {
-            robot.isRed = false;
+            Robot.isRed = false;
         }
 
         @Override

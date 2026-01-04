@@ -120,6 +120,7 @@ public class Turret extends Component {
         turret.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turretPID.setCoefficients(turretPIDCoef);
         turret.motor.setPower(0);
+        hood1.queue_position(0.5);
         updateAll();
     }
 

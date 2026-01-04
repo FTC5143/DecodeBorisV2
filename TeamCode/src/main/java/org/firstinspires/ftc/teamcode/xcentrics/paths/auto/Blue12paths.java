@@ -7,7 +7,7 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 
 public class Blue12paths {
-    public Pose startPose = new Pose(27.5,161.6,Math.toRadians(144));
+    public Pose startPose = new Pose(27.5,131.6,Math.toRadians(144));
     public PathChain scorePreload;
     public double Wait2;
     public PathChain getFirstPattern;
@@ -38,7 +38,7 @@ public class Blue12paths {
         getFirstPattern = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(59.554, 83.515), new Pose(16.000, 83.000))
+                        new BezierLine(new Pose(59.554, 83.515), new Pose(17.000, 83.000))
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();

@@ -12,17 +12,22 @@ public abstract class LiveAutoBase extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-            robot = new LiveRobot(this);
+        robot = new LiveRobot(this);
         // Start up the robot as soon as the program is initialized
         robot.startup();
+        robot.turret.startup();
+        robot.intake.startup();
         on_init();
         waitForStart();
         on_start();
-        on_loop();
+        while(opModeIsActive() && !isStopRequested() && isStarted()) {
+            on_loop();
+            robot.follower.update();
+            robot.update();
+        }
         on_stop();
         // Shut the robot down as soon as the program is finished
         robot.shutdown();
-        stop();
     }
 
     // Called when init is pressed, runs once
@@ -38,13 +43,12 @@ public abstract class LiveAutoBase extends LinearOpMode {
 
     protected void halt(double seconds) {
         resetRuntime();
-        while (getRuntime() < seconds && opModeIsActive()) {}
+        while (getRuntime() < seconds && opModeIsActive()) {
+            robot.update();
+        }
     }
     protected void followPath(PathChain p){
         robot.follower.followPath(p);
-    }
-    protected void maxPower(double d){
-        robot.follower.setMaxPower(d);
     }
     protected void followPath(PathChain p, double m){
         robot.follower.setMaxPower(m);

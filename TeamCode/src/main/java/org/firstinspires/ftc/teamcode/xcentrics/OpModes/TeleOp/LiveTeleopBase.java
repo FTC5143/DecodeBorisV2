@@ -26,7 +26,7 @@ public abstract class LiveTeleopBase extends LinearOpMode {
             on_init();
 
         waitForStart();
-        robot.follower.setStartingPose(robot.getLastPose());
+       // robot.follower.setStartingPose(robot.getLastPose());
         on_start();
 
         while(opModeIsActive() && !isStopRequested()) {

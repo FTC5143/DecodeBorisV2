@@ -5,6 +5,7 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 
 
 @Autonomous(name = "basicBigRed")
@@ -22,7 +23,7 @@ public class basicBigRed extends LiveAutoBase {
     private int pathState = 0;
     @Override
     public void on_init() {
-        robot.isRed = true;
+        Robot.isRed = true;
     }
 
     @Override

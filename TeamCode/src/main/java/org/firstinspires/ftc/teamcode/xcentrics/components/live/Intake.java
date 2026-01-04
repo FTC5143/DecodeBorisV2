@@ -69,7 +69,7 @@ public class Intake extends Component {
         setPower(-speed);
     }
     public Runnable intake(){
-        return () -> setPower(1);
+        return () -> setPower(-1);
     }
     public Runnable stopIntake(){
         return () -> setPower(0);

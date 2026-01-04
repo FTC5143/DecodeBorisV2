@@ -12,7 +12,7 @@ public class LiveRobot extends Robot{
     public  Follower follower;
     public  Intake intake;
     public  Turret turret;
-    public static Pose lastPose;
+    public static Pose lastPose = new Pose(0,0,Math.toRadians(0));
     {
         name = "Daniel"; //from the writing on the wall (daniel chapter 5)
     }
@@ -27,7 +27,7 @@ public class LiveRobot extends Robot{
     public void update(){
         super.update();
         follower.update();
-        setLastPose(follower.getPose());
+       setLastPose(follower.getPose());
     }
     public void startup(){
         isRed = true;

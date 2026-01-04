@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.xcentrics.OpModes.TeleOp.Comp;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 
+import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
@@ -18,20 +19,18 @@ public class TeleopLive extends LiveTeleopBase {
     //robot pose
     private Pose redScorePose,blueScorePose;
     private boolean autoDrive = false,f1 = false;
+    private Timer opMode = new Timer();
     //triangle Checker
     @Override
     public void on_init() {
-
+        robot.follower.setStartingPose(robot.getLastPose());
     }
 
     @Override
     public void on_start() {
+        opMode.resetTimer();
         robot.follower.startTeleOpDrive();
-        if(!robot.isRed()) {
-            robot.follower.setStartingPose(new Pose(63 ,9,Math.toRadians(180)));
-        } else {
-            robot.follower.setStartingPose(new Pose(81,9,Math.toRadians(0)));
-        }
+
         Turret.autoAim = false;
     }
 
@@ -42,7 +41,10 @@ public class TeleopLive extends LiveTeleopBase {
 
     @Override
     public void on_loop() {
-
+        if(opMode.getElapsedTime() == 10000){
+            gamepad1.rumble(1000);
+            gamepad2.rumble(1000);
+        }
         //gamepad
         //driving
         if(!autoDrive) {
@@ -69,6 +71,12 @@ public class TeleopLive extends LiveTeleopBase {
                 halt(0.2);
             }
 
+            if (gamepad1.left_bumper){
+                robot.follower.setMaxPower(0.5);
+            } else {
+                robot.follower.setMaxPower(1);
+            }
+
         } else if(!f1){
             if(robot.isRed()) {
                 robot.follower.followPath(robot.follower.pathBuilder()
@@ -84,15 +92,15 @@ public class TeleopLive extends LiveTeleopBase {
             f1 = true;
         }
 
-        if(gamepad1.left_bumper){
-            autoDrive = true;
-            f1 = false;
-            halt(0.3);
-        }
-        if(gamepad1.right_bumper){
-            robot.follower.breakFollowing();
-            autoDrive = false;
-        }
+//        if(gamepad1.left_bumper){
+//            autoDrive = true;
+//            f1 = false;
+//            halt(0.3);
+//        }
+//        if(gamepad1.right_bumper){
+//            robot.follower.breakFollowing();
+//            autoDrive = false;
+//        }
         //gamepad 1 controls
 
         if(gamepad2.dpad_up){

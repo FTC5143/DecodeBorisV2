@@ -2,11 +2,7 @@ package org.firstinspires.ftc.teamcode.xcentrics.robots;
 
 
 
-import static org.firstinspires.ftc.teamcode.xcentrics.robots.RobotConfig.BULK_READ_1_CYCLE;
-import static org.firstinspires.ftc.teamcode.xcentrics.robots.RobotConfig.BULK_READ_2_CYCLE;
-import static org.firstinspires.ftc.teamcode.xcentrics.robots.RobotConfig.COMPONENT_UPDATE_CYCLE;
-import static org.firstinspires.ftc.teamcode.xcentrics.robots.RobotConfig.FREQ_CHECK_CYCLE;
-import static org.firstinspires.ftc.teamcode.xcentrics.robots.RobotConfig.TELEMETRY_CYCLE;
+
 import com.bylazar.telemetry.TelemetryManager;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
