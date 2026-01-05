@@ -30,7 +30,7 @@ public class bigTriangleRed12artifact extends LiveAutoBase {
     @Override
     public void on_init() {
         Robot.isRed = false;
-        paths = new Blue12paths(robot.follower);
+        paths = new Red12paths(robot.follower);
         robot.follower.setStartingPose(paths.startPose);
     }
 

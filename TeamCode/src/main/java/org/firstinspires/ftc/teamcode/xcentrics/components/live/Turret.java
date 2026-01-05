@@ -53,17 +53,17 @@ class TurretConfig {
    // public static Pose testPose = new Pose(9,9,Math.toRadians(0));
     //public static  double power = 0;
     public static PIDFCoefficients turretPIDCoef = new PIDFCoefficients(0.01,0,0,0);
-    public static double targetVelocity = 2500;
+    public static double targetVelocity = 1700;
 }
 @Configurable
 
 public class Turret extends Component {
-    public static double a = 0.5 ,b =0 ,c = 0.0;
+    public static double a = 0.3,b =0 ,c = 0.0;
 
     // ------------------------------
     // Hardware
     // ------------------------------
-    private DcMotorEx fly1;
+    public DcMotorEx fly1;
     private DcMotorQUS turret;
     public double turretOffset = 0;            // calibration offset
     private ServoQUS hood1, kicker;

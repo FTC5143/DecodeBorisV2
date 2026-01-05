@@ -65,6 +65,8 @@ public abstract class LiveTeleopBase extends LinearOpMode {
     }
     protected void halt(double seconds) {
         resetRuntime();
-        while (getRuntime() < seconds && opModeIsActive()) {}
+        while (getRuntime() < seconds && opModeIsActive()) {
+            robot.update();
+        }
     }
 }

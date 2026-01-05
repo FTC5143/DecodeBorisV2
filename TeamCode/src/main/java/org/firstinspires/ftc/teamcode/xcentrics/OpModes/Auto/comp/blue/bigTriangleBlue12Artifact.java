@@ -23,7 +23,7 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
     private Blue12paths paths;
     public  int pathState = 1;
     public static boolean b1;
-    public static double launchWait = 0.5;
+    public static double launchWait = 0.7;
     public static double maxSpeed = 1.5;
     public static double intakeSpeed = 0.5;
     @Override
@@ -73,7 +73,7 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
                         //follow pickup path slowly
                         followPath(paths.getFirstPattern, intakeSpeed);
                         //increment
-                        pathState++;
+                        pathState = 4;
                     break;
                 }
 
@@ -182,7 +182,8 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
                     robot.turret.stopAim().run();
 
                     //go to the park position
-                    followPath(paths.park,0.7);
+                    followPath(paths.park,1);
+                    pathState = 500;
                 }
         }
     }
@@ -192,30 +193,28 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
     private void shoot3(){
         // 1
         halt(0.5);
+        waitUntillSpin();
         robot.turret.launch();
         robot.update();
-        halt(launchWait);
         //get next one ready
         robot.intake.setPower(-1);
         robot.update();
         halt(launchWait);
         //launch 2
-        robot.intake.setPower(0);
-        robot.update();
+        waitUntillSpin();
         robot.turret.launch();
         robot.update();
-        halt(launchWait);
+
         //get next one ready
-        robot.intake.setPower(-1);
-        robot.update();
-        halt(launchWait);
+        halt(1.5);
 
         //launch third one
+
+        robot.update();
+        waitUntillSpin();
+        robot.turret.launch();
         robot.intake.setPower(0);
         robot.update();
-        robot.turret.launch();
-        robot.update();
-        halt(launchWait);
     }
     public void drawOnlyCurrent() {
         try {
@@ -224,6 +223,11 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
             Drawing.sendPacket();
         } catch (Exception e) {
             throw new RuntimeException("Drawing failed " + e);
+        }
+    }
+    private void waitUntillSpin(){
+        while((Math.abs(robot.turret.fly1.getVelocity() - 1600) <= 0) ){
+            robot.update();
         }
     }
 }

@@ -8,6 +8,7 @@ import com.pedropathing.paths.PathChain;
 
 public class Blue12paths {
     public Pose startPose = new Pose(27.5,131.6,Math.toRadians(144));
+    public Pose scorePose = new Pose(59,95);
     public PathChain scorePreload;
     public double Wait2;
     public PathChain getFirstPattern;
@@ -28,7 +29,7 @@ public class Blue12paths {
         scorePreload = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(27.500, 131.600), new Pose(59.554, 83.515))
+                        new BezierLine(new Pose(27.500, 131.600), scorePose)
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(144), Math.toRadians(180))
                 .build();
@@ -38,27 +39,27 @@ public class Blue12paths {
         getFirstPattern = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(59.554, 83.515), new Pose(17.000, 83.000))
+                        new BezierLine(scorePose, new Pose(17.000, 83.000))
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
-        emptyGate = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierCurve(
-                                new Pose(16.000, 83.000),
-                                new Pose(29.661, 79.095),
-                                new Pose(17.099, 75.257)
-                        )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(90))
-                .build();
+        //emptyGate = follower
+//                .pathBuilder()
+//                .addPath(
+//                        new BezierCurve(
+//                                new Pose(16.000, 83.000),
+//                                new Pose(29.661, 79.095),
+//                                new Pose(17.099, 75.257)
+//                        )
+//                )
+//                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(90))
+//                .build();
 
         scoreFirstPattern = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(17.099, 75.257), new Pose(59.670, 83.399))
+                        new BezierLine(new Pose(17., 83),scorePose)
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(90))
                 .build();
@@ -69,7 +70,7 @@ public class Blue12paths {
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                new Pose(59.670, 83.399),
+                               scorePose,
                                 new Pose(52.575, 72.233),
                                 new Pose(52.110, 58.507)
                         )
@@ -91,7 +92,7 @@ public class Blue12paths {
                         new BezierCurve(
                                 new Pose(9.189, 58.507),
                                 new Pose(49.667, 59.670),
-                                new Pose(59.787, 83.399)
+                               scorePose
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
@@ -102,7 +103,7 @@ public class Blue12paths {
         goToThirdPattern = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(59.787, 83.399), new Pose(44.898, 35.360))
+                        new BezierLine(scorePose, new Pose(44.898, 35.360))
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
@@ -128,7 +129,7 @@ public class Blue12paths {
         park = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(59.670, 83.515), new Pose(25.241, 70.023))
+                        new BezierLine(scorePose, new Pose(25.241, 70.023))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(270))
                 .build();
