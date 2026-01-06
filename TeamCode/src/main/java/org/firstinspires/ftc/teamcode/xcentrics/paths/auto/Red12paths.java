@@ -8,6 +8,7 @@ import com.pedropathing.paths.PathChain;
 
 public class Red12paths{
     public final Pose startPose = new Pose(116.5,132,Math.toRadians(36));
+    private final Pose scorePose = new Pose(84.4,83.5);
     Follower follower;
     public PathChain scorePreload;
     public double Wait2;
@@ -29,7 +30,7 @@ public class Red12paths{
         scorePreload = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(116.300, 131.700), new Pose(84.446, 83.515))
+                        new BezierLine(new Pose(116.300, 131.700), scorePose)
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(36), Math.toRadians(0))
                 .build();
@@ -39,7 +40,7 @@ public class Red12paths{
         getFirstPattern = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(84.446, 83.515), new Pose(128.000, 83.000))
+                        new BezierLine(scorePose, new Pose(128.000, 83.000))
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
@@ -59,7 +60,7 @@ public class Red12paths{
         scoreFirstPattern = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(126.901, 75.257), new Pose(84.330, 83.399))
+                        new BezierLine(new Pose(128.000, 83.000), scorePose)
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(90))
                 .build();
@@ -70,7 +71,7 @@ public class Red12paths{
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                new Pose(84.330, 83.399),
+                                scorePose,
                                 new Pose(91.400, 72.200),
                                 new Pose(91.900, 58.500)
                         )
@@ -92,7 +93,7 @@ public class Red12paths{
                         new BezierCurve(
                                 new Pose(134.811, 58.507),
                                 new Pose(94.333, 59.670),
-                                new Pose(84.213, 83.399)
+                                scorePose
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -119,7 +120,7 @@ public class Red12paths{
         scoreThirdPattern = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(134.695, 35.128), new Pose(84.330, 83.515))
+                        new BezierLine(new Pose(134.695, 35.128), scorePose)
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
@@ -129,7 +130,7 @@ public class Red12paths{
         park = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(84.330, 83.515), new Pose(118.759, 70.023))
+                        new BezierLine(scorePose, new Pose(118.759, 70.023))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(270))
                 .build();
