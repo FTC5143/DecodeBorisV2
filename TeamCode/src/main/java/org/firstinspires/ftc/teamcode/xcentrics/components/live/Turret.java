@@ -29,7 +29,8 @@ class TurretConfig {
     // PID Configuration
     // ------------------------------
     //public static double TurretP = 0, TurretI = 0, TurretD = 0;
-  public static double flyP = 25, flyI = 5, flyD = 0;
+  public static double flyP = 0, flyI = 0, flyD = 0, flyF = 0;
+  public static com.qualcomm.robotcore.hardware.PIDFCoefficients flyPidCoef = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,22.9);
 
 
     // ------------------------------
@@ -42,7 +43,7 @@ class TurretConfig {
     // Turret Encoder Configuration
     // ------------------------------
 
-    public static double ticksPerTurretRotation = 6610;      // encoder ticks per 360°
+    public static double ticksPerTurretRotation = 2526;      // encoder ticks per 360°
     public static double turretHeading;               // current turret heading (deg)
     public static double turretTarget;                // target turret heading (ticks)
 
@@ -53,7 +54,7 @@ class TurretConfig {
    // public static Pose testPose = new Pose(9,9,Math.toRadians(0));
     //public static  double power = 0;
     public static PIDFCoefficients turretPIDCoef = new PIDFCoefficients(0.01,0,0,0);
-    public static double targetVelocity = 1700;
+    public static double targetVelocity = 1300;
 }
 @Configurable
 
@@ -109,9 +110,8 @@ public class Turret extends Component {
         super.startup();
 
 
-        fly1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        fly1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        fly1.setVelocityPIDFCoefficients(flyP,flyI,flyD,0);
+        fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fly1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef);
         kicker.queue_position(1);
 
         if(LiveRobot.isAuto) {
@@ -131,8 +131,8 @@ public class Turret extends Component {
     public void update(OpMode opMode) {
         super.update(opMode);
 
-//        turretPID.setCoefficients(turretPIDCoef);
-//        fly1.setVelocityPIDFCoefficients(flyP,flyI,flyD,0);
+        turretPID.setCoefficients(turretPIDCoef);
+ //       fly1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef);
 
         updateTurretHeading();  // update turret heading relative to robot
         computeDistance(); //see how far we are
@@ -147,7 +147,7 @@ public class Turret extends Component {
 
         if (autoAim) {
             turret.queue_power(turretPID.run());
-            computeFlySpeed();
+           computeFlySpeed();
         } else {
             turret.queue_power(0);
             fly1.setVelocity(0);
@@ -173,6 +173,8 @@ public class Turret extends Component {
         addData("Fly1Vel", fly1.getVelocity());
         addData("FlyTargetVel",targetVelocity);
         addData("autoAim:", autoAim);
+        addData("FlyError",Math.abs(fly1.getVelocity() - targetVelocity));
+        addData("turretOffset",turretOffset);
 
 
     }
@@ -207,8 +209,8 @@ public class Turret extends Component {
         );
 
         double rawTicks = targetDegTurret * (ticksPerTurretRotation / 360.0);
-        double minTicks = -4633;
-        double maxTicks = 3917;
+        double minTicks = -3951;
+        double maxTicks = 2119;
 
         turretTarget = Math.max(minTicks, Math.min(maxTicks, rawTicks));
         turretPID.setTargetPosition(turretTarget);

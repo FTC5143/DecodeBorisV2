@@ -14,7 +14,7 @@ public class LiveRobot extends Robot{
     public  Turret turret;
     public static Pose lastPose = new Pose(0,0,Math.toRadians(0));
     {
-        name = "Daniel"; //from the writing on the wall (daniel chapter 5)
+        name = "CYPHER"; //from the writing on the wall (daniel chapter 5)
     }
     public LiveRobot(LinearOpMode opMode) {
         super(opMode);

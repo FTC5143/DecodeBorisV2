@@ -43,7 +43,7 @@ public abstract class LiveAutoBase extends LinearOpMode {
 
     protected void halt(double seconds) {
         resetRuntime();
-        while (getRuntime() < seconds && opModeIsActive()) {
+        while (getRuntime() < seconds && opModeIsActive() && opModeIsActive() && !isStopRequested() && isStarted()) {
             robot.update();
         }
     }
