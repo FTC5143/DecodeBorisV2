@@ -4,10 +4,11 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 
-
+@Disabled
 @Autonomous(name = "basicBigRed")
 public class basicBigRed extends LiveAutoBase {
     private final Pose startPose = new Pose(116.6,131.7,r(37)),

@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.xcentrics.OpModes.TeleOp.Debug;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
+@Disabled
 @TeleOp(name = "motorDirection")
 public class driveMoterDirection extends OpMode {
     private DcMotor FL,BL,BR,FR;

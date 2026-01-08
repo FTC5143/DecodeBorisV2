@@ -58,7 +58,7 @@ class TurretConfig {
 @Configurable
 
 public class Turret extends Component {
-    public static double a = 0.4,b =0 ,c = 0.0;
+    public static double a = 0.7,b =0 ,c = 0.0;
 
     // ------------------------------
     // Hardware
@@ -242,7 +242,7 @@ public class Turret extends Component {
         kicker.queue_position(0);
         updateAll();
         halt(0.5);
-        kicker.queue_position(1);
+        kicker.queue_position(0.9);
         updateAll();
     }
 

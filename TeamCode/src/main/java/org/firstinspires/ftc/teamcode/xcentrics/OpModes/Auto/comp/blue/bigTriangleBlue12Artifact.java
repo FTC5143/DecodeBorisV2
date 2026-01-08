@@ -77,15 +77,15 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
                 }
 
             case 3:
-                if(notBusy()){
-                    //stop intake
-                    robot.intake.stopIntake().run();
-                    //empty gate
-                    followPath(paths.emptyGate);
-                    //increment
-                    pathState++;
-                    break;
-                }
+//                if(notBusy()){
+//                    //stop intake
+//                    robot.intake.stopIntake().run();
+//                    //empty gate
+//                    followPath(paths.emptyGate);
+//                    //increment
+//                    pathState++;
+//                    break;
+//                }
 
             case 4:
                 if(notBusy()){
@@ -137,41 +137,42 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
                 }
             case 8:
                 if(notBusy()){
-                    //score second pattern
-                    shoot3();
-                    //stop aiming the turret
-                    robot.turret.stopAim();
-
-                    //go to the third pattern
-                    followPath(paths.goToThirdPattern);
-                    //increment
-                    pathState++;
-                    break;
+//                    //score second pattern
+//                    shoot3();
+//                    //stop aiming the turret
+//                    robot.turret.stopAim();
+//
+//                    //go to the third pattern
+//                    followPath(paths.goToThirdPattern);
+//                    //increment
+//                    pathState++;
+//                    break;
                 }
 
             case 9:
                 if(notBusy()){
-                    //turn on intake
-                    robot.intake.intake().run();
-                    //pick up balls slowly
-                    followPath(paths.pickUpThirdPattern,intakeSpeed);
-                    //increment
-                    pathState++;
-                    break;
+//                    //turn on intake
+//                    robot.intake.intake().run();
+//                    //pick up balls slowly
+//                    followPath(paths.pickUpThirdPattern,intakeSpeed);
+//                    //increment
+//                    pathState++;
+//                    break;
                 }
 
             case 10:
                 if(notBusy()){
-                    //turn off intake
-                    robot.intake.stopIntake().run();
-                    //go to scoring position at full speed
-                    followPath(paths.scoreThirdPattern,maxSpeed);
-                    //aim the turret
-                    robot.turret.aim().run();
-                    //increment
-                    pathState++;
-                    break;
+//                    //turn off intake
+//                    robot.intake.stopIntake().run();
+//                    //go to scoring position at full speed
+//                    followPath(paths.scoreThirdPattern,maxSpeed);
+//                    //aim the turret
+//                    robot.turret.aim().run();
+//                    //increment
+//                    pathState++;
+//                    break;
                 }
+
 
             case 11:
                 if(notBusy()){

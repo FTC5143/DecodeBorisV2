@@ -47,7 +47,7 @@ public class TeleopLive extends LiveTeleopBase {
         }
         //gamepad
         //driving
-        if(!autoDrive) {
+        //if(!autoDrive) {
             robot.follower.setTeleOpDrive(
                     0 - gamepad1.left_stick_y,
                     0 - gamepad1.left_stick_x,
@@ -66,31 +66,32 @@ public class TeleopLive extends LiveTeleopBase {
             if (gamepad1.left_bumper && gamepad1.right_bumper && Robot.isRed) {
                 Robot.isRed = false;
                 halt(0.2);
-            } else if (gamepad1.right_bumper && gamepad1.left_bumper &&!Robot.isRed) {
+            } else if (gamepad1.right_bumper && gamepad1.left_bumper && !Robot.isRed) {
                 Robot.isRed = true;
                 halt(0.2);
             }
 
-            if (gamepad1.left_bumper){
+            if (gamepad1.left_bumper) {
                 robot.follower.setMaxPower(0.5);
             } else {
                 robot.follower.setMaxPower(1);
             }
+       // }
 
-        } else if(!f1){
-            if(robot.isRed()) {
-                robot.follower.followPath(robot.follower.pathBuilder()
-                        .addPath(new BezierLine(robot.follower::getPose,redScorePose))
-                        .setLinearHeadingInterpolation(robot.follower.getPose().getHeading(), redScorePose.getHeading())
-                        .build());
-            } else {
-                robot.follower.followPath(robot.follower.pathBuilder()
-                        .addPath(new BezierLine(robot.follower :: getPose, blueScorePose))
-                        .setLinearHeadingInterpolation(robot.follower.getPose().getHeading(), blueScorePose.getHeading())
-                        .build());
-            }
-            f1 = true;
-        }
+//        } else if(!f1){
+//            if(robot.isRed()) {
+//                robot.follower.followPath(robot.follower.pathBuilder()
+//                        .addPath(new BezierLine(robot.follower::getPose,redScorePose))
+//                        .setLinearHeadingInterpolation(robot.follower.getPose().getHeading(), redScorePose.getHeading())
+//                        .build());
+//            } else {
+//                robot.follower.followPath(robot.follower.pathBuilder()
+//                        .addPath(new BezierLine(robot.follower :: getPose, blueScorePose))
+//                        .setLinearHeadingInterpolation(robot.follower.getPose().getHeading(), blueScorePose.getHeading())
+//                        .build());
+//            }
+//            f1 = true;
+//        }
 
 //        if(gamepad1.left_bumper){
 //            autoDrive = true;
@@ -137,10 +138,10 @@ public class TeleopLive extends LiveTeleopBase {
 
         //turret offset
         if(gamepad2.dpad_left) {
-           robot.turret.turretOffset +=1;
+           robot.turret.turretOffset -=1;
            halt(0.005);
         } else if(gamepad2.dpad_right){
-            robot.turret.turretOffset -= 1;
+            robot.turret.turretOffset += 1;
             halt(0.005);
         }
 

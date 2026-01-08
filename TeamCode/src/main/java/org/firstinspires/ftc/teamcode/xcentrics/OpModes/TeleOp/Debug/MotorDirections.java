@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 
 import java.util.Arrays;
 import java.util.List;
-
+@Disabled
 @Configurable
 @TeleOp(name = "Motor Directions", group = "Teleop Test")
 public class MotorDirections extends OpMode {
