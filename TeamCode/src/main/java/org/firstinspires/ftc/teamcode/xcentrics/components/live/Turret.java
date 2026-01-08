@@ -43,7 +43,7 @@ class TurretConfig {
     // Turret Encoder Configuration
     // ------------------------------
 
-    public static double ticksPerTurretRotation = 2526;      // encoder ticks per 360°
+    public static double ticksPerTurretRotation = 4839.3;      // encoder ticks per 360°
     public static double turretHeading;               // current turret heading (deg)
     public static double turretTarget;                // target turret heading (ticks)
 
