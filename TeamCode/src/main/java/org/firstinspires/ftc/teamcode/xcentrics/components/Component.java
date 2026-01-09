@@ -74,13 +74,13 @@ public abstract class Component {
         telemetry.addLine(caption);
         robot.panelsTelemetry.addLine(caption);
     }
-    public volatile double time = 0.0;
-
     // internal time tracking
     private volatile long startTime = 0; // in nanoseconds
     public void halt(double seconds) {
         resetRuntime();
-        while (getRuntime() < seconds) {}
+        while (getRuntime() < seconds) {
+            robot.update();
+        }
     }
     public double getRuntime() {
         final double NANOSECONDS_PER_SECOND = TimeUnit.SECONDS.toNanos(1);

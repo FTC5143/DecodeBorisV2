@@ -272,4 +272,10 @@ public class Turret extends Component {
     public Runnable stopAim(){
         return () -> autoAim = false;
     }
+    public void spinUp(){
+        targetVelocity += 100;
+    }
+    public void spinDown(){
+        targetVelocity -=100;
+    }
 }

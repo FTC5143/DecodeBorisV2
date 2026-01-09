@@ -17,8 +17,7 @@ public class TeleopLive extends LiveTeleopBase {
     //small triangle points
 
     //robot pose
-    private Pose redScorePose,blueScorePose;
-    private boolean autoDrive = false,f1 = false;
+
     private Timer opMode = new Timer();
     //triangle Checker
     @Override
@@ -146,6 +145,15 @@ public class TeleopLive extends LiveTeleopBase {
         }
 
 
+        //turret speed controls
+        if(gamepad1.b)
+        {
+            robot.turret.spinDown();
+        }
+        if(gamepad2.x)
+        {
+            robot.turret.spinUp();
+        }
 
     }
 }

@@ -29,7 +29,7 @@ public class Blue12paths {
         getFirstPattern = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(scorePose, new Pose(16.000, 83.000))
+                        new BezierLine(scorePose, new Pose(16.500, 85.000))
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
@@ -57,7 +57,7 @@ public class Blue12paths {
         pickupSecondPattern = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(52.110, 58.507), new Pose(9.189, 58.507))
+                        new BezierLine(new Pose(52.110, 58.507), new Pose(9.5, 59))
                 )
                 .setTangentHeadingInterpolation()
                 .build();
