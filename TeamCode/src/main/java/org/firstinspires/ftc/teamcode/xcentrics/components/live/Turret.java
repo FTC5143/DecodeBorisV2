@@ -4,7 +4,6 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.control.PIDFController;
 import com.pedropathing.geometry.Pose;
-import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -18,7 +17,6 @@ import org.firstinspires.ftc.teamcode.xcentrics.robots.LiveRobot;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.DcMotorQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.ServoQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.components.Component;
-import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.*;
 
@@ -112,7 +110,6 @@ public class Turret extends Component {
 
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fly1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef);
-        kicker.queue_position(1);
 
         if(LiveRobot.isAuto) {
             turret.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

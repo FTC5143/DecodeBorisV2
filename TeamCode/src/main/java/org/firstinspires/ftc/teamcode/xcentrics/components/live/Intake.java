@@ -37,8 +37,8 @@ public class Intake extends Component {
     public void registerHardware(HardwareMap hardwareMap){
         super.registerHardware(hardwareMap);
         intake = new DcMotorQUS(hardwareMap.get(DcMotorEx.class,"intake"));
-        in1 = new CRServoQUS(hardwareMap.get(CRServo.class,"Lin"));
-        in2 = new CRServoQUS(hardwareMap.get(CRServo.class,"Rin"));
+        in1 = new CRServoQUS(hardwareMap.get(CRServo.class,"transfer1"));
+        in2 = new CRServoQUS(hardwareMap.get(CRServo.class,"transfer2"));
         in1.servo.setDirection(DcMotorSimple.Direction.REVERSE);
         in2.servo.setDirection(DcMotorSimple.Direction.REVERSE);
     }
