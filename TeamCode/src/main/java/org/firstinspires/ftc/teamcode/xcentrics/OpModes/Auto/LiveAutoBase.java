@@ -23,7 +23,7 @@ public abstract class LiveAutoBase extends LinearOpMode {
         while(opModeIsActive() && !isStopRequested() && isStarted()) {
             on_loop();
             robot.follower.update();
-            robot.update();
+            //robot.update();
         }
         on_stop();
         // Shut the robot down as soon as the program is finished

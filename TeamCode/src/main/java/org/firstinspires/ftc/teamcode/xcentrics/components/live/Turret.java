@@ -28,7 +28,7 @@ class TurretConfig {
     // ------------------------------
     //public static double TurretP = 0, TurretI = 0, TurretD = 0;
   public static double flyP = 0, flyI = 0, flyD = 0, flyF = 0;
-  public static com.qualcomm.robotcore.hardware.PIDFCoefficients flyPidCoef = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,22.9);
+  public static com.qualcomm.robotcore.hardware.PIDFCoefficients flyPidCoef = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,22.9), flyPidCoef2 = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,22.9);
 
 
     // ------------------------------
@@ -52,17 +52,17 @@ class TurretConfig {
    // public static Pose testPose = new Pose(9,9,Math.toRadians(0));
     //public static  double power = 0;
     public static PIDFCoefficients turretPIDCoef = new PIDFCoefficients(0.01,0,0,0);
-    public static double targetVelocity = 1300;
+    public static double targetVelocity = 1300; // close is 1300, far is 1700
 }
 @Configurable
 
 public class Turret extends Component {
-    public static double a = 0.7,b =0 ,c = 0.0;
+    public static double a = 0.7,b =0 ,c = 0.0; //far triangle is 0.5, close is 0.7
 
     // ------------------------------
     // Hardware
     // ------------------------------
-    public DcMotorEx fly1;
+    public DcMotorEx fly1,fly2;
     private DcMotorQUS turret;
     public double turretOffset = 0;            // calibration offset
     private ServoQUS hood1, kicker;
@@ -93,6 +93,7 @@ public class Turret extends Component {
         super.registerHardware(map);
 
         fly1 = map.get(DcMotorEx.class, "fly1");
+        fly2 = map.get(DcMotorEx.class,"fly2");
         turret = new DcMotorQUS(map.get(DcMotorEx.class, "turret"));
         turret.motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -110,6 +111,8 @@ public class Turret extends Component {
 
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fly1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef);
+        fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fly2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef2);
 
         if(LiveRobot.isAuto) {
             turret.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -118,7 +121,7 @@ public class Turret extends Component {
         turretPID.setCoefficients(turretPIDCoef);
         turret.motor.setPower(0);
         hood1.queue_position(0.5);
-        updateAll();
+       // updateAll();
     }
 
     // ------------------------------
@@ -148,6 +151,7 @@ public class Turret extends Component {
         } else {
             turret.queue_power(0);
             fly1.setVelocity(0);
+            fly2.setVelocity(0);
         }
 
         updateAll();
@@ -226,6 +230,7 @@ public class Turret extends Component {
     }
     private void computeFlySpeed() {
         fly1.setVelocity(targetVelocity);
+        fly2.setVelocity(targetVelocity);
         velocityReady = Math.abs(fly1.getVelocity() - targetVelocity) <= 100;
     }
     public void resetEncoder(){
