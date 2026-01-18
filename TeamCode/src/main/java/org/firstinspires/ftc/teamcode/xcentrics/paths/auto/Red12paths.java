@@ -6,23 +6,29 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 
+@SuppressWarnings("ALL")
 public class Red12paths{
     public final Pose startPose = new Pose(116.5,132,Math.toRadians(36));
     private final Pose scorePose = new Pose(84.4,83.5);
+    @SuppressWarnings("CanBeFinal")
     Follower follower;
     public PathChain scorePreload;
+    @SuppressWarnings("unused")
     public double Wait2;
     public PathChain getFirstPattern;
     public PathChain emptyGate;
     public PathChain scoreFirstPattern;
+    @SuppressWarnings("unused")
     public double Wait6;
     public PathChain goToSecondPattern;
     public PathChain pickupSecondPattern;
     public PathChain scoreSecondPattern;
+    @SuppressWarnings("unused")
     public double Wait11;
     public PathChain goToThirdPattern;
     public PathChain pickUpThirdPattern;
     public PathChain scoreThirdPattern;
+    @SuppressWarnings("unused")
     public double Wait14;
     public PathChain park;
 
@@ -136,6 +142,7 @@ public class Red12paths{
                 .build();
     }
 
+    @SuppressWarnings("unused")
     public Red12paths(Follower follower){
         this.follower = follower;
         Paths();

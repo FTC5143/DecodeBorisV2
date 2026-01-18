@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.xcentrics.components.Component;
 
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.*;
 
+@SuppressWarnings({"ALL", "unused"})
 @Configurable
 class TurretConfig {
 
@@ -28,6 +29,7 @@ class TurretConfig {
     // ------------------------------
     //public static double TurretP = 0, TurretI = 0, TurretD = 0;
   //public static double flyP = 0, flyI = 0, flyD = 0, flyF = 0;
+  @SuppressWarnings("CanBeFinal")
   public static com.qualcomm.robotcore.hardware.PIDFCoefficients flyPidCoef = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,22.9), flyPidCoef2 = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,22.9);
 
 
@@ -41,6 +43,7 @@ class TurretConfig {
     // Turret Encoder Configuration
     // ------------------------------
 
+    @SuppressWarnings("CanBeFinal")
     public static double ticksPerTurretRotation = 4839.3;      // encoder ticks per 360°
     public static double turretHeading;               // current turret heading (deg)
     public static double turretTarget;                // target turret heading (ticks)
@@ -51,12 +54,15 @@ class TurretConfig {
     //public static boolean aim = false;                is turret tracking target      flywheel allowed to spin
    // public static Pose testPose = new Pose(9,9,Math.toRadians(0));
     //public static  double power = 0;
+    @SuppressWarnings("CanBeFinal")
     public static PIDFCoefficients turretPIDCoef = new PIDFCoefficients(0.01,0,0,0);
     public static double targetVelocity = 1300; // close is 1300, far is 1700
 }
+@SuppressWarnings("ALL")
 @Configurable
 
 public class Turret extends Component {
+    @SuppressWarnings("CanBeFinal")
     public static double a = 0.7,b =0 ,c = 0.0; //far triangle is 0.5, close is 0.7
 
     // ------------------------------
@@ -80,6 +86,7 @@ public class Turret extends Component {
         name = "turret";
     }
 
+    @SuppressWarnings("unused")
     public Turret(LiveRobot robot) {
         super(robot);
         this.robot = robot;

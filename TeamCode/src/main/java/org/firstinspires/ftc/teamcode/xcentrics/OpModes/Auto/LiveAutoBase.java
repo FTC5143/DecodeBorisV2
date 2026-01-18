@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.xcentrics.robots.LiveRobot;
 
+@SuppressWarnings({"ALL", "unused"})
 public abstract class LiveAutoBase extends LinearOpMode {
 
     protected LiveRobot robot;

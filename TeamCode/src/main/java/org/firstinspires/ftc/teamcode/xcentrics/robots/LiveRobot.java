@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.xcentrics.components.live.Camera;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Intake;
 
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Turret;
+@SuppressWarnings("ALL")
 public class LiveRobot extends Robot{
     public  Follower follower;
     public  Intake intake;
@@ -18,6 +19,7 @@ public class LiveRobot extends Robot{
     {
         name = "CYPHER"; //from the writing on the wall (daniel chapter 5)
     }
+    @SuppressWarnings("unused")
     public LiveRobot(LinearOpMode opMode) {
         super(opMode);
         follower    = Constants.createFollower(hwmap);

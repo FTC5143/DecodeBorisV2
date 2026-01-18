@@ -8,14 +8,19 @@ import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.LiveAutoBase;
 import org.firstinspires.ftc.teamcode.xcentrics.paths.auto.Blue12paths;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 
+@SuppressWarnings("ALL")
 @Configurable
 @Autonomous(name = "Big Blue Beutafle Triangle NEINE Artifact",group = "blue")
 public class bigTriangleBlue12Artifact extends LiveAutoBase {
     private Blue12paths paths;
     public  int pathState = 1;
+    @SuppressWarnings("unused")
     public static boolean b1;
+    @SuppressWarnings("CanBeFinal")
     public static double launchWait = 0.7;
+    @SuppressWarnings("CanBeFinal")
     public static double maxSpeed = 1.5;
+    @SuppressWarnings("CanBeFinal")
     public static double intakeSpeed = 0.5;
     @Override
     public void on_init() {

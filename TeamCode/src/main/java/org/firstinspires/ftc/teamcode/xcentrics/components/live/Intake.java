@@ -15,11 +15,14 @@ import org.firstinspires.ftc.teamcode.xcentrics.components.Component;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.DcMotorQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.CRServoQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
+@SuppressWarnings("ALL")
 @Configurable
 class IntakeConfig{
+    @SuppressWarnings("unused")
     public static double speed;
 }
 
+@SuppressWarnings("ALL")
 public class Intake extends Component {
     ///  MOTORS ///
     DcMotorQUS intake;
@@ -29,6 +32,7 @@ public class Intake extends Component {
     {
         name = "intake";
     }
+    @SuppressWarnings("unused")
     public Intake(Robot robot) {
         super(robot);
     }

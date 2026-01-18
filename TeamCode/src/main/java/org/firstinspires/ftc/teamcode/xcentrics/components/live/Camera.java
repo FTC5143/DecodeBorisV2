@@ -23,6 +23,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
+@SuppressWarnings("ALL")
 public class Camera extends Component {
     private final Position cameraPosition = new Position(DistanceUnit.MM,
             0,0,0,0);
@@ -32,6 +33,7 @@ public class Camera extends Component {
     private VisionPortal visionPortal;
     public List<AprilTagDetection> currentDetections;
 
+    @SuppressWarnings("unused")
     public Camera(Robot robot) {
         super(robot);
     }
@@ -127,7 +129,6 @@ public class Camera extends Component {
                 }
             }
             // No red tag detected, return default
-            return null;
         } else {
             // Blue alliance logic
             for(AprilTagDetection detection : currentDetections){
@@ -142,8 +143,8 @@ public class Camera extends Component {
                             .getAsCoordinateSystem(PedroCoordinates.INSTANCE);
                 }
             }
-            return null;
         }
+        return null;
     }
 
 }

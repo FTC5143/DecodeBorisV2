@@ -8,13 +8,13 @@ import com.pedropathing.ftc.FollowerBuilder;
 import com.pedropathing.ftc.drivetrains.MecanumConstants;
 import com.pedropathing.ftc.localization.Encoder;
 import com.pedropathing.ftc.localization.constants.ThreeWheelConstants;
-import com.pedropathing.ftc.localization.constants.ThreeWheelIMUConstants;
 import com.pedropathing.paths.PathConstraints;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+@SuppressWarnings({"ALL", "unused"})
 public class Constants {
+    @SuppressWarnings("CanBeFinal")
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(9.8)
             .forwardZeroPowerAcceleration(-48.526847126531436)
@@ -24,6 +24,7 @@ public class Constants {
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.025,0,0.00001,0.6,0.01))
             .centripetalScaling(0.0005);
 
+    @SuppressWarnings("CanBeFinal")
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
 
@@ -35,6 +36,7 @@ public class Constants {
                 .build();
     }
 
+    @SuppressWarnings("CanBeFinal")
     public static ThreeWheelConstants localizerConstants = new ThreeWheelConstants()
             .forwardTicksToInches(0.0019573536701847456)
             .strafeTicksToInches(0.0019753046721908427)
@@ -49,6 +51,7 @@ public class Constants {
             .rightEncoderDirection(Encoder.FORWARD)
             .strafeEncoderDirection(Encoder.REVERSE);
 
+    @SuppressWarnings("CanBeFinal")
     public static MecanumConstants driveConstants = new MecanumConstants()
             .maxPower(1)
             .rightFrontMotorName("FR")

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.xcentrics.OpModes.TeleOp.Comp;
 
-import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 
 import com.pedropathing.util.Timer;
@@ -11,6 +10,7 @@ import org.firstinspires.ftc.teamcode.xcentrics.OpModes.TeleOp.LiveTeleopBase;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Turret;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 
+@SuppressWarnings({"ALL", "unused"})
 @TeleOp(name = "TeleOp")
 public class TeleopLive extends LiveTeleopBase {
 
@@ -18,6 +18,7 @@ public class TeleopLive extends LiveTeleopBase {
 
     //robot pose
 
+    @SuppressWarnings("CanBeFinal")
     private Timer opMode = new Timer();
     //triangle Checker
     @Override

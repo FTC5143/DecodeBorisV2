@@ -16,36 +16,49 @@ import org.firstinspires.ftc.teamcode.xcentrics.components.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings({"ALL", "unused"})
 @Configurable
 class RobotConfig {
     // Interval in cycles at which we call update on al the components
+    @SuppressWarnings("CanBeFinal")
     public static int COMPONENT_UPDATE_CYCLE = 1;
     // Interval in cycles at which we bulk read from Rev Hub 1
+    @SuppressWarnings("CanBeFinal")
     public static int BULK_READ_1_CYCLE = 1;
     // Interval in cycles at which we bulk read from Rev Hub 2
+    @SuppressWarnings("CanBeFinal")
     public static int BULK_READ_2_CYCLE = 5;
     // Interval in cycles at which we send telemetry to the phone
+    @SuppressWarnings("CanBeFinal")
     public static int TELEMETRY_CYCLE = 40;
     // Interval in cycles at which we calculate cycle frequency
+    @SuppressWarnings("CanBeFinal")
     public static int FREQ_CHECK_CYCLE = 40;
     //what aliance we are on
 }
 
+@SuppressWarnings("ALL")
 public class Robot {
 
+    @SuppressWarnings("CanBeFinal")
     HardwareMap hwmap;
+    @SuppressWarnings("CanBeFinal")
     public LinearOpMode opmode;
     public static boolean isRed = true;
     public static boolean isAuto = true;
 
+    @SuppressWarnings("CanBeFinal")
     ArrayList<Component> components = new ArrayList<>();
 
     public String name;
 
+    @SuppressWarnings("CanBeFinal")
     public ArrayList<String> warnings = new ArrayList<>();
 
+    @SuppressWarnings("unused")
     boolean running = false;
 
+    @SuppressWarnings("CanBeFinal")
     Telemetry telemetry;
 
     protected long last_update = System.nanoTime();
@@ -56,14 +69,17 @@ public class Robot {
     Runnable update_thread;
 
     List<LynxModule> expansion_hubs;
+    @SuppressWarnings("CanBeFinal")
     public TelemetryManager panelsTelemetry;
 
     // The Update Thread
     // Should be called as fast as possible. Does all reads and writes to the rev hub
     class UpdateThread implements Runnable{
 
+        @SuppressWarnings("CanBeFinal")
         Robot robot;
 
+        @SuppressWarnings("unused")
         public UpdateThread(Robot robot) {
             super();
             this.robot = robot;
@@ -77,6 +93,7 @@ public class Robot {
         }
     }
 
+    @SuppressWarnings("unused")
     public Robot(LinearOpMode opmode) { // FIRST THIS IS *YOUR* FAULT IT HAS TO BE THIS WAY AND I HATE IT AND YOU SHOULD BE ASHAMED
         this.opmode = opmode;
         this.telemetry = this.opmode.telemetry;
@@ -88,6 +105,7 @@ public class Robot {
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
     }
 
+    @SuppressWarnings("unused")
     public void startup() {
         running = true;
 
@@ -192,6 +210,7 @@ public class Robot {
         expansion_hubs = hwmap.getAll(LynxModule.class);
     }
 
+    @SuppressWarnings("unused")
     public void addWarning(String warning) {
         /**
          * Add a warning to be displayed on the phone for when something is amiss and the robot should not be run

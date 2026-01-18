@@ -4,11 +4,13 @@ import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.basic.basic;
 import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.comp.blue.Small9Blue;
 import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.comp.red.bigTriangleRed12artifact;
 
+@SuppressWarnings("ALL")
 public class classes {
 
 
     private final Small9Blue s = new Small9Blue();
 
+    @SuppressWarnings("unused")
     public classes(){
         basic b = new basic();
         b.runOpMode();

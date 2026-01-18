@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.xcentrics.util.qus;
 
+@SuppressWarnings({"ALL", "unused"})
 public abstract class QUS {
     boolean needs_write = false;
 

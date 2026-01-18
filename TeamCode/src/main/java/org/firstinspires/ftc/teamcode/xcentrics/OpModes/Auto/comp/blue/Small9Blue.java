@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.LiveAutoBase;
 import org.firstinspires.ftc.teamcode.xcentrics.paths.auto.smallTriangleBlue;
+@SuppressWarnings({"ALL", "unused"})
 @Autonomous(name = "Small Blue Beutafle Triangle NEINE Artifact",group = "blue")
 public class Small9Blue extends LiveAutoBase {
     private smallTriangleBlue paths;

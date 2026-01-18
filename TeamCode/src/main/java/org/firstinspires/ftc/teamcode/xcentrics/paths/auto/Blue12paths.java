@@ -6,17 +6,28 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 
+@SuppressWarnings("ALL")
 public class Blue12paths {
+    @SuppressWarnings("CanBeFinal")
     public Pose startPose = new Pose(27.5,131.6,Math.toRadians(144));
+    @SuppressWarnings("CanBeFinal")
     public Pose scorePose = new Pose(56,95);
+    @SuppressWarnings("CanBeFinal")
     public PathChain scorePreload;
+    @SuppressWarnings("CanBeFinal")
     public PathChain getFirstPattern;
+    @SuppressWarnings("CanBeFinal")
     public PathChain scoreFirstPattern;
+    @SuppressWarnings("CanBeFinal")
     public PathChain goToSecondPattern;
+    @SuppressWarnings("CanBeFinal")
     public PathChain pickupSecondPattern;
+    @SuppressWarnings("CanBeFinal")
     public PathChain scoreSecondPattern;
+    @SuppressWarnings("CanBeFinal")
     public PathChain park;
 
+    @SuppressWarnings("unused")
     public Blue12paths(Follower follower) {
         scorePreload = follower
                 .pathBuilder()

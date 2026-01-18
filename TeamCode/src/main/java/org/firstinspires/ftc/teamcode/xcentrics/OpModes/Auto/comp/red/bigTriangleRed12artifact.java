@@ -7,13 +7,17 @@ import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.LiveAutoBase;
 import org.firstinspires.ftc.teamcode.xcentrics.paths.auto.Red12paths;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 
+@SuppressWarnings({"ALL", "unused"})
 @Configurable
 @Autonomous(name = "Big Beutafle Red Triangle NEINE Artifact", group = "red")
 public class bigTriangleRed12artifact extends LiveAutoBase {
     private Red12paths paths;
     public  int pathState = 1;
+    @SuppressWarnings("CanBeFinal")
     public static double launchWait = 0.7;
+    @SuppressWarnings("CanBeFinal")
     public static double maxSpeed = 1.5;
+    @SuppressWarnings("CanBeFinal")
     public static double intakeSpeed = 0.5;
     @Override
     public void on_init() {

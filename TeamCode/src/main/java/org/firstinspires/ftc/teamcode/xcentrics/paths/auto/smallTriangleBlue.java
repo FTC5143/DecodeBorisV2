@@ -6,16 +6,25 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 
+@SuppressWarnings("ALL")
 public class smallTriangleBlue {
 
+        @SuppressWarnings("CanBeFinal")
         public PathChain goToFirstPattern;
+        @SuppressWarnings("CanBeFinal")
         public PathChain getFirstPattern;
+        @SuppressWarnings("CanBeFinal")
         public PathChain scoreFirstPattern;
+        @SuppressWarnings("CanBeFinal")
         public PathChain goToSecondPattern;
+        @SuppressWarnings("CanBeFinal")
         public PathChain getSecondPattern;
+        @SuppressWarnings("CanBeFinal")
         public PathChain scoreSecondPattern;
+        @SuppressWarnings("CanBeFinal")
         public PathChain park;
 
+        @SuppressWarnings("unused")
         public smallTriangleBlue(Follower follower) {
             goToFirstPattern = follower.pathBuilder().addPath(
                             new BezierCurve(

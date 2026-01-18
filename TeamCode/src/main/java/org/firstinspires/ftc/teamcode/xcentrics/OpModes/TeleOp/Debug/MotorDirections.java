@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.xcentrics.OpModes.TeleOp.Debug;
 
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,13 +12,19 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("ALL")
 @Configurable
 @TeleOp(name = "Motor Directions", group = "Teleop Test")
 public class MotorDirections extends OpMode {
+    @SuppressWarnings("CanBeFinal")
     public static double leftFrontMotorDirection = 0;
+    @SuppressWarnings("CanBeFinal")
     public static double leftRearMotorDirection = 0;
+    @SuppressWarnings("CanBeFinal")
     public static double rightFrontMotorDirection = 0;
+    @SuppressWarnings("CanBeFinal")
     public static double rightRearMotorDirection = 0;
+    @SuppressWarnings("unused")
     public static double test = 1;
 
     //private MultipleTelemetry telemetryM;
