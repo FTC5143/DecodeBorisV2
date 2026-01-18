@@ -63,9 +63,7 @@ public class Intake extends Component {
 
         addData("Speed: ",speed);
     }
-    public void outtake(){
-        setPower(-speed);
-    }
+
     public void intake(){
          setPower(-1);
     }
