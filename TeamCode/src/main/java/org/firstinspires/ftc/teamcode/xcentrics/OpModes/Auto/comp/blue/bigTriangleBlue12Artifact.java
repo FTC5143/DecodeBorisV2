@@ -135,45 +135,6 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
                     pathState = 11;
                     break;
                 }
-            case 8:
-                if(notBusy()){
-//                    //score second pattern
-//                    shoot3();
-//                    //stop aiming the turret
-//                    robot.turret.stopAim();
-//
-//                    //go to the third pattern
-//                    followPath(paths.goToThirdPattern);
-//                    //increment
-//                    pathState++;
-//                    break;
-                }
-
-            case 9:
-                if(notBusy()){
-//                    //turn on intake
-//                    robot.intake.intake().run();
-//                    //pick up balls slowly
-//                    followPath(paths.pickUpThirdPattern,intakeSpeed);
-//                    //increment
-//                    pathState++;
-//                    break;
-                }
-
-            case 10:
-                if(notBusy()){
-//                    //turn off intake
-//                    robot.intake.stopIntake().run();
-//                    //go to scoring position at full speed
-//                    followPath(paths.scoreThirdPattern,maxSpeed);
-//                    //aim the turret
-//                    robot.turret.aim().run();
-//                    //increment
-//                    pathState++;
-//                    break;
-                }
-
-
             case 11:
                 if(notBusy()){
                     //score third pattern

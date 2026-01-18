@@ -4,7 +4,6 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.xcentrics.robots.LiveRobot;
-import org.json.JSONException;
 
 public abstract class LiveAutoBase extends LinearOpMode {
 

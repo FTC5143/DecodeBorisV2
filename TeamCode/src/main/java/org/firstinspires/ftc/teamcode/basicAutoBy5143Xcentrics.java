@@ -14,11 +14,11 @@ public class basicAutoBy5143Xcentrics extends LinearOpMode {
     private DcMotor frontLeftMotor,frontRightMotor,backRightMotor,backLeftMotor;
     private final long wait = 1000;
 
-    /// TODO:
+    /// to do:
     /// Match motor variables with hardware map
     /// make motors run the same way
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode(){
 
         //assign the motor variable to the motor on the robot
         frontLeftMotor = hardwareMap.get(DcMotor.class,"");

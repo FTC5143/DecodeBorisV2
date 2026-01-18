@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class basic extends LinearOpMode {
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         DcMotor Fl = hardwareMap.get(DcMotor.class,"FL"),Bl = hardwareMap.get(DcMotor.class,"BL"),Br = hardwareMap.get(DcMotor.class,"BR"),Fr = hardwareMap.get(DcMotor.class,"FR");
 
         waitForStart();

@@ -4,7 +4,6 @@ package org.firstinspires.ftc.teamcode.xcentrics.components.live;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.IntakeConfig.speed;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -13,7 +12,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.xcentrics.components.Component;
-import org.firstinspires.ftc.teamcode.xcentrics.robots.LiveRobot;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.DcMotorQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.CRServoQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;

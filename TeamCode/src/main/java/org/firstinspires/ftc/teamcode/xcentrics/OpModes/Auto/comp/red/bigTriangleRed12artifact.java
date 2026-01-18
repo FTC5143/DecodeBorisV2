@@ -1,20 +1,9 @@
 package org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.comp.red;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.field.FieldManager;
-import com.bylazar.field.PanelsField;
-import com.bylazar.field.Style;
-import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.Pose;
-import com.pedropathing.math.Vector;
-import com.pedropathing.paths.Path;
-import com.pedropathing.paths.PathChain;
-import com.pedropathing.util.PoseHistory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.LiveAutoBase;
-import org.firstinspires.ftc.teamcode.xcentrics.paths.auto.Blue12paths;
 import org.firstinspires.ftc.teamcode.xcentrics.paths.auto.Red12paths;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 
@@ -23,7 +12,6 @@ import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 public class bigTriangleRed12artifact extends LiveAutoBase {
     private Red12paths paths;
     public  int pathState = 1;
-    public static boolean b1;
     public static double launchWait = 0.7;
     public static double maxSpeed = 1.5;
     public static double intakeSpeed = 0.5;

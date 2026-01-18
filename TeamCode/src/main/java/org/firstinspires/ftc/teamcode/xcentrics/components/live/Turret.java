@@ -27,7 +27,7 @@ class TurretConfig {
     // PID Configuration
     // ------------------------------
     //public static double TurretP = 0, TurretI = 0, TurretD = 0;
-  public static double flyP = 0, flyI = 0, flyD = 0, flyF = 0;
+  //public static double flyP = 0, flyI = 0, flyD = 0, flyF = 0;
   public static com.qualcomm.robotcore.hardware.PIDFCoefficients flyPidCoef = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,22.9), flyPidCoef2 = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,22.9);
 
 
@@ -48,7 +48,7 @@ class TurretConfig {
     // ------------------------------
     // Other Servo Positions
     // ------------------------------
-    //public static boolean aim = false;               // is turret tracking target     // flywheel allowed to spin
+    //public static boolean aim = false;                is turret tracking target      flywheel allowed to spin
    // public static Pose testPose = new Pose(9,9,Math.toRadians(0));
     //public static  double power = 0;
     public static PIDFCoefficients turretPIDCoef = new PIDFCoefficients(0.01,0,0,0);

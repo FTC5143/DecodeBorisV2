@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.xcentrics.components.live;
 
+import android.annotation.SuppressLint;
+
 import com.pedropathing.ftc.FTCCoordinates;
 import com.pedropathing.geometry.PedroCoordinates;
 import com.pedropathing.geometry.Pose;
@@ -22,9 +24,9 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 
 public class Camera extends Component {
-    private Position cameraPosition = new Position(DistanceUnit.MM,
+    private final Position cameraPosition = new Position(DistanceUnit.MM,
             0,0,0,0);
-    private YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
+    private final YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
             0,-90,0,0);
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
@@ -66,6 +68,7 @@ public class Camera extends Component {
 
     }
 
+    @SuppressLint("DefaultLocale")
     public void updateTelemetry(Telemetry telemetry){
         addData("# AprilTags Detected", currentDetections.size());
 
