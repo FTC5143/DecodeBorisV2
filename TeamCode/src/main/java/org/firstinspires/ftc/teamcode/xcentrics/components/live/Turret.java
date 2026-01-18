@@ -280,4 +280,15 @@ public class Turret extends Component {
     public void spinDown(){
         targetVelocity -=100;
     }
+    public void shoot3(){
+        double wait = 0.5;
+        halt(wait);
+        launch();
+        halt(wait);
+        launch();
+        halt(wait);
+        launch();
+        halt(wait);
+        launch();
+    }
 }

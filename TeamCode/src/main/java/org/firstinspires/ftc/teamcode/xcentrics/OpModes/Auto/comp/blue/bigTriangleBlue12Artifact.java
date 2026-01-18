@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.xcentrics.paths.auto.Blue12paths;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 
 @Configurable
-@Autonomous(name = "Blue Big Triangle (12 Artifacts)")
+@Autonomous(name = "Big Blue Beutafle Triangle NEINE Artifact",group = "blue")
 public class bigTriangleBlue12Artifact extends LiveAutoBase {
     private Blue12paths paths;
     public  int pathState = 1;
