@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto;
+package org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.basic;
 
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -6,6 +6,7 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.LiveAutoBase;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 
 @Disabled

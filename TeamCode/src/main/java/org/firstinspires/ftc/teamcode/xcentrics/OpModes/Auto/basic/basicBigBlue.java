@@ -1,19 +1,18 @@
-package org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto;
+package org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.basic;
 
 
 
-import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.LiveAutoBase;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 @Disabled
 @Autonomous(name = "basicBigBlue")
-public class basicBigBlue extends LiveAutoBase{
+public class basicBigBlue extends LiveAutoBase {
         private final Pose startPose = new Pose(116.6,131.7,r(37)),
                 scorePose = new Pose(96,96,r(0)),
                 travlePose = new Pose(96,84,r(0)),

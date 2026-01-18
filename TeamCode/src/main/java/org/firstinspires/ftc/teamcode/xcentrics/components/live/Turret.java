@@ -268,11 +268,11 @@ public class Turret extends Component {
     public void shutdown() {
         super.shutdown();
     }
-    public Runnable aim(){
-        return () -> autoAim = true;
+    public void aim(){
+         autoAim = true;
     }
-    public Runnable stopAim(){
-        return () -> autoAim = false;
+    public void stopAim(){
+         autoAim = false;
     }
     public void spinUp(){
         targetVelocity += 100;

@@ -1,11 +1,9 @@
-package org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto;
+package org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.basic;
 
 import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous(name = "Basic")

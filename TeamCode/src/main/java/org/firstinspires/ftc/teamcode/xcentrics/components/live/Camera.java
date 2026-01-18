@@ -22,8 +22,6 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 
 public class Camera extends Component {
-
-    private Camera camera;
     private Position cameraPosition = new Position(DistanceUnit.MM,
             0,0,0,0);
     private YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
@@ -110,7 +108,9 @@ public class Camera extends Component {
 
     public Pose getPose(){
         if(robot.isRed()) {
-            currentDetections.stream().findAny();
+            for(AprilTagDetection detection : currentDetections){
+                if(detection.metadata != null && detection.metadata.name.contains("Red"));
+            }
             return new Pose(0, 0, 0, FTCCoordinates.INSTANCE).getAsCoordinateSystem(PedroCoordinates.INSTANCE);
         } else {
             return new Pose();
