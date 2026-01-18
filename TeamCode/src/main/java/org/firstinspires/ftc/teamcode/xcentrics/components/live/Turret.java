@@ -155,6 +155,10 @@ public class Turret extends Component {
         }
 
         updateAll();
+        Pose p = robot.camera.getPose();
+        if(p != null) {
+            robot.follower.setPose(p);
+        }
     }
 
     // ------------------------------

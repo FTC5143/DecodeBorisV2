@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.xcentrics.components.live;
 import android.annotation.SuppressLint;
 
 import com.pedropathing.ftc.FTCCoordinates;
+import com.pedropathing.ftc.PoseConverter;
 import com.pedropathing.geometry.PedroCoordinates;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.xcentrics.components.Component;
@@ -111,11 +113,37 @@ public class Camera extends Component {
     public Pose getPose(){
         if(robot.isRed()) {
             for(AprilTagDetection detection : currentDetections){
-                if(detection.metadata != null && detection.metadata.name.contains("Red"));
+                if(detection.metadata != null && detection.metadata.name.contains("Red")){
+                    // Get the robot pose from AprilTag detection
+                    Pose3D robotPose3D = detection.robotPose;
+
+                    // Extract x, y, and yaw (heading)
+                    double x = robotPose3D.getPosition().x; // already in inches
+                    double y = robotPose3D.getPosition().y;
+                    double heading = robotPose3D.getOrientation().getYaw(AngleUnit.RADIANS);
+
+                    // Convert to Pedro Pose using FTC coordinates, then to Pedro coordinates
+                    return new Pose(x, y, heading, FTCCoordinates.INSTANCE)
+                            .getAsCoordinateSystem(PedroCoordinates.INSTANCE);
+                }
             }
-            return new Pose(0, 0, 0, FTCCoordinates.INSTANCE).getAsCoordinateSystem(PedroCoordinates.INSTANCE);
+            // No red tag detected, return default
+            return null;
         } else {
-            return new Pose();
+            // Blue alliance logic
+            for(AprilTagDetection detection : currentDetections){
+                if(detection.metadata != null && detection.metadata.name.contains("Blue")){
+                    Pose3D robotPose3D = detection.robotPose;
+
+                    double x = robotPose3D.getPosition().x;
+                    double y = robotPose3D.getPosition().y;
+                    double heading = robotPose3D.getOrientation().getYaw(AngleUnit.RADIANS);
+
+                    return new Pose(x, y, heading, FTCCoordinates.INSTANCE)
+                            .getAsCoordinateSystem(PedroCoordinates.INSTANCE);
+                }
+            }
+            return null;
         }
     }
 
