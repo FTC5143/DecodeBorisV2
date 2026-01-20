@@ -23,7 +23,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-@SuppressWarnings("ALL")
+
 public class Camera extends Component {
     private final Position cameraPosition = new Position(DistanceUnit.MM,
             0,0,0,0);
@@ -33,7 +33,7 @@ public class Camera extends Component {
     private VisionPortal visionPortal;
     public List<AprilTagDetection> currentDetections;
 
-    @SuppressWarnings("unused")
+    
     public Camera(Robot robot) {
         super(robot);
     }

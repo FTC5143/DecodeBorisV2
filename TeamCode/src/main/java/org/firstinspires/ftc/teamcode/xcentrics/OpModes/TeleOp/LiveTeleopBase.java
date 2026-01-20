@@ -7,12 +7,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.xcentrics.robots.LiveRobot;
 
-@SuppressWarnings("ALL")
+
 public abstract class LiveTeleopBase extends LinearOpMode {
 
     protected LiveRobot robot;
 
-    @SuppressWarnings("CanBeFinal")
+    
     private ArrayMap<Double, Runnable> todo_tasks = new ArrayMap<>();
 
     @Override
@@ -61,7 +61,7 @@ public abstract class LiveTeleopBase extends LinearOpMode {
     // Called repeatedly while the program is running
     public abstract void on_loop();
 
-    @SuppressWarnings("unused")
+    
     public void run_in(Runnable command, double milliseconds) {
         todo_tasks.put(getRuntime()+((milliseconds)/1000.0), command);
     }

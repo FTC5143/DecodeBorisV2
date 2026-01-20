@@ -15,14 +15,14 @@ import org.firstinspires.ftc.teamcode.xcentrics.components.Component;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.DcMotorQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.CRServoQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
-@SuppressWarnings("ALL")
+
 @Configurable
 class IntakeConfig{
-    @SuppressWarnings("unused")
+    
     public static double speed;
 }
 
-@SuppressWarnings("ALL")
+
 public class Intake extends Component {
     ///  MOTORS ///
     DcMotorQUS intake;
@@ -32,15 +32,15 @@ public class Intake extends Component {
     {
         name = "intake";
     }
-    @SuppressWarnings("unused")
+    
     public Intake(Robot robot) {
         super(robot);
     }
     public void registerHardware(HardwareMap hardwareMap){
         super.registerHardware(hardwareMap);
-        intake = new DcMotorQUS(hardwareMap.get(DcMotorEx.class,"intake"));
-        in1 = new CRServoQUS(hardwareMap.get(CRServo.class,"transfer1"));
-        in2 = new CRServoQUS(hardwareMap.get(CRServo.class,"transfer2"));
+        intake = new DcMotorQUS(hardwareMap.get(DcMotorEx.class,"intake"),true);
+        in1 = new CRServoQUS(hardwareMap.get(CRServo.class,"transfer1"),true);
+        in2 = new CRServoQUS(hardwareMap.get(CRServo.class,"transfer2"),true);
         in1.servo.setDirection(DcMotorSimple.Direction.REVERSE);
         in2.servo.setDirection(DcMotorSimple.Direction.REVERSE);
     }

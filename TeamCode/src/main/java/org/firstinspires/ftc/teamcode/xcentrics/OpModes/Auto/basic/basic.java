@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.xcentrics.OpModes.classes;
 
 /// DONOT USE WITHOUT COMMENTING OUT d.p();
-@SuppressWarnings({"ALL", "unused"})
+
 @Disabled
 ///  DONOT USE WITHOUT COMMENTINGT OUT d.p();
 @Autonomous(name = "Basic")

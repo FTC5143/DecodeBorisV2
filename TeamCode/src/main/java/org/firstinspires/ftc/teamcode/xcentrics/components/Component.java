@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings("ALL")
+
 public abstract class Component {
 
     protected final static int STATUS_OFFLINE = 0;
@@ -22,14 +22,14 @@ public abstract class Component {
     protected int status = STATUS_OFFLINE;
 
     // The robot that we are a part of
-    @SuppressWarnings("CanBeFinal")
+    
     protected Robot robot;
     protected Telemetry telemetry;
 
-    @SuppressWarnings("unused")
+    
     protected final DecimalFormat TELEMETRY_DECIMAL = new DecimalFormat("##.00");
 
-    @SuppressWarnings("unused")
+    
     public Component(Robot robot) {
         this.robot = robot;
         robot.registerComponent(this);

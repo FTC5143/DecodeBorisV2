@@ -2,24 +2,24 @@ package org.firstinspires.ftc.teamcode.xcentrics.util.qus;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-@SuppressWarnings("ALL")
+
 public class DcMotorQUS extends QUS {
     private boolean first_cache = false; // Have we cached a value yet
 
     private double queued_power;
 
-    @SuppressWarnings("CanBeFinal")
+
     private boolean do_cache;
 
-    @SuppressWarnings("CanBeFinal")
+
     public DcMotorEx motor;
 
-    @SuppressWarnings("unused")
+
     public DcMotorQUS(DcMotorEx motor) {
         this(motor, true);
     }
 
-    @SuppressWarnings("unused")
+
     public DcMotorQUS(DcMotorEx motor, boolean do_cache) {
         this.motor = motor;
         this.do_cache = do_cache;
