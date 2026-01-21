@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.xcentrics.components.live;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.lights.LightsManager;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.control.PIDFController;
 import com.pedropathing.geometry.Pose;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.xcentrics.robots.LiveRobot;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.DcMotorQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.util.qus.ServoQUS;
 import org.firstinspires.ftc.teamcode.xcentrics.components.Component;
+import com.bylazar.lights.RGBIndicator;
 
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.TurretConfig.*;
 
@@ -57,6 +59,7 @@ class TurretConfig {
     
     public static PIDFCoefficients turretPIDCoef = new PIDFCoefficients(0.01,0,0,0);
     public static double targetVelocity = 1300; // close is 1300, far is 1700
+    public static double greenPos = 0.444, redPos = 0.3;
 }
 
 @Configurable
@@ -71,16 +74,18 @@ public class Turret extends Component {
     public DcMotorEx fly1,fly2;
     private DcMotorQUS turret;
     public double turretOffset = 0;            // calibration offset
-    private ServoQUS hood1, kicker;
+    private ServoQUS hood1, kicker,led;
     private final PIDFController turretPID = new PIDFController(turretPIDCoef);
 
     private final LiveRobot robot;             // reference to robot
+    private LightsManager lightsManager;
 
     private final Pose redGoal = new Pose(131,137), blueGoal = new Pose(12,136);      // goal positions
     public static double distance;             // distance to goal
     public static boolean autoAim = true;
     public static boolean resetEncoder = false;
     public static double servoPos = 0;
+
 
     {
         name = "turret";
@@ -104,6 +109,7 @@ public class Turret extends Component {
         turret = new DcMotorQUS(map.get(DcMotorEx.class, "turret"),true);
         turret.motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        led = new ServoQUS(map.get(Servo.class,"led"),true);
         hood1 = new ServoQUS(map.get(Servo.class, "H1"));
         kicker = new ServoQUS(map.get(Servo.class, "kicker"));
     }
@@ -120,6 +126,7 @@ public class Turret extends Component {
         fly1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef);
         fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fly2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef2);
+        fly2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         if(LiveRobot.isAuto) {
             turret.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -128,6 +135,8 @@ public class Turret extends Component {
         turretPID.setCoefficients(turretPIDCoef);
         turret.motor.setPower(0);
         hood1.queue_position(0.5);
+        led.queue_position(greenPos);
+        led.update();
        // updateAll();
     }
 
@@ -161,11 +170,18 @@ public class Turret extends Component {
             fly2.setVelocity(0);
         }
 
-        updateAll();
-        Pose p = robot.camera.getPose();
-        if(p != null) {
-            robot.follower.setPose(p);
+
+        if(velocityReady){
+            led.queue_position(greenPos);
+        } else {
+            led.queue_position(redPos);
         }
+
+        updateAll();
+//        Pose p = robot.camera.getPose();
+//        if(p != null) {
+//            robot.follower.setPose(p);
+//        }
     }
 
     // ------------------------------
@@ -208,6 +224,7 @@ public class Turret extends Component {
 
     // Compute turret target with motion compensation
     private void computeTurretTarget() {
+
         Pose p = robot.follower.getPose();
         double targetRads = robot.isRed() ?
                 Math.atan2(redGoal.getY() - p.getY(), redGoal.getX() - p.getX()) :
@@ -220,11 +237,16 @@ public class Turret extends Component {
                 targetDegField - robotHeadingDeg - turretOffset
         );
 
+
+
         double rawTicks = targetDegTurret * (ticksPerTurretRotation / 360.0);
         double minTicks = -3951;
         double maxTicks = 2119;
 
         turretTarget = Math.max(minTicks, Math.min(maxTicks, rawTicks));
+
+
+
         turretPID.setTargetPosition(turretTarget);
         turretPID.updatePosition(turret.motor.getCurrentPosition());
         shooterReady = (turretPID.getError() <= 10);
@@ -274,6 +296,7 @@ public class Turret extends Component {
         turret.update();
         hood1.update();
         kicker.update();
+        led.update();
     }
     @Override
     public void shutdown() {

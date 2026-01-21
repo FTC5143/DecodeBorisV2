@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.xcentrics.OpModes.TeleOp.Comp;
 
+import com.bylazar.gamepad.GamepadManager;
+import com.bylazar.gamepad.PanelsGamepad;
 import com.pedropathing.geometry.Pose;
 
 import com.pedropathing.util.Timer;
@@ -20,6 +22,7 @@ public class TeleopLive extends LiveTeleopBase {
 
 
     private Timer opMode = new Timer();
+    //private PanelsGamepad g2 = PanelsGamepad.INSTANCE.getFirstManager().asCombinedFTCGamepad(OpModeInternal.this.gamepad2);
     //triangle Checker
     @Override
     public void on_init() {

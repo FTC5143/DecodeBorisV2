@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 
 
 @Configurable
-@Autonomous(name = "Big Blue Beutafle Triangle NEINE Artifact",group = "blue")
+@Autonomous(name = "Big Blue Beutafle Triangle NEIN Artifact",group = "blue")
 public class bigTriangleBlue12Artifact extends LiveAutoBase {
     private Blue12paths paths;
     public  int pathState = 1;
@@ -67,6 +67,7 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
                         robot.turret.stopAim();
                         //follow pickup path slowly
                         followPath(paths.getFirstPattern, intakeSpeed);
+                        robot.intake.intake();
                         //increment
                         pathState = 4;
                     break;
