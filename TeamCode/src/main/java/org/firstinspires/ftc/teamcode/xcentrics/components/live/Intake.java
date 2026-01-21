@@ -28,7 +28,7 @@ public class Intake extends Component {
     DcMotorQUS intake;
 
     /// CRServos ///
-    private CRServoQUS in1,in2,in3;
+    private CRServoQUS in1,in2,in3,in4;
     {
         name = "intake";
     }
@@ -42,9 +42,11 @@ public class Intake extends Component {
         in1 = new CRServoQUS(hardwareMap.get(CRServo.class,"transfer1"),true);
         in2 = new CRServoQUS(hardwareMap.get(CRServo.class,"transfer2"),true);
         in3 = new CRServoQUS(hardwareMap.get(CRServo.class,"transfer3"),true);
+        in4 = new CRServoQUS(hardwareMap.get(CRServo.class,"intake4"),true);
         in1.servo.setDirection(DcMotorSimple.Direction.REVERSE);
         in2.servo.setDirection(DcMotorSimple.Direction.FORWARD);
         in3.servo.setDirection(DcMotorSimple.Direction.REVERSE);
+        in4.servo.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void update(OpMode opMode){
@@ -57,12 +59,14 @@ public class Intake extends Component {
         in1.queue_power(power);
         in2.queue_power(power);
         in3.queue_power(power);
+        in4.queue_power(power);
         intake.queue_power(power);
     }
     private void update(){
         in1.update();
         in2.update();
         in3.update();
+        in4.update();
         intake.update();
     }
 
