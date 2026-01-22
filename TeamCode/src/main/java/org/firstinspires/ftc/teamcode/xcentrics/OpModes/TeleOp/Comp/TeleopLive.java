@@ -116,7 +116,7 @@ public class TeleopLive extends LiveTeleopBase {
         }
 
         if(gamepad2.left_bumper){
-            robot.intake.setPower(-1);
+            robot.intake.intake();
 
         } else if(gamepad2.right_bumper){
             robot.intake.setPower(1);

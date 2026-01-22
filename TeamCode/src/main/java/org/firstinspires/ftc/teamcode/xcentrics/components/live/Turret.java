@@ -147,8 +147,12 @@ public class Turret extends Component {
     public void update(OpMode opMode) {
         super.update(opMode);
 
-        turretPID.setCoefficients(turretPIDCoef);
- //       fly1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef);
+     //   turretPID.setCoefficients(turretPIDCoef);
+        fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fly1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef);
+        fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fly2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef2);
+        fly2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         updateTurretHeading();  // update turret heading relative to robot
         computeDistance(); //see how far we are
@@ -264,7 +268,7 @@ public class Turret extends Component {
     private void computeFlySpeed() {
         fly1.setVelocity(targetVelocity);
         fly2.setVelocity(targetVelocity);
-        velocityReady = Math.abs(fly1.getVelocity() - targetVelocity) <= 100;
+        velocityReady = Math.abs( -fly1.getVelocity() + targetVelocity) <= 100;
     }
     public void resetEncoder(){
         turret.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

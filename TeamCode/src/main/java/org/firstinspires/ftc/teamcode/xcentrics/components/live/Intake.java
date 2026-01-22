@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 @Configurable
 class IntakeConfig{
     
-    public static double speed;
+    public static double speed = -0.5;
 }
 
 
@@ -77,7 +77,7 @@ public class Intake extends Component {
     }
 
     public void intake(){
-         setPower(-1);
+         setPower(speed);
     }
     public void stopIntake(){
          setPower(0);

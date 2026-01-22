@@ -17,7 +17,7 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
     
     public static boolean b1;
     
-    public static double launchWait = 0.7;
+    public static double launchWait = 0.5;
     
     public static double maxSpeed = 1.5;
     
