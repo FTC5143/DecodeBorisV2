@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.comp.blue;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.LiveAutoBase;
 import org.firstinspires.ftc.teamcode.xcentrics.paths.auto.Blue9WithGatePaths;
-import org.firstinspires.ftc.teamcode.xcentrics.paths.auto.Red9WithGatePaths;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
-
+@Autonomous(name = "big blue triangle 9 with gate (Delta)", group = "blue")
 public class bigTriangleBlueWithGate extends LiveAutoBase {
     private Blue9WithGatePaths paths;
     private int pathState = 0;
