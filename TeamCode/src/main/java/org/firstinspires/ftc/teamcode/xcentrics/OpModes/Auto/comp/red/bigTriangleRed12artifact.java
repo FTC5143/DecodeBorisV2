@@ -189,7 +189,7 @@ public class bigTriangleRed12artifact extends LiveAutoBase {
         robot.turret.launch();
         robot.update();
         //get next one ready
-        robot.intake.setPower(-1);
+        robot.intake.intake();
         robot.update();
         halt(launchWait);
         //launch 2
@@ -205,7 +205,7 @@ public class bigTriangleRed12artifact extends LiveAutoBase {
         robot.update();
         waitUntillSpin();
         robot.turret.launch();
-        robot.intake.setPower(0);
+        robot.intake.stopIntake();
         robot.update();
     }
     private void waitUntillSpin(){
