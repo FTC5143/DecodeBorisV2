@@ -5,6 +5,7 @@ import com.bylazar.lights.LightsManager;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.control.PIDFController;
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -32,7 +33,7 @@ class TurretConfig {
     //public static double TurretP = 0, TurretI = 0, TurretD = 0;
   //public static double flyP = 0, flyI = 0, flyD = 0, flyF = 0;
   
-  public static com.qualcomm.robotcore.hardware.PIDFCoefficients flyPidCoef = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,22.9), flyPidCoef2 = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,22.9);
+  public static com.qualcomm.robotcore.hardware.PIDFCoefficients flyPidCoef = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,19.5), flyPidCoef2 = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,19.5);
 
 
     // ------------------------------
@@ -67,7 +68,7 @@ class TurretConfig {
 
 public class Turret extends Component {
     
-    public static double a = 0.7,b =0 ,c = 0.0; //far triangle is 0.5, close is 0.7
+    public static double a = -0.000139573,b = 0.0223807 ,c = 0.377289; //far triangle is 0.5, close is 0.7
 
     // ------------------------------
     // Hardware
@@ -86,6 +87,7 @@ public class Turret extends Component {
     public static boolean autoAim = true;
     public static boolean resetEncoder = false;
     public static double servoPos = 0;
+    public boolean manual;
 
 
     {
@@ -146,15 +148,16 @@ public class Turret extends Component {
     // Main Update Loop
     // ------------------------------
     @Override
-    public void update(OpMode opMode) {
+    public void update(LinearOpMode opMode) {
         super.update(opMode);
 
-     //   turretPID.setCoefficients(turretPIDCoef);
-        fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        fly1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef);
 
-        fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        fly2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef2);
+     //   turretPID.setCoefficients(turretPIDCoef);
+        //fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //fly1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef);
+
+        //fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //fly2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef2);
        // fly2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         updateTurretHeading();  // update turret heading relative to robot
@@ -266,7 +269,14 @@ public class Turret extends Component {
     // Hood / Flywheel Physics
     // ------------------------------
     private void computeHoodAngle() {
-        servoPos = a + (b * distance) + (c * c * distance);
+        if(distance < 1000 && !manual){
+            c = 0.35;
+        } else if(distance <= 1000) {
+            c = 0.25;
+        } else {
+
+        }
+        //servoPos = c + (b * distance) + (a * a * distance);
         hood1.queue_position(servoPos);
     }
     private void computeFlySpeed() {
@@ -307,11 +317,6 @@ public class Turret extends Component {
         led.update();
     }
     @Override
-
-
-
-
-
     public void shutdown() {
         super.shutdown();
     }
@@ -325,7 +330,7 @@ public class Turret extends Component {
         targetVelocity = 1300;
     }
     public void far(){
-        targetVelocity = 1700;
+        targetVelocity = 1600;
     }
     public void shoot3(){
         double wait = 0.5;

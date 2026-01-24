@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.xcentrics.components;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
@@ -25,9 +26,11 @@ public abstract class Component {
     
     protected Robot robot;
     protected Telemetry telemetry;
+    private boolean flag = false;
 
     
     protected final DecimalFormat TELEMETRY_DECIMAL = new DecimalFormat("##.00");
+    protected LinearOpMode opMode;
 
     
     public Component(Robot robot) {
@@ -41,7 +44,11 @@ public abstract class Component {
          */
     }
 
-    public void update(OpMode opmode) {
+    public void update(LinearOpMode opmode) {
+        if(!flag){
+            this.opMode = opmode;
+            flag = true;
+        }
         /**
          * Called every time the robot update method is called
          */

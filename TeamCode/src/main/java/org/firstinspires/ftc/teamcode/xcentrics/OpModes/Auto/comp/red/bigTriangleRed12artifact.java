@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 
 
 @Configurable
-@Autonomous(name = "Big Beutafle Red Triangle NEINE Artifact", group = "red")
+@Autonomous(name = "Big Red Triangle 9 Artifact", group = "red")
 public class bigTriangleRed12artifact extends LiveAutoBase {
     private Red12paths paths;
     public  int pathState = 1;

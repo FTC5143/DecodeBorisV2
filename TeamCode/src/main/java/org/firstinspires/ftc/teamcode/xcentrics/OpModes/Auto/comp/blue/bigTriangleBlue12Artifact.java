@@ -10,14 +10,10 @@ import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 
 
 @Configurable
-@Autonomous(name = "Big Blue Beutafle Triangle NEIN Artifact",group = "blue")
+@Autonomous(name = "Big Blue Triangle 9 Artifact",group = "blue")
 public class bigTriangleBlue12Artifact extends LiveAutoBase {
     private Blue12paths paths;
     public  int pathState = 1;
-    
-    public static boolean b1;
-    
-    public static double launchWait = 0.5;
     
     public static double maxSpeed = 1.5;
     

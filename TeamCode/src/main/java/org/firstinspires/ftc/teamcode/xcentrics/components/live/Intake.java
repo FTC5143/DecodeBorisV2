@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.xcentrics.components.live;
 import static org.firstinspires.ftc.teamcode.xcentrics.components.live.IntakeConfig.speed;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -32,6 +33,8 @@ public class Intake extends Component {
     {
         name = "intake";
     }
+    //
+    private int state = 0;
     
     public Intake(Robot robot) {
         super(robot);
@@ -49,9 +52,21 @@ public class Intake extends Component {
         in4.servo.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    public void update(OpMode opMode){
+    public void update(LinearOpMode opMode){
         super.update(opMode);
+        switch(state){
+            case 0:
+                setPower(0);
+                break;
 
+            case 1:
+                setPower(speed);
+                break;
+
+            case 2:
+                setPower(-speed);
+                break;
+        }
         update();
     }
 
@@ -77,9 +92,12 @@ public class Intake extends Component {
     }
 
     public void intake(){
-         setPower(speed);
+         state = 1;
     }
     public void stopIntake(){
-         setPower(0);
+         state = 0;
+    }
+    public void outtake(){
+        state = 2;
     }
 }

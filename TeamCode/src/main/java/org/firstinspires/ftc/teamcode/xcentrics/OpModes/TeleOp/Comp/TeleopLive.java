@@ -33,7 +33,6 @@ public class TeleopLive extends LiveTeleopBase {
     public void on_start() {
         opMode.resetTimer();
         robot.follower.startTeleOpDrive();
-
         Turret.autoAim = false;
     }
 
@@ -108,10 +107,10 @@ public class TeleopLive extends LiveTeleopBase {
         //gamepad 1 controls
 
         if(gamepad2.dpad_up){
-            Turret.a -= 0.1;
+            Turret.c -= 0.1;
             halt(0.1);
         } else if(gamepad2.dpad_down){
-            Turret.a += 0.1;
+            Turret.c += 0.1;
             halt(0.1);
         }
 
@@ -119,7 +118,7 @@ public class TeleopLive extends LiveTeleopBase {
             robot.intake.intake();
 
         } else if(gamepad2.right_bumper){
-            robot.intake.intake();
+            robot.intake.outtake();
         } else {
             robot.intake.stopIntake();
         }

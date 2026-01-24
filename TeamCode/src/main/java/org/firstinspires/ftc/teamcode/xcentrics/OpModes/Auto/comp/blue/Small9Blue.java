@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.LiveAutoBase;
 import org.firstinspires.ftc.teamcode.xcentrics.paths.auto.smallTriangleBlue;
 
-@Autonomous(name = "Small Blue Beutafle Triangle NEINE Artifact",group = "blue")
+@Autonomous(name = "Small Blue Triangle 9 Artifact",group = "blue")
 public class Small9Blue extends LiveAutoBase {
     private smallTriangleBlue paths;
     private int p = 0;

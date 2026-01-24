@@ -17,7 +17,7 @@ public class LiveRobot extends Robot{
     //public Camera camera;
     public static Pose lastPose = new Pose(0,0,Math.toRadians(0));
     {
-        name = "CYPHER"; //from the writing on the wall (daniel chapter 5)
+        name = "CYPHER";
     }
 
     public LiveRobot(LinearOpMode opMode) {
@@ -32,13 +32,11 @@ public class LiveRobot extends Robot{
     public void update(){
         super.update();
         follower.update();
-       setLastPose(follower.getPose());
+       lastPose = follower.getPose();
     }
     public void startup(){
         isRed = true;
     }
-
-
     @Override
     public  void updateTelemetry(){
         super.updateTelemetry();

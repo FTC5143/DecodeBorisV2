@@ -42,7 +42,7 @@ public class Blue9WithGatePaths {
                         new BezierCurve(
                                 new Pose(16.000, 83.000),
                                 new Pose(33.571, 81.068),
-                                new Pose(17.099, 75.257)
+                                new Pose(16.500, 70.000)
                         )
                 ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(90))
 
