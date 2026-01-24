@@ -55,7 +55,7 @@ public class Intake extends Component {
         update();
     }
 
-    public void setPower(double power){
+    private void setPower(double power){
         in1.queue_power(power);
         in2.queue_power(power);
         in3.queue_power(power);

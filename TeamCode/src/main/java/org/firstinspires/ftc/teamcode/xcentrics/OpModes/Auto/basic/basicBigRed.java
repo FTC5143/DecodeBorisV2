@@ -31,7 +31,7 @@ public class basicBigRed extends LiveAutoBase {
     @Override
     public void on_start() {
         robot.follower.setStartingPose(startPose);
-        robot.intake.setPower(1);
+        //robot.intake.setPower(1);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class basicBigRed extends LiveAutoBase {
 
             case 2:
                 robot.follower.followPath(travelToPattern);
-                robot.intake.setPower(1);
+                //robot.intake.setPower(1);
                 pathState++;
                 break;
 
