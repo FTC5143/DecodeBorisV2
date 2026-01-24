@@ -67,7 +67,7 @@ public class bigTriangleBlueWithGate extends LiveAutoBase {
             case 4:
                 if(b()){
                     robot.turret.shoot3();
-                    followPath(paths.gotoSecondPattern);
+                    followPath(paths.goToSecondPattern);
                     robot.turret.stopAim();
                     pathState++;
                     break;
