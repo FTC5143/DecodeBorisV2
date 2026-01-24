@@ -118,8 +118,6 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
 
             case 7:
                 if(notBusy()){
-                    //turn off intake
-                    robot.intake.stopIntake();
                     //go to score position at full speed
                     followPath(paths.scoreSecondPattern,maxSpeed);
                     //aim turret
