@@ -60,6 +60,7 @@ class TurretConfig {
     public static PIDFCoefficients turretPIDCoef = new PIDFCoefficients(0.01,0,0,0);
     public static double targetVelocity = 1300; // close is 1300, far is 1700
     public static double greenPos = 0.444, redPos = 0.3;
+    public static double kickerMin = 0.865, kickerMax = 0.45;
 }
 
 @Configurable
@@ -120,13 +121,14 @@ public class Turret extends Component {
     @Override
     public void startup() {
         super.startup();
-
-
+        fly1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fly1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef);
+        fly1.setDirection(DcMotorSimple.Direction.REVERSE);
+        fly2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fly2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef2);
-        fly2.setDirection(DcMotorSimple.Direction.REVERSE);
+        fly2.setDirection(DcMotorSimple.Direction.FORWARD);
 
         if(LiveRobot.isAuto) {
             turret.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -150,9 +152,10 @@ public class Turret extends Component {
      //   turretPID.setCoefficients(turretPIDCoef);
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fly1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef);
+
         fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fly2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,flyPidCoef2);
-        fly2.setDirection(DcMotorSimple.Direction.REVERSE);
+       // fly2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         updateTurretHeading();  // update turret heading relative to robot
         computeDistance(); //see how far we are
@@ -203,6 +206,7 @@ public class Turret extends Component {
         addData("TurretTicks",turret.motor.getCurrentPosition());
         addData("Distance", distance);
         addData("Fly1Vel", fly1.getVelocity());
+        addData("Fly2Vel",fly2.getVelocity());
         addData("FlyTargetVel",targetVelocity);
         addData("autoAim:", autoAim);
         addData("FlyError",Math.abs(fly1.getVelocity() - targetVelocity));
@@ -268,7 +272,7 @@ public class Turret extends Component {
     private void computeFlySpeed() {
         fly1.setVelocity(targetVelocity);
         fly2.setVelocity(targetVelocity);
-        velocityReady = Math.abs( -fly1.getVelocity() + targetVelocity) <= 100;
+        velocityReady = Math.abs( fly1.getVelocity() - targetVelocity) <= 100;
     }
     public void resetEncoder(){
         turret.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -280,10 +284,10 @@ public class Turret extends Component {
     // Launch / Kicker
     // ------------------------------
     public void launch() {
-        kicker.queue_position(0);
+        kicker.queue_position(kickerMax);
         updateAll();
         halt(0.5);
-        kicker.queue_position(0.9);
+        kicker.queue_position(kickerMin);
         updateAll();
     }
 
@@ -303,6 +307,11 @@ public class Turret extends Component {
         led.update();
     }
     @Override
+
+
+
+
+
     public void shutdown() {
         super.shutdown();
     }
@@ -312,14 +321,15 @@ public class Turret extends Component {
     public void stopAim(){
          autoAim = false;
     }
-    public void spinUp(){
-        targetVelocity += 100;
+    public void close(){
+        targetVelocity = 1300;
     }
-    public void spinDown(){
-        targetVelocity -=100;
+    public void far(){
+        targetVelocity = 1700;
     }
     public void shoot3(){
         double wait = 0.5;
+        robot.intake.intake();
         halt(wait);
         launch();
         halt(wait);
@@ -328,5 +338,6 @@ public class Turret extends Component {
         launch();
         halt(wait);
         launch();
+        robot.intake.stopIntake();
     }
 }
