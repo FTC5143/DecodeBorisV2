@@ -82,7 +82,7 @@ public class Turret extends Component {
     private final LiveRobot robot;             // reference to robot
     private LightsManager lightsManager;
 
-    private final Pose redGoal = new Pose(131,137), blueGoal = new Pose(12,136);      // goal positions
+    private final Pose redGoal = new Pose(135,141), blueGoal = new Pose(8,142);      // goal positions
     public static double distance;             // distance to goal
     public static boolean autoAim = true;
     public static boolean resetEncoder = false;

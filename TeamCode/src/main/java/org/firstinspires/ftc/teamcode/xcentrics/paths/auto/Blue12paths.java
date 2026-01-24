@@ -8,10 +8,10 @@ import com.pedropathing.paths.PathChain;
 
 
 public class Blue12paths {
-    
+
     public Pose startPose = new Pose(27.5,131.6,Math.toRadians(144));
     
-    public Pose scorePose = new Pose(56,95);
+    public Pose scorePose = new Pose(47.5,112);
     
     public PathChain scorePreload;
     
@@ -33,7 +33,7 @@ public class Blue12paths {
                         new BezierLine(
                                 new Pose(27.500, 131.600),
 
-                                new Pose(47.500, 112.000)
+                                scorePose
                         )
                 ).setLinearHeadingInterpolation(Math.toRadians(144), Math.toRadians(180))
 
@@ -41,7 +41,7 @@ public class Blue12paths {
 
         getFirstPattern = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(47.500, 112.000),
+                                scorePose,
                                 new Pose(59.000, 80.500),
                                 new Pose(18.844, 83.326)
                         )
@@ -53,7 +53,7 @@ public class Blue12paths {
                         new BezierLine(
                                 new Pose(18.844, 83.326),
 
-                                new Pose(47.500, 112.000)
+                                scorePose
                         )
                 ).setConstantHeadingInterpolation(Math.toRadians(180))
 
@@ -61,7 +61,7 @@ public class Blue12paths {
 
         goToSecondPattern = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(47.500, 112.000),
+                                scorePose,
                                 new Pose(52.575, 72.233),
                                 new Pose(50.603, 60.340)
                         )
@@ -73,7 +73,7 @@ public class Blue12paths {
                         new BezierLine(
                                 new Pose(50.603, 60.340),
 
-                                new Pose(18.542, 59.635)
+                                new Pose(10.000, 59.635)
                         )
                 ).setConstantHeadingInterpolation(Math.toRadians(180))
 
@@ -83,7 +83,7 @@ public class Blue12paths {
                         new BezierCurve(
                                 new Pose(18.542, 59.635),
                                 new Pose(49.600, 59.700),
-                                new Pose(47.500, 112.000)
+                                scorePose
                         )
                 ).setConstantHeadingInterpolation(Math.toRadians(180))
 
@@ -91,7 +91,7 @@ public class Blue12paths {
 
         park = follower.pathBuilder().addPath(
                         new BezierLine(
-                                new Pose(47.500, 112.000),
+                                scorePose,
 
                                 new Pose(35.500, 72.000)
                         )
