@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.xcentrics.robots;
 
 
 
+//port static org.firstinspires.ftc.teamcode.xcentrics.components.live.Turret.flyError;
+
 import com.bylazar.telemetry.TelemetryManager;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -46,6 +48,7 @@ public class Robot {
     public LinearOpMode opmode;
     public static boolean isRed = true;
     public static boolean isAuto = true;
+    public boolean b1 = false;
 
     
     ArrayList<Component> components = new ArrayList<>();
