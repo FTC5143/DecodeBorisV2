@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Camera;
+import org.firstinspires.ftc.teamcode.xcentrics.components.live.DualCamera;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Intake;
 
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Turret;
@@ -14,7 +15,8 @@ public class LiveRobot extends Robot{
     public  Follower follower;
     public  Intake intake;
     public  Turret turret;
-    //public Camera camera;
+    public Camera camera;
+    public DualCamera dualCamera;
     public static Pose lastPose = new Pose(0,0,Math.toRadians(0));
     {
         name = "CYPHER";
@@ -46,5 +48,21 @@ public class LiveRobot extends Robot{
     }
     public Pose getLastPose(){
         return lastPose;
+    }
+
+    /**
+     * Get current robot pose from vision or follower
+     */
+    public Pose getRobotPose() {
+        // Try to get pose from DualCamera first (AprilTag-based)
+        if (dualCamera != null) {
+            Pose cameraPose = dualCamera.getPose();
+            if (cameraPose != null) {
+                return cameraPose;
+            }
+        }
+
+        // Fall back to follower pose
+        return follower.getPose();
     }
 }
