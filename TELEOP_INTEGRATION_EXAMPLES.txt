@@ -1,0 +1,517 @@
+IMPLEMENTATION EXAMPLE - USING AUTONOMOUS SYSTEM IN TELEOP
+============================================================
+
+This file shows practical code examples for integrating the autonomous 
+ball pickup system into your TeleOp operations.
+
+
+EXAMPLE 1: BASIC TELEOP WITH AUTO ASSIST
+==========================================
+
+// In your TeleOp on_loop() method
+
+@Override
+public void on_loop() {
+    // 1. Update autonomous controller (handles button polling)
+    if (autoController != null) {
+        autoController.update(this);
+    }
+    
+    // 2. Check if autonomous mode is active
+    if (autoController != null && autoController.isAutoModeActive()) {
+        // In autonomous mode: turret/intake are auto-controlled
+        handleAutonomousMode();
+    } else {
+        // In manual mode: driver has full control
+        handleManualMode();
+    }
+    
+    // 3. Drive control works in both modes
+    handleDriveInput();
+    
+    // 4. Update telemetry
+    robot.updateTelemetry(telemetry);
+    if (autoController != null) {
+        autoController.displayAutoStatusBanner();
+        autoController.updateTelemetry(telemetry);
+    }
+    
+    telemetry.update();
+}
+
+
+EXAMPLE 2: MANUAL MODE IMPLEMENTATION
+======================================
+
+private void handleManualMode() {
+    // Manual turret control
+    if (gamepad2 != null) {
+        // Rotate turret with left stick
+        double turretInput = gamepad2.left_stick_x;
+        if (Math.abs(turretInput) > 0.1) {
+            robot.turret.turret.queue_power(turretInput * 0.8);
+        } else {
+            robot.turret.turret.queue_power(0);
+        }
+        
+        // Flywheel control with bumpers
+        if (gamepad2.right_bumper) {
+            robot.turret.fly1.setVelocity(1300);  // Close range
+            robot.turret.fly2.setVelocity(1300);
+        } else if (gamepad2.left_bumper) {
+            robot.turret.fly1.setVelocity(0);
+            robot.turret.fly2.setVelocity(0);
+        }
+        
+        // Launch with A button
+        if (gamepad2.a) {
+            robot.turret.launch();
+        }
+        
+        // Intake with Y (pickup) / X (outtake)
+        if (gamepad2.y) {
+            robot.intake.intake();
+        } else if (gamepad2.x) {
+            robot.intake.outtake();
+        } else {
+            robot.intake.stopIntake();
+        }
+    }
+    
+    telemetry.addLine("MANUAL MODE - Full driver control");
+}
+
+
+EXAMPLE 3: AUTONOMOUS MODE IMPLEMENTATION
+===========================================
+
+private void handleAutonomousMode() {
+    // In autonomous mode, turret and intake are controlled by the system
+    // Driver can only:
+    // 1. Move robot with drive stick (optional)
+    // 2. Override/cancel with X button
+    // 3. Emergency stop with Back button
+    
+    telemetry.addLine("AUTONOMOUS MODE ACTIVE");
+    telemetry.addData("State", autoController.getCurrentAutoState());
+    telemetry.addLine("");
+    telemetry.addLine("Current Actions (Auto-Controlled):");
+    telemetry.addData("  Intake", robot.intake);  // controlled by system
+    telemetry.addData("  Turret", robot.turret);  // controlled by system
+    telemetry.addLine("");
+    telemetry.addLine("Available Controls:");
+    telemetry.addLine("  Drive Stick: Move robot");
+    telemetry.addLine("  X Button: Override auto");
+    telemetry.addLine("  Back: Emergency stop");
+}
+
+
+EXAMPLE 4: DRIVE CONTROL (WORKS IN BOTH MODES)
+===============================================
+
+private void handleDriveInput() {
+    if (gamepad1 == null) {
+        return;
+    }
+    
+    // Tank drive example
+    double leftPower = -gamepad1.left_stick_y;    // Negative for forward
+    double rightPower = -gamepad1.right_stick_y;
+    
+    // In autonomous mode, driver can still move for repositioning
+    // This override of drive is allowed
+    
+    telemetry.addData("Drive", 
+        String.format("L:%.2f R:%.2f", leftPower, rightPower));
+}
+
+
+EXAMPLE 5: INITIALIZATION
+==========================
+
+@Override
+public void on_init() {
+    telemetry.addLine("Initializing TeleOp with Auto Assist...");
+    telemetry.update();
+    
+    try {
+        // Initialize autonomous system components
+        robot.initializeAutonomousSystem();
+        
+        // Initialize driver controller
+        robot.initializeAutonomousController(gamepad1, gamepad2);
+        
+        // Store reference to controller for easy access
+        autoController = robot.autonomousController;
+        
+        telemetry.addLine("✓ Auto system initialized");
+        telemetry.addLine("✓ Ready for match");
+        telemetry.update();
+        
+    } catch (Exception e) {
+        telemetry.addLine("✗ Failed to initialize auto system");
+        telemetry.addData("Error", e.getMessage());
+        telemetry.update();
+        
+        // System still works in manual mode
+        autoController = null;
+    }
+}
+
+
+EXAMPLE 6: DETECTING MODE CHANGES IN CODE
+===========================================
+
+// Detect when user toggles auto mode
+private BallPickupAndScoringSystem.AutoState previousState = 
+    BallPickupAndScoringSystem.AutoState.MANUAL;
+
+@Override
+public void on_loop() {
+    if (autoController != null) {
+        BallPickupAndScoringSystem.AutoState currentState = 
+            autoController.getCurrentAutoState();
+        
+        // Detect transition into auto mode
+        if (previousState == BallPickupAndScoringSystem.AutoState.MANUAL &&
+            currentState != BallPickupAndScoringSystem.AutoState.MANUAL) {
+            telemetry.addLine(">> AUTO MODE ENABLED");
+            // Can add custom startup actions here
+        }
+        
+        // Detect transition out of auto mode
+        if (previousState != BallPickupAndScoringSystem.AutoState.MANUAL &&
+            currentState == BallPickupAndScoringSystem.AutoState.MANUAL) {
+            telemetry.addLine(">> AUTO MODE DISABLED");
+            // Can add custom cleanup here
+        }
+        
+        previousState = currentState;
+    }
+}
+
+
+EXAMPLE 7: CUSTOM TELEMETRY DURING AUTONOMOUS
+===============================================
+
+private void displayAutoSystemTelemetry() {
+    if (autoController == null) {
+        return;
+    }
+    
+    telemetry.addLine("═══════════════════════════════");
+    telemetry.addLine("AUTONOMOUS BALL SYSTEM");
+    telemetry.addLine("═══════════════════════════════");
+    
+    BallPickupAndScoringSystem.AutoState state = 
+        autoController.getCurrentAutoState();
+    
+    switch (state) {
+        case MANUAL:
+            telemetry.addLine("State: MANUAL (Awaiting command)");
+            telemetry.addLine("Action: Press Y to enable auto");
+            break;
+        case SCAN:
+            telemetry.addLine("State: SCAN");
+            telemetry.addData("Balls detected", 
+                robot.ballDetectionVision.getBallCount());
+            break;
+        case NAVIGATE_TO_BALL:
+            telemetry.addLine("State: NAVIGATE_TO_BALL");
+            telemetry.addLine("Action: Moving to detected ball");
+            break;
+        case PICKUP:
+            telemetry.addLine("State: PICKUP");
+            telemetry.addLine("Action: Intake spinning");
+            break;
+        case NAVIGATE_TO_GOAL:
+            telemetry.addLine("State: NAVIGATE_TO_GOAL");
+            telemetry.addLine("Action: Moving to shooting position");
+            break;
+        case ALIGN_TURRET:
+            telemetry.addLine("State: ALIGN_TURRET");
+            telemetry.addLine("Action: Aiming & spinning up");
+            break;
+        case WAIT_FOR_READY:
+            telemetry.addLine("State: WAIT_FOR_READY");
+            telemetry.addLine("Action: Checking turret status");
+            break;
+        case SHOOT:
+            telemetry.addLine("State: SHOOT");
+            telemetry.addLine("Action: Firing ball");
+            break;
+        case VERIFY:
+            telemetry.addLine("State: VERIFY");
+            telemetry.addLine("Action: Confirming score");
+            break;
+        case ERROR:
+            telemetry.addLine("State: ERROR");
+            telemetry.addLine("Action: Attempting recovery");
+            break;
+    }
+    
+    telemetry.addLine("═══════════════════════════════");
+}
+
+
+EXAMPLE 8: RESPONDING TO AUTO MODE CHANGES
+===========================================
+
+// Safe cleanup when exiting auto mode
+private void onAutoModeDisabled() {
+    if (robot == null) {
+        return;
+    }
+    
+    // Stop any running mechanisms
+    robot.intake.stopIntake();
+    robot.turret.stopAim();
+    
+    telemetry.addLine("Auto mode disabled - mechanisms stopped");
+}
+
+// Custom initialization when entering auto mode
+private void onAutoModeEnabled() {
+    telemetry.addLine("Auto mode enabled - system ready");
+}
+
+// Use in on_loop():
+private BallPickupAndScoringSystem.AutoState previousAutoState = 
+    BallPickupAndScoringSystem.AutoState.MANUAL;
+
+private void checkAutoModeTransition() {
+    if (autoController == null) {
+        return;
+    }
+    
+    BallPickupAndScoringSystem.AutoState currentAutoState = 
+        autoController.getCurrentAutoState();
+    
+    boolean wasManual = previousAutoState == 
+        BallPickupAndScoringSystem.AutoState.MANUAL;
+    boolean isManual = currentAutoState == 
+        BallPickupAndScoringSystem.AutoState.MANUAL;
+    
+    if (wasManual && !isManual) {
+        // Entering auto mode
+        onAutoModeEnabled();
+    } else if (!wasManual && isManual) {
+        // Exiting auto mode
+        onAutoModeDisabled();
+    }
+    
+    previousAutoState = currentAutoState;
+}
+
+
+EXAMPLE 9: FORCE DISABLE AUTO IN EMERGENCY
+===========================================
+
+// Add emergency stop handler
+private void handleEmergencyStop() {
+    if (autoController != null) {
+        // Force disable autonomous
+        autoController.forceDisableAuto();
+        
+        // Stop all mechanisms
+        robot.intake.stopIntake();
+        robot.turret.stopAim();
+        robot.follower.breakFollowing();
+        
+        telemetry.addLine("!!! EMERGENCY STOP ACTIVATED !!!");
+        telemetry.addLine("All systems halted");
+    }
+}
+
+// Can be called from on_loop() if custom condition detected
+private void on_loop() {
+    // ... normal loop code ...
+    
+    // Custom emergency condition
+    if (someErrorCondition) {
+        handleEmergencyStop();
+    }
+}
+
+
+EXAMPLE 10: TELEMETRY STATUS BAR
+=================================
+
+private void displayStatusBar() {
+    if (autoController == null) {
+        return;
+    }
+    
+    String autoStatus = autoController.isAutoModeActive() ? 
+        "[AUTO ON]" : "[MANUAL]";
+    
+    String visionStatus = "";
+    if (robot.ballDetectionVision.isConnected()) {
+        visionStatus += "B";  // B = Ball detection
+    }
+    if (robot.aprilTagVision.isPoseValid()) {
+        visionStatus += "T";  // T = Tag detection
+    }
+    if (visionStatus.isEmpty()) {
+        visionStatus = "NONE";
+    }
+    
+    String turretStatus = robot.turret.shooterReady ? 
+        "[READY]" : "[NOT READY]";
+    
+    telemetry.addLine(autoStatus + " | Vision:" + visionStatus + 
+        " | Turret:" + turretStatus);
+}
+
+
+EXAMPLE 11: FULL TELEOP CLASS SKELETON
+=======================================
+
+@TeleOp(name = "Complete Teleop with Auto", group = "TeleOp")
+public class CompleteTeleopWithAuto extends LiveTeleopBase {
+    
+    private AutonomousController autoController;
+    private BallPickupAndScoringSystem.AutoState previousAutoState;
+    
+    @Override
+    public void on_init() {
+        // Initialize auto system
+        try {
+            robot.initializeAutonomousSystem();
+            robot.initializeAutonomousController(gamepad1, gamepad2);
+            autoController = robot.autonomousController;
+            previousAutoState = BallPickupAndScoringSystem.AutoState.MANUAL;
+        } catch (Exception e) {
+            telemetry.addLine("Error: " + e.getMessage());
+        }
+    }
+    
+    @Override
+    public void on_start() {
+        telemetry.addLine("TeleOp started - ready for input");
+    }
+    
+    @Override
+    public void on_loop() {
+        // Update auto controller (handles button polling)
+        if (autoController != null) {
+            autoController.update(this);
+        }
+        
+        // Main control logic
+        if (autoController != null && autoController.isAutoModeActive()) {
+            handleAutonomousMode();
+        } else {
+            handleManualMode();
+        }
+        
+        // Drive always works
+        handleDriveInput();
+        
+        // Check transitions
+        checkAutoModeTransition();
+        
+        // Update telemetry
+        displayStatusBar();
+        displayAutoSystemTelemetry();
+        robot.updateTelemetry(telemetry);
+        telemetry.update();
+    }
+    
+    @Override
+    public void on_stop() {
+        if (autoController != null) {
+            autoController.forceDisableAuto();
+        }
+    }
+    
+    private void handleAutonomousMode() {
+        telemetry.addLine("AUTO MODE - Turret/Intake controlled by system");
+        telemetry.addLine("Press X to override, Back for E-Stop");
+    }
+    
+    private void handleManualMode() {
+        // Implement manual controls for turret/intake
+        // (See examples above)
+    }
+    
+    private void handleDriveInput() {
+        // Drive control implementation
+    }
+    
+    private void checkAutoModeTransition() {
+        // Transition detection
+    }
+    
+    private void displayStatusBar() {
+        // Status bar display
+    }
+    
+    private void displayAutoSystemTelemetry() {
+        // Detailed auto telemetry
+    }
+}
+
+
+EXAMPLE 12: ERROR HANDLING
+==========================
+
+@Override
+public void on_loop() {
+    try {
+        if (autoController != null) {
+            autoController.update(this);
+        }
+        
+        // Main logic
+        if (autoController != null && autoController.isAutoModeActive()) {
+            handleAutonomousMode();
+        } else {
+            handleManualMode();
+        }
+        
+        handleDriveInput();
+        robot.updateTelemetry(telemetry);
+        telemetry.update();
+        
+    } catch (Exception e) {
+        // Error occurred - try to recover
+        telemetry.addData("ERROR", e.getMessage());
+        telemetry.addLine("Stack trace: " + e.toString());
+        
+        try {
+            // Try to disable auto and stop mechanisms
+            if (autoController != null) {
+                autoController.forceDisableAuto();
+            }
+        } catch (Exception e2) {
+            // Recovery failed
+            telemetry.addLine("Recovery failed!");
+        }
+        
+        telemetry.update();
+    }
+}
+
+
+KEY TAKEAWAYS
+=============
+
+1. Always check autoController != null before using
+2. Call autoController.update() every loop cycle
+3. Check isAutoModeActive() to determine control mode
+4. Drive stick works in both modes (operator choice)
+5. Use displayAutoStatusBanner() for driver info
+6. Handle exceptions gracefully with try/catch
+7. Always provide manual override (X button works)
+8. Emergency stop (Back) halts all systems immediately
+9. Haptic feedback gives driver confirmation
+10. Telemetry shows system state for debugging
+
+This integration allows seamless switching between:
+- Pure manual control
+- Autonomous assistance (selective mechanism control)
+- Full autonomous mode
+
+With proper error handling and emergency controls throughout!
+

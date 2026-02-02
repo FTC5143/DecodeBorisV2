@@ -89,6 +89,10 @@ public class Turret extends Component {
     public static double servoPos = 0;
     public boolean manual;
 
+    // Manual target override (field angle in radians)
+    private boolean manualTargetEnabled = false;
+    private double manualTargetAngleRad = 0.0;
+
 
     {
         name = "turret";
@@ -235,11 +239,16 @@ public class Turret extends Component {
 
     // Compute turret target with motion compensation
     private void computeTurretTarget() {
-
         Pose p = robot.follower.getPose();
-        double targetRads = robot.isRed() ?
-                Math.atan2(redGoal.getY() - p.getY(), redGoal.getX() - p.getX()) :
-                Math.atan2(blueGoal.getY() - p.getY(), blueGoal.getX() - p.getX());
+        double targetRads;
+
+        if (manualTargetEnabled) {
+            targetRads = manualTargetAngleRad;
+        } else {
+            targetRads = robot.isRed() ?
+                    Math.atan2(redGoal.getY() - p.getY(), redGoal.getX() - p.getX()) :
+                    Math.atan2(blueGoal.getY() - p.getY(), blueGoal.getX() - p.getX());
+        }
 
         double targetDegField = Math.toDegrees(targetRads);
         double robotHeadingDeg = Math.toDegrees(p.getHeading());
@@ -325,6 +334,7 @@ public class Turret extends Component {
     }
     public void stopAim(){
          autoAim = false;
+            manualTargetEnabled = false;
     }
     public void close(){
         targetVelocity = 1300;
@@ -344,5 +354,54 @@ public class Turret extends Component {
         halt(wait);
         launch();
         robot.intake.stopIntake();
+    }
+
+    // ------------------------------
+    // Autonomous Helper API
+    // ------------------------------
+
+    /**
+     * Set a manual turret target angle (field-centric radians)
+     */
+    public void setTargetAngle(double angleRadians) {
+        manualTargetAngleRad = angleRadians;
+        manualTargetEnabled = true;
+        autoAim = true;
+    }
+
+    /**
+     * Set flywheel target velocity (RPM or native units)
+     */
+    public void setFlywheelVelocity(double velocity) {
+        targetVelocity = velocity;
+    }
+
+    /**
+     * Get turret position error (encoder ticks)
+     */
+    public double getTurretError() {
+        return turretPID.getError();
+    }
+
+    /**
+     * Get flywheel velocity error (absolute)
+     */
+    public double getFlywheelError() {
+        return Math.abs(fly1.getVelocity() - targetVelocity);
+    }
+
+    /**
+     * Check if turret and flywheel are ready to fire
+     */
+    public boolean isReadyToFire(double turretToleranceTicks, double flywheelTolerance) {
+        return Math.abs(getTurretError()) <= turretToleranceTicks
+                && getFlywheelError() <= flywheelTolerance;
+    }
+
+    /**
+     * Fire a single shot
+     */
+    public void shoot() {
+        launch();
     }
 }

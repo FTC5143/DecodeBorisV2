@@ -1,0 +1,606 @@
+AUTONOMOUS BALL PICKUP AND SCORING SYSTEM
+==========================================
+FTC Robot Control System - 5143 Xcentrics
+Version 1.0
+
+TABLE OF CONTENTS
+=================
+1. Overview
+2. System Architecture
+3. Components
+4. Hardware Requirements
+5. Configuration
+6. Usage Guide
+7. Driver Controls
+8. State Machine
+9. Troubleshooting
+10. Integration Guide
+
+================================================================================
+1. OVERVIEW
+================================================================================
+
+This system provides a complete autonomous ball pickup and scoring solution for
+FTC robots using:
+- Husky Lens camera for real-time ball detection
+- AprilTag vision for field localization
+- Pedro Pathing for autonomous navigation
+- Turret-based aiming and shooting
+
+Key Features:
+✓ Real-time ball detection and tracking
+✓ AprilTag-based pose fusion for accurate localization
+✓ Autonomous ball pickup and scoring
+✓ Driver-controlled toggle with haptic feedback
+✓ Emergency stop and override capabilities
+✓ Full telemetry for debugging and monitoring
+
+================================================================================
+2. SYSTEM ARCHITECTURE
+================================================================================
+
+Component Hierarchy:
+┌─────────────────────────────────────────────┐
+│          AutoBallPickupAndScore              │ (Main OpMode)
+│                (OpMode)                      │
+└────────────────┬────────────────────────────┘
+                 │
+    ┌────────────┼────────────┬──────────────┐
+    │            │            │              │
+    ▼            ▼            ▼              ▼
+┌────────┐  ┌─────────┐  ┌──────────┐  ┌──────────┐
+│ Robot  │  │ Ball    │  │ AprilTag │  │Autonomous│
+│ System │  │Detection│  │ Vision   │  │Controller│
+└────────┘  │ Vision  │  │          │  └──────────┘
+            └─────────┘  └──────────┘
+                │              │
+                └──────┬───────┘
+                       │
+                ┌──────▼───────┐
+                │ Ball Pickup  │
+                │ & Scoring    │
+                │ System       │
+                │ (State       │
+                │  Machine)    │
+                └──────────────┘
+
+Data Flow:
+1. Vision systems update simultaneously
+2. Ball detection identifies target balls
+3. AprilTag vision updates robot pose
+4. State machine processes current state
+5. Autonomous controller handles driver input
+6. Commands issued to intake/turret/drivetrain
+
+================================================================================
+3. COMPONENTS
+================================================================================
+
+BallDetectionVision.java
+────────────────────────
+Wraps Husky Lens camera for ball detection.
+
+Key Methods:
+- getClosestBall() : BallDetection
+  Returns the nearest detected ball or null
+
+- getAllDetectedBalls() : List<BallDetection>
+  Returns all detected balls sorted by priority
+
+- getBallCount() : int
+  Returns number of detected balls
+
+- areBallsDetected() : boolean
+  Quick check for any detected balls
+
+- isConnected() : boolean
+  Checks HuskyLens connection status
+
+Public Class: BallDetectionVision.BallDetection
+- x, y : Frame coordinates (0-320, 0-240)
+- width, height : Pixel dimensions
+- getDistanceFromCenter() : double
+- getArea() : int
+- getAngleFromCenter() : double
+
+Configuration (BallDetectionConfig):
+- minBallConfidence = 0.5
+- maxBallDistance = 500.0 pixels from center
+- minBlockSize = 20 pixels
+
+AprilTagVision.java
+───────────────────
+Enhanced AprilTag detection with pose fusion.
+
+Key Methods:
+- getPose() : Pose
+  Returns fused pose estimate (vision + odometry)
+
+- getAveragePose() : Pose
+  Returns smoothed pose from history
+
+- isPoseValid() : boolean
+  Checks if pose is fresh (< 500ms old)
+
+- getDetections() : List<AprilTagDetection>
+  Returns all current detections
+
+- isRedTagVisible() : boolean
+- isBlueTagVisible() : boolean
+  Check specific tag visibility
+
+- setStreaming(boolean) : void
+  Enable/disable camera streaming for performance
+
+Configuration (AprilTagVisionConfig):
+- enablePoseFusion = true
+- fusionWeight = 0.7 (70% vision, 30% odometry)
+- maxPoseUpdateDistance = 100.0 inches
+
+BallPickupAndScoringSystem.java
+───────────────────────────────
+Main state machine for autonomous operation.
+
+Enum: AutoState
+- MANUAL: Driver control, auto idle
+- SCAN: Search for balls
+- NAVIGATE_TO_BALL: Follow path to ball
+- PICKUP: Execute intake sequence
+- NAVIGATE_TO_GOAL: Move to shooting position
+- ALIGN_TURRET: Aim turret, spin up flywheel
+- WAIT_FOR_READY: Poll turret status
+- SHOOT: Execute shooting sequence
+- VERIFY: Confirm score
+- ERROR: Error recovery
+
+Key Methods:
+- setAutoEnabled(boolean) : void
+  Enable/disable autonomous mode
+
+- isAutoEnabled() : boolean
+  Check autonomous mode status
+
+- getCurrentState() : AutoState
+  Get current state machine state
+
+AutonomousController.java
+─────────────────────────
+Handles driver input and haptic feedback.
+
+Control Buttons:
+- gamepad1.y : Toggle autonomous mode
+- gamepad1.x : Override/cancel autonomous
+- gamepad1.back : Emergency stop
+
+Haptic Patterns:
+- TOGGLE_ON: Mode enabled
+- TOGGLE_OFF: Mode disabled
+- AUTO_ENGAGED: System engaged
+- MODE_CHANGED: State changed
+- EMERGENCY_STOP: System stopped
+- READY_TO_FIRE: Turret ready
+
+Key Methods:
+- setAutoEnabled(boolean) : void
+- isAutoModeActive() : boolean
+- forceDisableAuto() : void
+- triggerHapticFeedback(HapticPattern) : void
+- getCurrentAutoState() : AutoState
+
+================================================================================
+4. HARDWARE REQUIREMENTS
+================================================================================
+
+Required Hardware:
+1. Husky Lens Camera
+   - Connected via I2C
+   - Configured for ball detection
+
+2. Webcam (AprilTag Detection)
+   - Connected via USB
+   - Named "Webcam 1" in hardware config
+
+3. Drive Motors
+   - Standard tank/mecanum drive
+
+4. Intake Mechanism
+   - DcMotor "intake"
+   - CRServos "transfer1", "transfer2", "transfer3", "intake4"
+
+5. Turret System
+   - DcMotorEx "turret" (with encoder)
+   - DcMotorEx "fly1", "fly2" (flywheel motors)
+   - Servo "hood1" (firing angle adjustment)
+   - Servo "kicker" (ball release)
+   - Servo "led" (status indicator)
+
+6. Gamepad1 & Gamepad2
+   - Driver input devices
+
+Hardware Configuration (hardware.json example):
+{
+  "motorList": [
+    {"name": "intake", "port": 0, "type": "DcMotorEx"},
+    {"name": "turret", "port": 1, "type": "DcMotorEx"},
+    {"name": "fly1", "port": 2, "type": "DcMotorEx"},
+    {"name": "fly2", "port": 3, "type": "DcMotorEx"}
+  ],
+  "servoList": [
+    {"name": "transfer1", "port": 0, "type": "CRServo"},
+    {"name": "transfer2", "port": 1, "type": "CRServo"},
+    {"name": "hood1", "port": 2, "type": "Servo"},
+    {"name": "kicker", "port": 3, "type": "Servo"},
+    {"name": "led", "port": 4, "type": "Servo"}
+  ],
+  "sensorList": [
+    {"name": "huskylens", "port": "I2C", "type": "HuskyLens"},
+    {"name": "Webcam 1", "port": "USB", "type": "WebcamName"}
+  ]
+}
+
+================================================================================
+5. CONFIGURATION
+================================================================================
+
+Key Configurable Parameters:
+
+BallDetectionConfig:
+- minBallConfidence: Minimum detection confidence (0-1)
+- maxBallDistance: Max pixels from center to consider
+- minBlockSize: Minimum detected block size
+
+AprilTagVisionConfig:
+- enablePoseFusion: Enable vision+odometry fusion
+- fusionWeight: Vision weighting (0.7 = 70% vision, 30% odometry)
+- maxPoseUpdateDistance: Max distance for pose update validation
+- poseFusionHistorySize: Number of poses to average
+
+AutoSystemConfig:
+- ballDetectionTimeout: Seconds to search for ball
+- ballPickupDistance: Inches to trigger intake
+- pathFollowingTolerance: Path completion threshold
+- turretPositionTolerance: ±50 ticks error tolerance
+- turretVelocityTolerance: ±100 RPM error tolerance
+- turretAlignTimeout: Seconds for turret alignment
+- flywheelSpinupTimeout: Seconds for flywheel
+
+AutonomousControlConfig:
+- enableHapticFeedback: Enable vibration feedback
+- hapticDuration: Feedback duration
+
+Turret Configuration (in Turret.java):
+- ticksPerTurretRotation: 4839.3 (4839 ticks per 360°)
+- targetVelocity: 1300 (close) / 1600 (far) RPM
+
+================================================================================
+6. USAGE GUIDE
+================================================================================
+
+Autonomous Mode (AutoBallPickupAndScore OpMode):
+
+1. PreStart Phase:
+   - Press Init
+   - System initializes all components (5 second timeout)
+   - Waits for all systems ready
+
+2. Start Phase:
+   - Robot waits for start signal
+   - All cameras streaming
+
+3. During Match:
+   - Press Y to enable autonomous mode (haptic feedback)
+   - Robot begins ball scanning
+   - Autonomous pickup and scoring sequence follows
+   - Press X to override/cancel at any time
+   - Press Back for emergency stop
+
+Hybrid Mode (TeleopWithAutoAssist OpMode):
+
+1. PreStart Phase:
+   - Initialize systems during init
+   - Robot ready for manual control
+
+2. Start Phase:
+   - TeleOp begins
+   - Manual drive/turret/intake control available
+
+3. During Match:
+   - Press Y to toggle autonomous assistance (can switch modes)
+   - In autonomous mode: turret/intake auto-controlled
+   - In manual mode: full driver control
+   - Drive stick works in both modes for repositioning
+
+================================================================================
+7. DRIVER CONTROLS
+================================================================================
+
+Autonomous Mode OpMode:
+
+gamepad1.y (Rising Edge)
+├─ While Auto OFF: Enable auto mode → haptic feedback
+└─ While Auto ON: Disable auto mode → haptic feedback
+
+gamepad1.x (Rising Edge)
+├─ While Auto OFF: No effect
+└─ While Auto ON: Cancel auto, return to manual → haptic feedback
+
+gamepad1.back (Rising Edge)
+├─ Regardless of mode: Emergency stop
+├─ All systems halt immediately
+├─ Strong haptic feedback warning
+└─ Return to manual mode
+
+Hybrid TeleOp Mode:
+
+gamepad1.y (Rising Edge)
+├─ Toggle auto assist mode
+
+gamepad1 Left Stick
+├─ Drive forward/backward/rotate
+
+gamepad2.y
+├─ Intake balls
+
+gamepad2.x
+├─ Outtake balls
+
+gamepad2.right_bumper
+├─ Spin up flywheel (1300 RPM)
+
+gamepad2.left_bumper
+├─ Stop flywheel
+
+gamepad2.a
+├─ Launch ball
+
+gamepad2.left_stick_x
+├─ Manual turret control
+
+Haptic Feedback:
+- Toggle ON: Double pulse (100ms on/off, 50% intensity)
+- Toggle OFF: Quick tap (50ms on/off, 30% intensity)
+- Mode Changed: Double tap (50ms on/off, 60% intensity)
+- Emergency Stop: Long pulse (200ms on/off, 100% intensity)
+- Ready to Fire: Rapid pulse (100ms on/off, 50% intensity)
+
+================================================================================
+8. STATE MACHINE
+================================================================================
+
+State Transitions:
+
+MANUAL (Idle State)
+├─ autoEnabled = true → SCAN
+└─ autoEnabled = false → MANUAL (hold)
+
+SCAN (Search for Balls)
+├─ Ball detected → NAVIGATE_TO_BALL
+├─ Timeout → MANUAL
+└─ autoEnabled = false → MANUAL
+
+NAVIGATE_TO_BALL (Following Path)
+├─ Reached ball → PICKUP
+├─ Ball lost → SCAN
+├─ Timeout → MANUAL
+└─ autoEnabled = false → MANUAL
+
+PICKUP (Intake Sequence)
+├─ Intake complete → NAVIGATE_TO_GOAL
+├─ Timeout → SCAN
+└─ autoEnabled = false → MANUAL
+
+NAVIGATE_TO_GOAL (Path to Shoot Position)
+├─ Reached goal → ALIGN_TURRET
+├─ Timeout → SCAN
+└─ autoEnabled = false → MANUAL
+
+ALIGN_TURRET (Aim & Spinup)
+├─ Turret aligned → WAIT_FOR_READY
+├─ Timeout → SCAN
+└─ autoEnabled = false → MANUAL
+
+WAIT_FOR_READY (Check Readiness)
+├─ Ready conditions met → SHOOT
+│  (±50 ticks position, ±100 RPM velocity)
+├─ Timeout → SCAN
+└─ autoEnabled = false → MANUAL
+
+SHOOT (Fire Sequence)
+├─ All shots fired → VERIFY
+└─ autoEnabled = false → MANUAL
+
+VERIFY (Confirm Score)
+├─ After 1 second delay → SCAN (restart)
+
+ERROR (Error Recovery)
+├─ After 1 second → MANUAL
+
+Timeouts (Seconds):
+- SCAN: 3.0s
+- NAVIGATE_TO_BALL: 10.0s
+- NAVIGATE_TO_GOAL: 10.0s
+- ALIGN_TURRET: 3.0s
+- WAIT_FOR_READY: 2.0s
+
+================================================================================
+9. TROUBLESHOOTING
+================================================================================
+
+Issue: HuskyLens Not Detected
+Solution:
+- Check I2C connection
+- Verify hardware configuration name matches "huskylens"
+- Check HuskyLens firmware is up to date
+- Review BallDetectionVision startup logs
+
+Issue: AprilTag Detection Not Working
+Solution:
+- Verify webcam is connected to "Webcam 1" port
+- Check USB connection quality
+- Ensure AprilTags are properly mounted
+- Verify tag orientation and alignment
+- Check camera calibration
+
+Issue: Turret Not Aiming
+Solution:
+- Verify turret encoder connection
+- Check turretPIDCoef values are correct
+- Verify ticksPerTurretRotation calibration
+- Monitor turretPID.getError() in telemetry
+- Check manual turret control works
+
+Issue: Robot Not Following Path
+Solution:
+- Verify Pedro Pathing is configured correctly
+- Check robot pose estimation accuracy
+- Ensure AprilTag pose updates are valid
+- Review path endpoints for feasibility
+- Check odometry calibration
+
+Issue: Autonomous Mode Won't Enable
+Solution:
+- Check vision systems are initialized
+- Review system initialization logs in telemetry
+- Verify no ERROR state in state machine
+- Check gamepad1.y button detection
+
+Issue: Haptic Feedback Not Working
+Solution:
+- Verify enableHapticFeedback = true in config
+- Check gamepad1 connection
+- Ensure gamepad firmware is updated
+- Test gamepad rumble separately
+
+Issue: Ball Not Picked Up
+Solution:
+- Verify intake motor is functioning
+- Check ballPickupDistance is appropriate
+- Verify ball detection is working
+- Check intake timeout is sufficient
+- Monitor intake sensor feedback
+
+Issue: Vision Pose Updates Lag Behind
+Solution:
+- Check AprilTag detection frequency
+- Verify aprilTagVision.setStreaming(true)
+- Consider reducing other vision processing
+- Check USB/I2C bus for congestion
+
+================================================================================
+10. INTEGRATION GUIDE
+================================================================================
+
+To integrate this system into your existing robot code:
+
+Step 1: Add Component Classes
+─────────────────────────────
+Copy the following files to your xcentrics/components/live/ directory:
+- BallDetectionVision.java
+- AprilTagVision.java
+- BallPickupAndScoringSystem.java
+- AutonomousController.java
+
+Step 2: Update LiveRobot.java
+─────────────────────────────
+Already done! The updated LiveRobot.java includes:
+- Component declarations
+- Initialization methods:
+  • initializeAutonomousSystem()
+  • initializeAutonomousController()
+
+Step 3: Create OpModes
+──────────────────────
+Add these OpModes to your project:
+- AutoBallPickupAndScore.java (full autonomous)
+- TeleopWithAutoAssist.java (hybrid mode)
+
+Step 4: Configure Hardware
+──────────────────────────
+Update your hardware configuration (FTC control hub):
+1. I2C Device: "huskylens" (HuskyLens)
+2. USB Camera: "Webcam 1" (AprilTag)
+3. Motors: intake, turret, fly1, fly2
+4. Servos: transfer1-4, hood1, kicker, led
+
+Step 5: Tune Parameters
+───────────────────────
+In each config class, tune parameters for your robot:
+- BallDetectionConfig: minBlockSize, maxBallDistance
+- AprilTagVisionConfig: fusionWeight, maxPoseUpdateDistance
+- AutoSystemConfig: timeouts, distances, tolerances
+- AutonomousControlConfig: haptic settings
+
+Step 6: Test Incrementally
+──────────────────────────
+1. Test HuskyLens detection separately
+   → Run BallDetectionVision debug mode
+
+2. Test AprilTag vision
+   → Verify pose updates match actual robot position
+
+3. Test path following
+   → Run manual path test before autonomous
+
+4. Test turret readiness
+   → Verify position/velocity tolerance feedback
+
+5. Test state machine
+   → Monitor telemetry during each state transition
+
+6. Full integration test
+   → Run complete autonomous sequence
+
+Integration Checklist:
+☐ BallDetectionVision.java added
+☐ AprilTagVision.java added
+☐ BallPickupAndScoringSystem.java added
+☐ AutonomousController.java added
+☐ LiveRobot.java updated
+☐ AutoBallPickupAndScore.java created
+☐ TeleopWithAutoAssist.java created
+☐ Hardware configuration updated
+☐ HuskyLens calibrated for ball detection
+☐ AprilTag tags mounted and positioned
+☐ Pedro Pathing constants configured
+☐ Turret encoder calibration verified
+☐ Motor directions verified
+☐ Button mappings tested
+☐ Haptic feedback tested
+☐ Telemetry verification complete
+☐ Full system test passed
+
+Optional: Additional Features
+──────────────────────────────
+1. Ball color detection: Modify BallDetectionVision
+   to filter balls by color (red/blue alliance)
+
+2. Multiple ball tracking: Enhance to pick up
+   multiple balls in sequence
+
+3. Custom path generation: Create user-defined
+   paths for specific field positions
+
+4. Advanced turret control: Implement predictive
+   aiming based on ball velocity
+
+5. Telemetry recording: Log all detections and
+   states for post-match analysis
+
+6. Performance optimization: Reduce vision
+   processing for higher loop frequency
+
+7. Machine learning: Train custom detector
+   using HuskyLens learning mode
+
+================================================================================
+
+For questions or issues, review:
+- Component javadoc comments
+- State machine flow diagram
+- Configuration options
+- Telemetry output during debugging
+
+Good luck with your autonomous system!
+- 5143 Xcentrics
+
+================================================================================

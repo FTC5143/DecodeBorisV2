@@ -1,0 +1,411 @@
+QUICK START GUIDE - AUTONOMOUS BALL PICKUP SYSTEM
+==================================================
+
+GET UP AND RUNNING IN 10 MINUTES
+================================
+
+1. FILES CREATED (Add to your project)
+─────────────────────────────────────
+
+Location: TeamCode/src/main/java/org/firstinspires/ftc/teamcode/xcentrics/
+
+Components (add to components/live/):
+✓ BallDetectionVision.java       - Husky Lens integration
+✓ AprilTagVision.java            - AprilTag pose fusion  
+✓ BallPickupAndScoringSystem.java - Main state machine
+✓ AutonomousController.java      - Driver input handler
+
+OpModes (add to OpModes/):
+✓ AutoBallPickupAndScore.java       - Autonomous mode
+✓ TeleopWithAutoAssist.java         - Hybrid TeleOp mode
+
+Updated File:
+✓ LiveRobot.java - Already integrated with new components
+
+
+2. HARDWARE SETUP CHECKLIST
+───────────────────────────
+
+Must-Have Connections:
+□ Husky Lens → I2C (name: "huskylens")
+□ Webcam → USB (name: "Webcam 1")
+□ Motor "intake" (DcMotorEx)
+□ Motor "turret" (DcMotorEx, with encoder)
+□ Motor "fly1" & "fly2" (DcMotorEx, flywheel)
+□ Servo "hood1" (angle adjustment)
+□ Servo "kicker" (ball release)
+□ Servo "led" (status light)
+□ Servo "transfer1-4" (CRServos, intake transfer)
+
+
+3. CALIBRATION STEPS
+────────────────────
+
+Step 1: Calibrate HuskyLens
+- Power on robot with HuskyLens connected
+- In HuskyLens menu: Select ball detection algorithm
+- Point at real balls on field
+- Adjust detection threshold until balls are highlighted
+- Save settings
+
+Step 2: Mount AprilTags
+- Mount red goal AprilTag on red side goal
+- Mount blue goal AprilTag on blue side goal
+- Ensure clear line-of-sight from robot
+- Approximately 3-4 feet mounting height
+
+Step 3: Verify Turret Encoder
+- Manually rotate turret to known position
+- Note encoder reading in telemetry
+- Rotate 360° and verify reading returns to same value
+- If not, adjust ticksPerTurretRotation in TurretConfig
+
+Step 4: Test Pedro Pathing
+- Run existing autonomous with manual paths
+- Verify robot follows paths accurately
+- If drift detected, recalibrate odometry
+
+
+4. CONFIGURATION TUNING
+───────────────────────
+
+File: BallDetectionConfig
+- minBlockSize: Start at 20, increase if detecting noise
+- maxBallDistance: 500 pixels from center (frame width 320)
+- Result: Only realistic ball-sized objects detected
+
+File: AutoSystemConfig
+- ballPickupDistance: 8 inches (adjust for intake range)
+- turretPositionTolerance: 50 ticks (±50 = ~3.7°)
+- turretVelocityTolerance: 100 RPM (flywheel tolerance)
+- Timeouts: Start with defaults, increase if timeouts occur
+
+File: Turret.java
+- targetVelocity: 1300 (close range), 1600 (far range)
+- Adjust based on your goal distance
+
+
+5. FIRST RUN - AUTONOMOUS MODE
+───────────────────────────────
+
+Pre-Match Setup:
+1. Place robot on field
+2. Select "Auto Ball Pickup & Scoring" OpMode
+3. Press INIT
+   → System initializes all components
+   → Wait for "READY TO START" message
+4. Press START
+   → Robot waits for command
+
+During Match:
+1. Press gamepad1.Y
+   → Auto mode enabled (haptic feedback)
+   → Robot begins ball scanning
+2. Robot will:
+   a) Find nearest ball
+   b) Navigate to ball
+   c) Pick up ball
+   d) Navigate to goal
+   e) Aim turret
+   f) Fire 3 shots
+   g) Return to scanning
+3. Press gamepad1.X to cancel anytime
+4. Press gamepad1.Back for emergency stop (all systems halt)
+
+
+6. HYBRID MODE - TELEOP WITH AUTO ASSIST
+──────────────────────────────────────────
+
+Pre-Match Setup:
+1. Select "TeleOp with Auto Assist" OpMode
+2. Press INIT → System initializes
+3. Press START → Ready for driver input
+
+During Match:
+1. Normal TeleOp controls work (drive, manual turret, manual intake)
+2. Press gamepad1.Y to enable auto assist
+   → Turret/intake controlled by system
+   → Drive still under manual control
+3. Press gamepad1.Y again to return to full manual
+4. Emergency controls always available
+
+
+7. UNDERSTANDING THE STATE MACHINE
+───────────────────────────────────
+
+5 Main States:
+
+┌─────────┐
+│ MANUAL  │ ← Driver control (start here)
+└────┬────┘
+     │ Y button pressed
+     ▼
+┌─────────┐
+│  SCAN   │ ← Looking for balls
+└────┬────┘
+     │ Ball found
+     ▼
+┌──────────────────┐
+│ NAVIGATE_TO_BALL │ ← Following path
+└────┬─────────────┘
+     │ Ball reached
+     ▼
+┌────────┐
+│ PICKUP │ ← Intake spinning
+└────┬───┘
+     │ Intake complete
+     ▼
+┌──────────────────┐
+│ NAVIGATE_TO_GOAL │ ← Moving to goal
+└────┬─────────────┘
+     │ Goal reached
+     ▼
+┌─────────────────────┐
+│ ALIGN_TURRET/SHOOT  │ ← Aiming & firing
+└────┬────────────────┘
+     │ Shots complete
+     ▼
+┌────────┐
+│ VERIFY │ ← Brief delay
+└────┬───┘
+     │ Loop back
+     └────→ SCAN
+
+
+8. TELEMETRY READING
+────────────────────
+
+Key Information Displayed:
+- "Auto Mode": ON/OFF status
+- "Current State": Which state machine state
+- "Balls Detected": Count of visible balls
+- "Tags Visible": Which AprilTags currently seen (R/B)
+- "Turret Angle Error": Current accuracy
+- "Flywheel Velocity Error": RPM accuracy
+
+If something wrong:
+- Check "Current State" (should progress through states)
+- Check "Balls Detected" (> 0 required to start)
+- Check "Tags Visible" (R or B should appear regularly)
+- Check errors if state hangs (suggests timeout)
+
+
+9. TROUBLESHOOTING QUICK FIXES
+──────────────────────────────
+
+Problem: "Balls Detected" shows 0
+Fix: 
+  - Check HuskyLens connected
+  - Verify detection algorithm selected in HuskyLens menu
+  - Increase minBlockSize in BallDetectionConfig
+
+Problem: State stuck in SCAN
+Fix:
+  - Verify ball is in frame
+  - Check HuskyLens is looking at correct direction
+  - Increase ballDetectionTimeout
+
+Problem: State stuck in NAVIGATE_TO_BALL
+Fix:
+  - Check robot is moving (look at drive)
+  - Verify odometry calibration
+  - Increase pathFollowingTimeout
+
+Problem: State stuck in ALIGN_TURRET
+Fix:
+  - Check turret is moving manually first
+  - Verify turret encoder connection
+  - Check turretPIDCoef values not too low
+
+Problem: No haptic feedback
+Fix:
+  - Check enableHapticFeedback = true
+  - Test gamepad separately
+  - Verify gamepad firmware updated
+
+
+10. BUTTON REFERENCE CARD
+─────────────────────────
+
+Gamepad1 (Primary Driver):
+
+    Y
+    ├─ Toggle Auto Mode ON/OFF
+    │  └─ (Haptic feedback on change)
+    │
+    X
+    ├─ Override/Cancel Auto Mode
+    │  └─ (Only works if auto enabled)
+    │
+    Back
+    ├─ EMERGENCY STOP
+    │  └─ (All systems halt immediately)
+    │
+    Left Stick
+    ├─ Drive movement (Y/X axes)
+    │  └─ (Works in all modes)
+
+
+If Using Manual Turret Control (Hybrid Mode):
+
+Gamepad2 (Secondary Driver):
+
+    Y
+    ├─ Ball Intake
+    │
+    X
+    ├─ Ball Outtake
+    │
+    Right Bumper
+    ├─ Spin Flywheel (1300 RPM)
+    │
+    Left Bumper
+    ├─ Stop Flywheel
+    │
+    A
+    ├─ Launch Ball (Kicker)
+    │
+    Left Stick X
+    ├─ Manual Turret Rotation
+
+
+11. SUCCESS INDICATORS
+──────────────────────
+
+First Time Working:
+✓ HuskyLens detecting balls (telemetry shows > 0 balls)
+✓ State machine cycling through states
+✓ Haptic feedback when toggling modes
+✓ Robot attempting to navigate
+
+Full Autonomous Working:
+✓ Robot navigates to balls accurately
+✓ Pickup sequence completes
+✓ Robot shoots at goal
+✓ Cycle repeats for next ball
+
+Hybrid TeleOp Working:
+✓ Manual controls responsive
+✓ Can toggle auto assist
+✓ Turret/intake auto-controlled when auto enabled
+✓ Emergency override works
+
+
+12. PERFORMANCE OPTIMIZATION
+────────────────────────────
+
+If experiencing lag:
+1. Reduce vision resolution
+2. Lower camera streaming frequency
+3. Disable unused debug telemetry
+4. Check for memory leaks in telemetry
+
+If autonomous moving slowly:
+1. Increase pathFollowingTolerance (looser endpoint)
+2. Increase motor speeds in Path configuration
+3. Check robot battery voltage
+4. Verify motor PID tuning
+
+
+13. ADVANCED: CUSTOM TWEAKING
+──────────────────────────────
+
+Change Target Velocity:
+→ File: TurretConfig class
+  public static double targetVelocity = 1300; // or 1600
+
+Change Ball Search Timeout:
+→ File: AutoSystemConfig
+  public static double ballDetectionTimeout = 3.0; // seconds
+
+Change Turret Ready Threshold:
+→ File: AutoSystemConfig
+  public static double turretPositionTolerance = 50; // ticks
+
+Change Button Mapping:
+→ File: AutonomousController.updateToggleButton()
+  if (gamepad1.y) → change 'y' to desired button
+
+Enable/Disable Haptic Feedback:
+→ File: AutonomousControlConfig
+  public static boolean enableHapticFeedback = false; // true/false
+
+
+14. SUPPORT & DOCUMENTATION
+────────────────────────────
+
+Full documentation available in:
+→ AUTONOMOUS_SYSTEM_DOCUMENTATION.txt
+
+Component source files have detailed comments:
+- BallDetectionVision.java
+- AprilTagVision.java
+- BallPickupAndScoringSystem.java
+- AutonomousController.java
+
+Configuration classes have descriptions:
+- BallDetectionConfig
+- AprilTagVisionConfig
+- AutoSystemConfig
+- AutonomousControlConfig
+- TurretConfig
+
+
+15. COMMON ISSUES & SOLUTIONS
+──────────────────────────────
+
+┌─────────────────────────────────────────────────────┐
+│ Issue: "All systems initialized successfully" but   │
+│        robot doesn't move                           │
+├─────────────────────────────────────────────────────┤
+│ Solution:                                           │
+│ 1. Press Y to enable auto mode                      │
+│ 2. Check telemetry shows "Auto Enabled: true"       │
+│ 3. If State = MANUAL, system waiting for command    │
+│ 4. Verify ball is in frame                          │
+└─────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────┐
+│ Issue: "Timeout" in state machine                   │
+├─────────────────────────────────────────────────────┤
+│ Solution:                                           │
+│ 1. Check current state (which stage is timing out)  │
+│ 2. Verify required sensors working                  │
+│ 3. Increase that state's timeout value              │
+│ 4. Review target conditions for that state          │
+└─────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────┐
+│ Issue: "ERROR STATE" in telemetry                   │
+├─────────────────────────────────────────────────────┤
+│ Solution:                                           │
+│ 1. Check detailed error message in telemetry        │
+│ 2. Review logcat output (if available)              │
+│ 3. Verify all hardware connections                  │
+│ 4. Try manual mode first to test components         │
+└─────────────────────────────────────────────────────┘
+
+
+READY TO GO!
+============
+
+You now have:
+✓ Complete autonomous ball pickup system
+✓ Driver-controlled toggle functionality
+✓ Haptic feedback for mode changes
+✓ Emergency stop capability
+✓ Full telemetry monitoring
+✓ Hybrid TeleOp option
+
+Next Steps:
+1. Add all files to project
+2. Build and verify no errors
+3. Configure hardware connections
+4. Deploy to robot
+5. Run through calibration steps
+6. Test on field
+
+Good luck competing!
+- 5143 Xcentrics
+
+Questions? Check AUTONOMOUS_SYSTEM_DOCUMENTATION.txt for detailed info.
