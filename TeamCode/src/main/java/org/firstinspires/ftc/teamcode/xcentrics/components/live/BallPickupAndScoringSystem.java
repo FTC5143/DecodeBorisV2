@@ -645,11 +645,11 @@ public class BallPickupAndScoringSystem extends Component {
      */
     private void refreshBallObservations(Pose currentPose) {
         latestBallTargets.clear();
-
-        List<BallDetectionVision.BallObservation> observations = ballVision.getBallObservations(currentPose);
+        reusableObservations.clear();
+        ballVision.getBallObservations(currentPose, reusableObservations);
         long now = System.currentTimeMillis();
 
-        for (BallDetectionVision.BallObservation obs : observations) {
+        for (BallDetectionVision.BallObservation obs : reusableObservations) {
             BallTarget target = new BallTarget(
                     obs.id,
                     obs.fieldPose,
@@ -696,12 +696,12 @@ public class BallPickupAndScoringSystem extends Component {
             }
 
             BallGroup group = new BallGroup();
-            List<BallTarget> queue = new ArrayList<>();
-            queue.add(ball);
+            ArrayDeque<BallTarget> queue = new ArrayDeque<>();
+            queue.addLast(ball);
             visited.add(ball.id);
 
             while (!queue.isEmpty()) {
-                BallTarget current = queue.remove(0);
+                BallTarget current = queue.removeFirst();
                 group.balls.add(current);
 
                 for (BallTarget other : balls) {
@@ -711,7 +711,7 @@ public class BallPickupAndScoringSystem extends Component {
                     double dist = current.fieldPose.distanceFrom(other.fieldPose);
                     if (dist <= AutoSystemConfig.groupingDistance) {
                         visited.add(other.id);
-                        queue.add(other);
+                        queue.addLast(other);
                     }
                 }
             }
