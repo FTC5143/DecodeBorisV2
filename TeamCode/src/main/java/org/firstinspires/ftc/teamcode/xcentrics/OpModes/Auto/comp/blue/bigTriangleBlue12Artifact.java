@@ -37,6 +37,7 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
 
     @Override
     public void on_loop() {
+        robot.intake.intake();
         update();
         robot.turret.update(this);
     }

@@ -58,17 +58,13 @@ public class TeleopLive extends LiveTeleopBase {
 
 
             if (gamepad1.x) {
-                if (Robot.isRed) {
-                    robot.follower.setPose(new Pose(9, 9, Math.toRadians(0)));
-                } else {
-                    robot.follower.setPose(new Pose(135, 9, Math.toRadians(180)));
-                }
+                robot.follower.setPose(robot.camera.getPose());
             }
 
-            if (gamepad1.left_bumper && gamepad1.right_bumper && Robot.isRed) {
+            if (gamepad2.left_bumper && gamepad2.right_bumper && Robot.isRed) {
                 Robot.isRed = false;
                 halt(0.2);
-            } else if (gamepad1.right_bumper && gamepad1.left_bumper && !Robot.isRed) {
+            } else if (gamepad2.right_bumper && gamepad2.left_bumper && !Robot.isRed) {
                 Robot.isRed = true;
                 halt(0.2);
             }
@@ -131,10 +127,10 @@ public class TeleopLive extends LiveTeleopBase {
 
         //auto aim
         if(gamepad2.x && !Turret.autoAim){
-            Turret.autoAim = true;
+            Turret.spinFly = true;
             halt(0.2);
         } else if(gamepad2.x && Turret.autoAim){
-            Turret.autoAim = false;
+            Turret.spinFly = false;
             halt(0.2);
         }
 

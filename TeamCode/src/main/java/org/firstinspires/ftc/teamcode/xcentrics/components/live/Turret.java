@@ -62,11 +62,13 @@ class TurretConfig {
     public static double targetVelocity = 1300; // close is 1300, far is 1700
     public static double greenPos = 0.444, redPos = 0.3;
     public static double kickerMin = 0.865, kickerMax = 0.45;
+
 }
 
 @Configurable
 
 public class Turret extends Component {
+    public static boolean aimTurret = false, spinFly = false;
     
     public static double a = -0.000139573,b = 0.0223807 ,c = 0.377289; //far triangle is 0.5, close is 0.7
 
@@ -174,15 +176,18 @@ public class Turret extends Component {
                 resetEncoder = false;
             }
             computeHoodAngle();
+            if(aimTurret){
+                turret.queue_power(turretPID.run());
+            } else {
+                turret.queue_power(0);
+            }
 
-        if (autoAim) {
-            turret.queue_power(turretPID.run());
-           computeFlySpeed();
-        } else {
-            turret.queue_power(0);
-            fly1.setVelocity(0);
-            fly2.setVelocity(0);
-        }
+            if(spinFly){
+                computeFlySpeed();
+            } else {
+                fly1.setVelocity(0);
+                fly2.setVelocity(0);
+            }
 
 
         if(velocityReady){
@@ -331,10 +336,12 @@ public class Turret extends Component {
         super.shutdown();
     }
     public void aim(){
-         autoAim = true;
+         spinFly = true;
+         aimTurret = true;
     }
     public void stopAim(){
-         autoAim = false;
+         spinFly = false;
+         aimTurret = false;
             manualTargetEnabled = false;
     }
     public void close(){
@@ -349,7 +356,7 @@ public class Turret extends Component {
         final long maxNanos = (long) (maxSeconds * 1_000_000_000L);
         final long startNanos = System.nanoTime();
 
-        while (true) {
+        while (!opMode.isStopRequested()) {
             if (System.nanoTime() - startNanos >= maxNanos) {
                 break;
             }
@@ -383,7 +390,7 @@ public class Turret extends Component {
         halt(wait);
         waitForFlywheelStable(100, 0.2, 1.0);
         launch();
-        robot.intake.stopIntake();
+
     }
 
     // ------------------------------

@@ -26,7 +26,7 @@ public class LiveRobot extends Robot{
         follower    = Constants.createFollower(hwmap);
         intake      = new Intake(this);
         turret      = new Turret(this);
-        camera      = new Camera(this);
+        //camera      = new Camera(this);
     }
 
 
@@ -56,10 +56,10 @@ public class LiveRobot extends Robot{
     public Pose getRobotPose() {
         // Try to get pose from DualCamera first (AprilTag-based)
 
-            Pose cameraPose = camera.getPose();
-            if (cameraPose != null) {
-                return cameraPose;
-            }
+//            Pose cameraPose = camera.getPose();
+//            if (cameraPose != null) {
+//                return cameraPose;
+//            }
 
         // Fall back to follower pose
         return follower.getPose();
