@@ -303,6 +303,7 @@ public class Turret extends Component {
     // Launch / Kicker
     // ------------------------------
     public void launch() {
+        robot.follower.setPose(robot.getRobotPose());
         kicker.queue_position(kickerMax);
         updateAll();
         halt(0.5);
@@ -342,16 +343,45 @@ public class Turret extends Component {
     public void far(){
         targetVelocity = 1600;
     }
+    private void waitForFlywheelStable(double tolerance, double stableSeconds, double maxSeconds) {
+        long stableStart = -1L;
+        final long stableNanos = (long) (stableSeconds * 1_000_000_000L);
+        final long maxNanos = (long) (maxSeconds * 1_000_000_000L);
+        final long startNanos = System.nanoTime();
+
+        while (true) {
+            if (System.nanoTime() - startNanos >= maxNanos) {
+                break;
+            }
+            robot.update();
+            double error = Math.abs(fly1.getVelocity() - targetVelocity);
+
+            if (error <= tolerance) {
+                if (stableStart < 0L) {
+                    stableStart = System.nanoTime();
+                }
+                if (System.nanoTime() - stableStart >= stableNanos) {
+                    break;
+                }
+            } else {
+                stableStart = -1L;
+            }
+        }
+    }
     public void shoot3(){
         double wait = 0.5;
         robot.intake.intake();
         halt(wait);
+        waitForFlywheelStable(100, 0.2, 1.0);
         launch();
         halt(wait);
+        waitForFlywheelStable(100, 0.2, 1.0);
         launch();
         halt(wait);
+        waitForFlywheelStable(100, 0.2, 1.0);
         launch();
         halt(wait);
+        waitForFlywheelStable(100, 0.2, 1.0);
         launch();
         robot.intake.stopIntake();
     }

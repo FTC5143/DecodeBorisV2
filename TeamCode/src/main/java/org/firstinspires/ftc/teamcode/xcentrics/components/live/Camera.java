@@ -24,11 +24,13 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 
 
-public class Camera extends Component {
-    private final Position cameraPosition = new Position(DistanceUnit.MM,
+class CameraConfig {
+    public static Position cameraPosition = new Position(DistanceUnit.MM,
             0,0,0,0);
-    private final YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
+    public static YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
             0,-90,0,0);
+}
+public class Camera extends Component {
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
     public List<AprilTagDetection> currentDetections;
@@ -48,7 +50,7 @@ public class Camera extends Component {
                 //.setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
                 //.setTagLibrary(AprilTagGameDatabase.getCenterStageTagLibrary())
                 //.setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
-                .setCameraPose(cameraPosition, cameraOrientation)
+                .setCameraPose(CameraConfig.cameraPosition, CameraConfig.cameraOrientation)
 
                 // == CAMERA CALIBRATION ==
                 // If you do not manually specify calibration parameters, the SDK will attempt
@@ -103,15 +105,11 @@ public class Camera extends Component {
     public void update(OpMode opMode){
 
         currentDetections = aprilTag.getDetections();
-        if(robot.cycle % 2 == 0) {
-            visionPortal.resumeStreaming();
-        } else {
-            visionPortal.stopStreaming();
-        }
 
     }
 
     public Pose getPose(){
+        visionPortal.resumeStreaming();
         if(robot.isRed()) {
             for(AprilTagDetection detection : currentDetections){
                 if(detection.metadata != null && detection.metadata.name.contains("Red")){
@@ -144,6 +142,7 @@ public class Camera extends Component {
                 }
             }
         }
+        visionPortal.stopStreaming();
         return null;
     }
 
