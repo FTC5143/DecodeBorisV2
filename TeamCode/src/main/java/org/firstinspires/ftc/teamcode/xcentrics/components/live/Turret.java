@@ -62,6 +62,7 @@ class TurretConfig {
     public static double targetVelocity = 1300; // close is 1300, far is 1700
     public static double greenPos = 0.444, redPos = 0.3;
     public static double kickerMin = 0.865, kickerMax = 0.45;
+    public static double turretMin = -3141,turretMax = 1389;
 
 }
 
@@ -265,8 +266,8 @@ public class Turret extends Component {
 
 
         double rawTicks = targetDegTurret * (ticksPerTurretRotation / 360.0);
-        double minTicks = -3951;
-        double maxTicks = 2119;
+        double minTicks = turretMin;
+        double maxTicks = turretMax;
 
         turretTarget = Math.max(minTicks, Math.min(maxTicks, rawTicks));
 
