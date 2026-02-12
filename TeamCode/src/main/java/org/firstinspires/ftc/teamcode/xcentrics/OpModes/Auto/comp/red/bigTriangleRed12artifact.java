@@ -58,7 +58,7 @@ public class bigTriangleRed12artifact extends LiveAutoBase {
                 if(notBusy()){
                     //score preload
                     halt(1);
-                    shoot3();
+                    robot.turret.shoot3();
                     //run intake
                     robot.intake.intake();
                     //stop aiming the turret
@@ -73,7 +73,6 @@ public class bigTriangleRed12artifact extends LiveAutoBase {
             case 3:
                 if(notBusy()){
                     //stop intake
-                    robot.intake.stopIntake();
                     //empty gate
                     followPath(paths.emptyGate);
                     //increment
@@ -95,7 +94,7 @@ public class bigTriangleRed12artifact extends LiveAutoBase {
             case 5:
                 if(notBusy()) {
                     //score first pattern
-                    shoot3();
+                    robot.turret.shoot3();
                     //stop aiming
                     robot.turret.stopAim();
 
@@ -120,7 +119,6 @@ public class bigTriangleRed12artifact extends LiveAutoBase {
             case 7:
                 if(notBusy()){
                     //turn off intake
-                    robot.intake.stopIntake();
                     //go to score position at full speed
                     followPath(paths.scoreSecondPattern,maxSpeed);
                     //aim turret
@@ -132,7 +130,7 @@ public class bigTriangleRed12artifact extends LiveAutoBase {
             case 8:
                 if(notBusy()){
                     //score second pattern
-                    shoot3();
+                    robot.turret.shoot3();
                     //stop aiming the turret
                     robot.turret.stopAim();
 
@@ -157,7 +155,6 @@ public class bigTriangleRed12artifact extends LiveAutoBase {
             case 10:
                 if(notBusy()){
                     //turn off intake
-                    robot.intake.stopIntake();
                     //go to scoring position at full speed
                     followPath(paths.scoreThirdPattern,maxSpeed);
                     //aim the turret
@@ -170,7 +167,7 @@ public class bigTriangleRed12artifact extends LiveAutoBase {
             case 11:
                 if(notBusy()){
                     //score third pattern
-                    shoot3();
+                    robot.turret.shoot3();
                     //stop aiming the turret
                     robot.turret.stopAim();
 
@@ -182,32 +179,6 @@ public class bigTriangleRed12artifact extends LiveAutoBase {
     }
     private boolean notBusy(){
         return !robot.follower.isBusy();
-    }
-    private void shoot3(){
-        // 1
-        halt(0.5);
-        waitUntillSpin();
-        robot.turret.launch();
-        robot.update();
-        //get next one ready
-        robot.intake.intake();
-        robot.update();
-        halt(launchWait);
-        //launch 2
-        waitUntillSpin();
-        robot.turret.launch();
-        robot.update();
-
-        //get next one ready
-        halt(1.5);
-
-        //launch third one
-
-        robot.update();
-        waitUntillSpin();
-        robot.turret.launch();
-        robot.intake.stopIntake();
-        robot.update();
     }
     private void waitUntillSpin(){
         while((Math.abs(robot.turret.fly1.getVelocity() - 1600) <= 0) ){

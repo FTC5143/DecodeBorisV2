@@ -59,7 +59,7 @@ class TurretConfig {
     //public static  double power = 0;
     
     public static PIDFCoefficients turretPIDCoef = new PIDFCoefficients(0.01,0,0,0);
-    public static double targetVelocity = 1300; // close is 1300, far is 1700
+
     public static double greenPos = 0.444, redPos = 0.3;
     public static double kickerMin = 0.865, kickerMax = 0.45;
     public static double turretMin = -3141,turretMax = 1389;
@@ -69,6 +69,7 @@ class TurretConfig {
 @Configurable
 
 public class Turret extends Component {
+    public static double targetVelocity = 1300; // close is 1300, far is 1700
     public static boolean aimTurret = false, spinFly = false;
     
     public static double a = -0.000139573,b = 0.0223807 ,c = 0.377289; //far triangle is 0.5, close is 0.7
@@ -388,10 +389,6 @@ public class Turret extends Component {
         halt(wait);
         waitForFlywheelStable(100, 0.2, 1.0);
         launch();
-        halt(wait);
-        waitForFlywheelStable(100, 0.2, 1.0);
-        launch();
-
     }
 
     // ------------------------------

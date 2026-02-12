@@ -44,38 +44,38 @@ public class TeleopLive extends LiveTeleopBase {
 
     @Override
     public void on_loop() {
-        if(opMode.getElapsedTime() == 10000){
+        if (opMode.getElapsedTime() == 10000) {
             gamepad1.rumble(1000);
             gamepad2.rumble(1000);
         }
         //gamepad
         //driving
         //if(!autoDrive) {
-            robot.follower.setTeleOpDrive(
-                    0 - gamepad1.left_stick_y,
-                    0 - gamepad1.left_stick_x,
-                    0 - gamepad1.right_stick_x
-            );
+        robot.follower.setTeleOpDrive(
+                0 - gamepad1.left_stick_y,
+                0 - gamepad1.left_stick_x,
+                0 - gamepad1.right_stick_x
+        );
 
 
-            if (gamepad1.x) {
-                robot.follower.setPose(robot.camera.getPose());
-            }
+//            if (gamepad1.x) {
+//                robot.follower.setPose(robot.camera.getPose());
+//            }
 
-            if (gamepad2.left_bumper && gamepad2.right_bumper && Robot.isRed) {
-                Robot.isRed = false;
-                halt(0.2);
-            } else if (gamepad2.right_bumper && gamepad2.left_bumper && !Robot.isRed) {
-                Robot.isRed = true;
-                halt(0.2);
-            }
+        if (gamepad2.left_bumper && gamepad2.right_bumper && Robot.isRed) {
+            Robot.isRed = false;
+            halt(0.2);
+        } else if (gamepad2.right_bumper && gamepad2.left_bumper && !Robot.isRed) {
+            Robot.isRed = true;
+            halt(0.2);
+        }
 
-            if (gamepad1.left_bumper) {
-                robot.follower.setMaxPower(0.5);
-            } else {
-                robot.follower.setMaxPower(1);
-            }
-       // }
+        if (gamepad1.left_bumper) {
+            robot.follower.setMaxPower(0.5);
+        } else {
+            robot.follower.setMaxPower(1);
+        }
+        // }
 
 //        } else if(!f1){
 //            if(robot.isRed()) {
@@ -103,13 +103,23 @@ public class TeleopLive extends LiveTeleopBase {
 //        }
         //gamepad 1 controls
 
-        if(gamepad2.dpad_up){
-            Turret.c -= 0.1;
+if (!gamepad2.left_bumper){
+        if (gamepad2.dpad_up) {
+            Turret.servoPos -= 0.1;
             halt(0.1);
-        } else if(gamepad2.dpad_down){
-            Turret.c += 0.1;
+        } else if (gamepad2.dpad_down) {
+            Turret.servoPos += 0.1;
             halt(0.1);
         }
+    } else{
+        if (gamepad2.dpad_up) {
+            Turret.targetVelocity += 50;
+            halt(0.1);
+        } else if (gamepad2.dpad_down) {
+            Turret.targetVelocity -= 50;
+            halt(0.1);
+        }
+    }
 
         if(gamepad2.left_bumper){
             robot.intake.intake();
@@ -132,6 +142,13 @@ public class TeleopLive extends LiveTeleopBase {
             halt(0.2);
         } else if(gamepad2.x && Turret.spinFly){
             Turret.spinFly = false;
+            halt(0.2);
+        }
+        if(gamepad2.x && !Turret.spinFly){
+            Turret.aimTurret = true;
+            halt(0.2);
+        } else if(gamepad2.x && Turret.spinFly){
+            Turret.aimTurret = false;
             halt(0.2);
         }
 
