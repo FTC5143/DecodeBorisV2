@@ -90,7 +90,7 @@ public class Turret extends Component {
     public static double distance;             // distance to goal
     public static boolean autoAim = true;
     public static boolean resetEncoder = false;
-    public static double servoPos = 0;
+    public static double servoPos = 0.45;
     public boolean manual;
 
     // Manual target override (field angle in radians)
@@ -267,10 +267,8 @@ public class Turret extends Component {
 
 
         double rawTicks = targetDegTurret * (ticksPerTurretRotation / 360.0);
-        double minTicks = turretMin;
-        double maxTicks = turretMax;
 
-        turretTarget = Math.max(minTicks, Math.min(maxTicks, rawTicks));
+        turretTarget = Math.max(turretMin, Math.min(turretMax, rawTicks));
 
 
 
@@ -381,13 +379,13 @@ public class Turret extends Component {
         double wait = 0.5;
         robot.intake.intake();
         halt(wait);
-        waitForFlywheelStable(100, 0.2, 1.0);
+        //waitForFlywheelStable(100, 0.2, 1.0);
         launch();
         halt(wait);
-        waitForFlywheelStable(100, 0.2, 1.0);
+        //waitForFlywheelStable(100, 0.2, 1.0);
         launch();
         halt(wait);
-        waitForFlywheelStable(100, 0.2, 1.0);
+        //waitForFlywheelStable(100, 0.2, 1.0);
         launch();
     }
 

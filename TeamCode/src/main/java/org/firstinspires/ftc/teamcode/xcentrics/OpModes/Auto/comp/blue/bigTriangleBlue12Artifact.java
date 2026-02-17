@@ -143,9 +143,4 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
     private boolean notBusy(){
         return !robot.follower.isBusy();
     }
-    private void waitUntillSpin(){
-        while((Math.abs(robot.turret.fly1.getVelocity() - 1600) <= 0) ){
-            robot.update();
-        }
-    }
 }
