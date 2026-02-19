@@ -9,6 +9,8 @@ import org.firstinspires.ftc.teamcode.xcentrics.components.live.Camera;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Intake;
 import org.firstinspires.ftc.teamcode.xcentrics.components.live.Turret;
 
+import java.util.concurrent.TimeUnit;
+
 
 public class LiveRobot extends Robot{
     public Follower follower;
@@ -63,5 +65,19 @@ public class LiveRobot extends Robot{
 
         // Fall back to follower pose
         return follower.getPose();
+    }
+    private volatile long startTime = 0; // in nanoseconds
+    public void halt(double seconds) {
+        resetRuntime();
+        while (getRuntime() < seconds) {
+            update();
+        }
+    }
+    public double getRuntime() {
+        final double NANOSECONDS_PER_SECOND = TimeUnit.SECONDS.toNanos(1);
+        return (System.nanoTime() - startTime) / NANOSECONDS_PER_SECOND;
+    }
+    public void resetRuntime() {
+        startTime = System.nanoTime();
     }
 }

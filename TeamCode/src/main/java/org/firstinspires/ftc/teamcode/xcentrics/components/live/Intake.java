@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 @Configurable
 class IntakeConfig{
     
-    public static double speed = -0.5;
+    public static double speed = -1;
 }
 
 
@@ -74,7 +74,7 @@ public class Intake extends Component {
         in1.queue_power(power);
         in2.queue_power(power);
         in3.queue_power(power);
-        in4.queue_power(power);
+        in4.queue_power(-power);
         intake.queue_power(power);
     }
     private void update(){

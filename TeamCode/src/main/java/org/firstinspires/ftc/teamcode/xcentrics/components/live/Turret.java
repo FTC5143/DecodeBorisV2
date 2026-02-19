@@ -311,8 +311,11 @@ public class Turret extends Component {
         robot.follower.setPose(robot.getRobotPose());
         kicker.queue_position(kickerMax);
         updateAll();
-        halt(0.5);
+        robot.halt(0.5);
         kicker.queue_position(kickerMin);
+        robot.intake.intake();
+        robot.halt(0.5);
+        robot.intake.stopIntake();
         updateAll();
     }
 
@@ -378,14 +381,14 @@ public class Turret extends Component {
     public void shoot3(){
         double wait = 0.5;
         robot.intake.intake();
-        halt(wait);
-        //waitForFlywheelStable(100, 0.2, 1.0);
+        robot.halt(wait);
+        waitForFlywheelStable(100, 0.2, 1.0);
         launch();
-        halt(wait);
-        //waitForFlywheelStable(100, 0.2, 1.0);
+        robot.halt(wait);
+        waitForFlywheelStable(100, 0.2, 1.0);
         launch();
-        halt(wait);
-        //waitForFlywheelStable(100, 0.2, 1.0);
+        robot.halt(wait);
+        waitForFlywheelStable(100, 0.2, 1.0);
         launch();
     }
 
