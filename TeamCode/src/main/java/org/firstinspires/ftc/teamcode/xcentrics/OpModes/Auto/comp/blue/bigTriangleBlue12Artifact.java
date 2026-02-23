@@ -57,30 +57,18 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
                 if(notBusy()){
                     //score preload
                     halt(1);
-                        robot.turret.shoot3();
-                        //run intake
-                        robot.intake.intake();
-                        //stop aiming the turret
-                        robot.turret.stopAim();
-                        //follow pickup path slowly
-                        followPath(paths.getFirstPattern, intakeSpeed);
-                        robot.intake.intake();
-                        //increment
-                        pathState = 4;
+                    robot.turret.shoot3();
+                    //run intake
+                    robot.intake.intake();
+                    //stop aiming the turret
+                    robot.turret.stopAim();
+                    //follow pickup path slowly
+                    followPath(paths.getFirstPattern, intakeSpeed);
+                    //increment
+                    pathState = 4;
                     break;
                 }
-
-            case 3:
-//                if(notBusy()){
-//                    //stop intake
-//                    robot.intake.stopIntake().run();
-//                    //empty gate
-//                    followPath(paths.emptyGate);
-//                    //increment
-//                    pathState++;
-//                    break;
-//                }
-
+                
             case 4:
                 if(notBusy()){
                     //aim turret
@@ -119,6 +107,7 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
 
             case 7:
                 if(notBusy()){
+                    //turn off intake
                     //go to score position at full speed
                     followPath(paths.scoreSecondPattern,maxSpeed);
                     //aim turret
@@ -127,6 +116,7 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
                     pathState = 11;
                     break;
                 }
+
             case 11:
                 if(notBusy()){
                     //score third pattern
