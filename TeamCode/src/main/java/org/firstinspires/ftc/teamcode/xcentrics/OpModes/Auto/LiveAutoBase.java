@@ -42,10 +42,11 @@ public abstract class LiveAutoBase extends LinearOpMode {
 
 
     protected void halt(double seconds) {
-        resetRuntime();
-        while (getRuntime() < seconds && !isStopRequested()) {
-            robot.update();
-        }
+        robot.halt(seconds);
+    }
+    protected void followPath(PathChain p, double m, boolean h){
+        robot.follower.setMaxPower(m);
+        robot.follower.followPath(p,h);
     }
     protected void followPath(PathChain p){
         robot.follower.followPath(p);
@@ -53,5 +54,8 @@ public abstract class LiveAutoBase extends LinearOpMode {
     protected void followPath(PathChain p, double m){
         robot.follower.setMaxPower(m);
         robot.follower.followPath(p);
+    }
+    protected void followPath(PathChain p, boolean h){
+        robot.follower.followPath(p,h);
     }
 }

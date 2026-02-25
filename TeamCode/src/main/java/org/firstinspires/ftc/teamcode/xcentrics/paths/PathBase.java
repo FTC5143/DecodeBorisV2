@@ -9,6 +9,9 @@ public abstract class PathBase {
     public PathBase( Follower follower){
         this.follower = follower;
     }
+    public void setPoses(Pose[] p){
+        this.P = p;
+    }
     public void mirrorPoints(){
         Pose[] mirroredPoints = P;
         for (int i = 0; i < P.length; i++) {

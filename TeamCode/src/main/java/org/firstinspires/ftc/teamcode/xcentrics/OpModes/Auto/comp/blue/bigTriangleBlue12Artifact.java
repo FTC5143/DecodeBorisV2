@@ -27,7 +27,7 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
 
     @Override
     public void on_start() {
-
+        robot.turret.turretOffset -= 10;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
         switch(pathState){
             case 1:
                 //follow score preload path
-                followPath(paths.scorePreload);
+                followPath(paths.scorePreload,true);
                 //aim the turret
                 robot.turret.aim();
                 //increment
@@ -56,25 +56,25 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
             case 2:
                 if(notBusy()){
                     //score preload
-                    halt(1);
+                    halt(1.5);
                     robot.turret.shoot3();
                     //run intake
                     robot.intake.intake();
                     //stop aiming the turret
                     robot.turret.stopAim();
                     //follow pickup path slowly
-                    followPath(paths.getFirstPattern, intakeSpeed);
+                    followPath(paths.getFirstPattern, 1);
                     //increment
                     pathState = 4;
                     break;
                 }
-                
+
             case 4:
                 if(notBusy()){
                     //aim turret
                     robot.turret.aim();
                     //go to score position at full speed
-                    followPath(paths.scoreFirstPattern,maxSpeed);
+                    followPath(paths.scoreFirstPattern,1);
                     //increment
                     pathState++;
                     break;
@@ -99,7 +99,7 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
                     //turn on intake
                     robot.intake.intake();
                     //pickup second pattern slowly
-                    followPath(paths.pickupSecondPattern,intakeSpeed);
+                    followPath(paths.pickupSecondPattern,1);
                     //increment
                     pathState++;
                     break;
@@ -126,6 +126,7 @@ public class bigTriangleBlue12Artifact extends LiveAutoBase {
 
                     //go to the park position
                     followPath(paths.park,1);
+                    robot.intake.stopIntake();
                     pathState = 500;
                 }
         }

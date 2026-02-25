@@ -46,7 +46,7 @@ public class Constants {
             .strafePodX(-6)
             .leftEncoder_HardwareMapName("FR")// port 0
             .rightEncoder_HardwareMapName("BL") //port 3
-            .strafeEncoder_HardwareMapName("BR") //port 1
+            .strafeEncoder_HardwareMapName("FL") //port 1
             .leftEncoderDirection(Encoder.FORWARD)
             .rightEncoderDirection(Encoder.FORWARD)
             .strafeEncoderDirection(Encoder.REVERSE);

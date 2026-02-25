@@ -33,7 +33,7 @@ class TurretConfig {
     //public static double TurretP = 0, TurretI = 0, TurretD = 0;
   //public static double flyP = 0, flyI = 0, flyD = 0, flyF = 0;
   
-  public static com.qualcomm.robotcore.hardware.PIDFCoefficients flyPidCoef = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,19.5), flyPidCoef2 = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,19.5);
+  public static com.qualcomm.robotcore.hardware.PIDFCoefficients flyPidCoef = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,15), flyPidCoef2 = new com.qualcomm.robotcore.hardware.PIDFCoefficients(10,0,0,15);
 
 
     // ------------------------------
@@ -69,7 +69,7 @@ class TurretConfig {
 @Configurable
 
 public class Turret extends Component {
-    public static double targetVelocity = 1300; // close is 1300, far is 1700
+    public static double targetVelocity = 1200; // close is 1300, far is 1700
     public static boolean aimTurret = false, spinFly = false;
     
     public static double a = -0.000139573,b = 0.0223807 ,c = 0.377289; //far triangle is 0.5, close is 0.7
@@ -90,7 +90,7 @@ public class Turret extends Component {
     public static double distance;             // distance to goal
     public static boolean autoAim = true;
     public static boolean resetEncoder = false;
-    public static double servoPos = 0.45;
+    public static double servoPos = 0.8;
     public boolean manual;
 
     // Manual target override (field angle in radians)
@@ -315,7 +315,6 @@ public class Turret extends Component {
         kicker.queue_position(kickerMin);
         robot.intake.intake();
         robot.halt(0.5);
-        robot.intake.stopIntake();
         updateAll();
     }
 
@@ -379,17 +378,24 @@ public class Turret extends Component {
         }
     }
     public void shoot3(){
-        double wait = 0.5;
+        double wait = 0.4;
         robot.intake.intake();
         robot.halt(wait);
-        waitForFlywheelStable(100, 0.2, 1.0);
         launch();
         robot.halt(wait);
-        waitForFlywheelStable(100, 0.2, 1.0);
         launch();
         robot.halt(wait);
-        waitForFlywheelStable(100, 0.2, 1.0);
         launch();
+    }
+    public void launch(boolean b){
+        kicker.queue_position(kickerMax);
+        updateAll();
+        robot.halt(0.5);
+        kicker.queue_position(kickerMin);
+        robot.intake.intake();
+        robot.halt(0.5);
+        robot.intake.stopIntake();
+        updateAll();
     }
 
     // ------------------------------

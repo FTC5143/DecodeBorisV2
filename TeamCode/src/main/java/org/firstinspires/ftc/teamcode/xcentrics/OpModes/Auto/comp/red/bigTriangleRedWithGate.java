@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.comp.red;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.configuration.annotations.AnalogSensorType;
 
 import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.LiveAutoBase;
 import org.firstinspires.ftc.teamcode.xcentrics.paths.auto.Red9WithGatePaths;
 import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
+@Disabled
 
 //import static org.firstinspires.ftc.teamcode.xcentrics.robots.Robot.isRed;
 @Autonomous(name = "big red triangle 9 with gate (Delta)", group = "red")

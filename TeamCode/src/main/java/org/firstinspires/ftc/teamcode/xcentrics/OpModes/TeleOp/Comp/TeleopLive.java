@@ -138,7 +138,7 @@ if (!gamepad2.left_bumper){
         //launch ball(s)
 
         if(gamepad2.a){
-            robot.turret.launch();
+            robot.turret.launch(true);
         }
 
         //auto aim

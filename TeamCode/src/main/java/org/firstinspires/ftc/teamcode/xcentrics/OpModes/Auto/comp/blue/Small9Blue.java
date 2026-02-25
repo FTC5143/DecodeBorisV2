@@ -10,22 +10,15 @@ import org.firstinspires.ftc.teamcode.xcentrics.paths.auto.smallTriangleBlue;
 
 @Autonomous(name = "Small Blue Triangle 9 Artifact",group = "blue")
 public class Small9Blue extends LiveAutoBase {
-    Pose[] poses = new Pose[] {
-            new Pose(63.000, 9.000),
-            new Pose(62.000, 27.000),
-            new Pose(53.377, 34.791),
-            new Pose(10.000, 35.500),
-            new Pose(8.600, 32.100),
-            new Pose(8.600, 9.800),
-            new Pose(38.600, 33.200)
-    };
+
 
     SmallTriangle paths;
     private int p = 0;
     @Override
     public void on_init() {
-        paths = new SmallTriangle(poses, robot.follower);
+        paths = new SmallTriangle(robot.follower,false);
         robot.turret.far();
+        robot.follower.setStartingPose(new Pose(paths.Poses[0].getX(),paths.Poses[0].getY(),Math.toRadians(90)));
     }
 
     @Override

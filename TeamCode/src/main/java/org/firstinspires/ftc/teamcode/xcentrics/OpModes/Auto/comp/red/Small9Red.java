@@ -16,9 +16,9 @@ public class Small9Red extends LiveAutoBase {
     private int p = 0;
     @Override
     public void on_init() {
-        paths = new SmallTriangle( robot.follower);
-        paths.mirrorPoints();
+        paths = new SmallTriangle( robot.follower, true);
         robot.turret.far();
+        robot.follower.setStartingPose(new Pose(paths.Poses[0].getX(),paths.Poses[0].getY(),Math.toRadians(90)));
     }
 
     @Override

@@ -67,7 +67,7 @@ public class Red12paths{
                         new BezierCurve(
                                 new Pose(96.500, 112.000),
                                 new Pose(91.425, 72.233),
-                                new Pose(91.890, 59.000)
+                                new Pose(91.890, 65)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -76,7 +76,7 @@ public class Red12paths{
         pickupSecondPattern = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(91.890, 59.000), new Pose(134.500, 59.300))
+                        new BezierLine(new Pose(91.890, 65), new Pose(134.500, 59.300))
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();

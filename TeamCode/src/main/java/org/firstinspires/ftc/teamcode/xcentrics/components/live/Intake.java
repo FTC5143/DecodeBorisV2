@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.xcentrics.robots.Robot;
 @Configurable
 class IntakeConfig{
     
-    public static double speed = -1;
+    public static double speed = -0.7;
 }
 
 
