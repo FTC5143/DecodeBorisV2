@@ -13,26 +13,55 @@ public class test extends LiveAutoBase {
     private PedroDrawing pedroDrawing = new PedroDrawing();
     private int p = 0;
     PathChain Path1;
+    PathChain Path2,Path3,Path4;
 
     @Override
     public void on_init() {
         pedroDrawing.init();
+        robot.follower.setStartingPose(new Pose(56.711, 8.514,Math.toRadians(90)));
     }
 
     @Override
     public void on_start() {
         Path1 = robot.follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(72.000, 9.000),
-                                new Pose(122.905, 51.482),
-                                new Pose(20.903, 34.339),
-                                new Pose(72.000, 72.000)
+                                new Pose(56.711, 8.514),
+                                new Pose(62.034, 32.385),
+                                new Pose(49.163, 34.256)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(180))
+                ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(180))
 
                 .build();
-        robot.follower.setStartingPose(new Pose(72.000, 9,Math.toRadians(0)));
-        followPath(Path1,1);
+
+        Path2 = robot.follower.pathBuilder().addPath(
+                        new BezierLine(
+                                new Pose(49.163, 34.256),
+
+                                new Pose(42.871, 34.484)
+                        )
+                ).setConstantHeadingInterpolation(Math.toRadians(180))
+
+                .build();
+
+        Path3 = robot.follower.pathBuilder().addPath(
+                        new BezierLine(
+                                new Pose(42.871, 34.484),
+
+                                new Pose(14.516, 34.806)
+                        )
+                ).setTangentHeadingInterpolation()
+
+                .build();
+
+        Path4 = robot.follower.pathBuilder().addPath(
+                        new BezierLine(
+                                new Pose(14.516, 34.806),
+
+                                new Pose(56.711, 8.514)
+                        )
+                ).setConstantHeadingInterpolation(Math.toRadians(180))
+
+                .build();
     }
 
     @Override
@@ -43,5 +72,39 @@ public class test extends LiveAutoBase {
     @Override
     public void on_loop() {
         pedroDrawing.drawDebug(robot.follower);
+        update();
+    }
+    private void update(){
+        switch(p){
+            case 0:
+                robot.intake.intake();
+                followPath(Path1);
+                p++;
+                break;
+
+            case 1:
+                if(!robot.follower.isBusy()){
+                    followPath(Path2);
+                    p++;
+                    break;
+                }
+
+            case 2:
+                if(!robot.follower.isBusy()){
+                    followPath(Path3);
+                    p++;
+                    break;
+                }
+
+            case 3:
+                if(!robot.follower.isBusy()){
+                    followPath(Path4);
+                    p++;
+                    break;
+                }
+
+            default:
+                break;
+        }
     }
 }

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -9,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  * This is a basic auto where the robot moves a direction for a set amount of time then stops
  * @author Alex Stephens - 5143  Xcentrics
  */
-
+@Disabled
 @Autonomous(name = "Basic Auto (By 5143 Xcentrics)")
 public class basicAutoBy5143Xcentrics extends LinearOpMode {
     private DcMotor frontLeftMotor,frontRightMotor,backRightMotor,backLeftMotor;

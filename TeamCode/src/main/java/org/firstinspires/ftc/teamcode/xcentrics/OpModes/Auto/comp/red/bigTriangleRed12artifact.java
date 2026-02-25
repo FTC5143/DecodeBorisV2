@@ -41,9 +41,7 @@ public class bigTriangleRed12artifact extends LiveAutoBase {
 
     @Override
     public void on_loop() {
-        if(pathState != 500) {
-            robot.intake.intake();
-        }
+        robot.intake.intake();
         update();
         robot.turret.update(this);
         pedroDrawing.drawDebug(robot.follower);
