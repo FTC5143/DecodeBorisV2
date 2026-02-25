@@ -18,30 +18,31 @@ public class test extends LiveAutoBase {
     @Override
     public void on_init() {
         pedroDrawing.init();
-        robot.follower.setStartingPose(new Pose(56.711, 8.514,Math.toRadians(90)));
+        robot.follower.setStartingPose(new Pose(9.161, 60.258,Math.toRadians(270)));
     }
 
     @Override
     public void on_start() {
         Path1 = robot.follower.pathBuilder().addPath(
-                        new BezierCurve(
-                                new Pose(56.711, 8.514),
-                                new Pose(62.034, 32.385),
-                                new Pose(49.163, 34.256)
+                        new BezierLine(
+                                new Pose(9.161, 60.258),
+
+                                new Pose(11.903, 21.419)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(180))
+                ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(-156))
 
                 .build();
 
         Path2 = robot.follower.pathBuilder().addPath(
-                        new BezierLine(
-                                new Pose(49.163, 34.256),
-
-                                new Pose(42.871, 34.484)
+                        new BezierCurve(
+                                new Pose(11.903, 21.419),
+                                new Pose(13.532, 18.806),
+                                new Pose(10.710, 11.097)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(180))
+                ).setLinearHeadingInterpolation(Math.toRadians(-156), Math.toRadians(260))
 
                 .build();
+
 
         Path3 = robot.follower.pathBuilder().addPath(
                         new BezierLine(
@@ -73,6 +74,7 @@ public class test extends LiveAutoBase {
     public void on_loop() {
         pedroDrawing.drawDebug(robot.follower);
         update();
+        robot.intake.intake();
     }
     private void update(){
         switch(p){
