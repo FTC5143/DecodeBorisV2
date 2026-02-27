@@ -225,6 +225,7 @@ public class Turret extends Component {
         addData("autoAim:", autoAim);
         addData("FlyError",Math.abs(fly1.getVelocity() - targetVelocity));
         addData("turretOffset",turretOffset);
+        addData("Hood pose",servoPos);
 
 
     }
@@ -350,7 +351,8 @@ public class Turret extends Component {
         targetVelocity = 1300;
     }
     public void far(){
-        targetVelocity = 1600;
+        targetVelocity = 1900;
+        servoPos = 0.2;
     }
     private void waitForFlywheelStable(double tolerance, double stableSeconds, double maxSeconds) {
         long stableStart = -1L;

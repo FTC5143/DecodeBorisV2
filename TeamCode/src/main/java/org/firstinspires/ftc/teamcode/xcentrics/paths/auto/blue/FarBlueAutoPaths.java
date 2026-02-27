@@ -1,20 +1,12 @@
-package org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.basic;
+package org.firstinspires.ftc.teamcode.xcentrics.paths.auto.blue;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.PedroDrawing;
-import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.LiveAutoBase;
-@Autonomous(name = "test")
-public class test extends LiveAutoBase {
-    private PedroDrawing pedroDrawing = new PedroDrawing();
-    private int p = 0;
-    PathChain Path1;
-    PathChain Path2,Path3,Path4;
+public class FarBlueAutoPaths {
     public PathChain p1;
     public PathChain p2;
     public PathChain p3;
@@ -24,15 +16,7 @@ public class test extends LiveAutoBase {
     public PathChain p7;
     public PathChain p8;
 
-    @Override
-    public void on_init() {
-        pedroDrawing.init();
-        robot.follower.setStartingPose(new Pose(56.71148134046984, 8.514007076140375,Math.toRadians(90)));
-    }
-
-    @Override
-    public void on_start() {
-        Follower follower = robot.follower;
+    public FarBlueAutoPaths(Follower follower) {
         p1 = follower.pathBuilder().addPath(
                         new BezierCurve(
                                 new Pose(56.711, 8.514),
@@ -112,79 +96,5 @@ public class test extends LiveAutoBase {
                 ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(90))
 
                 .build();
-    }
-
-    @Override
-    public void on_stop() {
-
-    }
-
-    @Override
-    public void on_loop() {
-        pedroDrawing.drawDebug(robot.follower);
-        update();
-        robot.intake.intake();
-    }
-    private void update(){
-        switch(p){
-            case 0:
-                robot.intake.intake();
-                followPath(p1);
-                p++;
-                break;
-
-            case 1:
-                if(!robot.follower.isBusy()){
-                    followPath(p2);
-                    p++;
-                    break;
-                }
-
-            case 2:
-                if(!robot.follower.isBusy()){
-                    followPath(p3);
-                    p++;
-                    break;
-                }
-
-            case 3:
-                if(!robot.follower.isBusy()){
-                    followPath(p4);
-                    p++;
-                    break;
-                }
-
-            case 4:
-                if(!robot.follower.isBusy()){
-                    followPath(p5);
-                    p++;
-                    break;
-                }
-
-            case 5:
-                if(!robot.follower.isBusy()){
-                    followPath(p6);
-                    p++;
-                    break;
-                }
-
-            case 6:
-                if(!robot.follower.isBusy()){
-                    followPath(p7);
-                    p++;
-                    break;
-                }
-
-            case 7:
-                if(!robot.follower.isBusy()){
-                    followPath(p8);
-                    p++;
-                    break;
-                }
-
-
-            default:
-                break;
-        }
     }
 }
