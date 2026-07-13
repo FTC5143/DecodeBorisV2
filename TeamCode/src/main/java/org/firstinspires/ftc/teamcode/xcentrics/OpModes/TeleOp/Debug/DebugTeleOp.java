@@ -24,7 +24,5 @@ public class DebugTeleOp extends LiveTeleopBase {
 
     @Override
     public void on_loop() {
-        robot.turret.update(this);
-        robot.update();
     }
 }
