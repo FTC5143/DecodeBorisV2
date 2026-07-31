@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.comp.blue;
 
 import static org.firstinspires.ftc.teamcode.xcentrics.robots.Robot.isRed;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.field.Style;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
@@ -9,6 +10,7 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroDrawing;
 import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.LiveAutoBase;
@@ -17,12 +19,18 @@ import org.firstinspires.ftc.teamcode.xcentrics.paths.auto.blue.FarBlueAutoPaths
 import org.firstinspires.ftc.teamcode.xcentrics.paths.auto.red.SmallTriangle;
 import org.firstinspires.ftc.teamcode.xcentrics.paths.auto.smallTriangleBlue;
 
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
+
+@Configurable
 @Autonomous(name = "Small Blue Triangle 9 Artifact",group = "blue")
 public class Small9Blue extends LiveAutoBase {
 
     private static final Style robotLook = new Style(
             "", "#3F51B5", 0.75
     );
+    public static double turretAngle = -2;
+   //private static Timer timer = new ElapsedTime();
     FarBlueAutoPaths paths;
     public PathChain p1;
     public PathChain p2;
@@ -37,6 +45,7 @@ public class Small9Blue extends LiveAutoBase {
     public void on_init() {
         paths = new FarBlueAutoPaths(robot.follower);
         robot.turret.far();
+        robot.turret.turretOffset -=turretAngle;
         robot.follower.setStartingPose(new Pose(56.71148134046984, 8.514007076140375,Math.toRadians(90)));
         PedroDrawing.init();
         isRed = false;
@@ -137,6 +146,8 @@ public class Small9Blue extends LiveAutoBase {
         update();
         PedroDrawing.drawDebug(robot.follower);
         robot.intake.intake();
+       // robot.addData("Seconds: ", timer.seconds());
+       // robot.addData("Path state", p);
     }
 
     private void update(){
@@ -184,13 +195,14 @@ public class Small9Blue extends LiveAutoBase {
 
             case 5:
                 if(!robot.follower.isBusy()){
+                    //timer.reset();
                     followPath(p6);
                     p++;
                     break;
                 }
 
             case 6:
-                if(!robot.follower.isBusy()){
+                if(!robot.follower.isBusy() /*|| timer.seconds() >= 3*/){
                     robot.turret.aim();
                     followPath(p7);
                     p++;

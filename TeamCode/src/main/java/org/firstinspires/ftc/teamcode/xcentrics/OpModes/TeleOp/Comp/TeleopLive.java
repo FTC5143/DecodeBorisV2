@@ -53,6 +53,10 @@ public class TeleopLive extends LiveTeleopBase {
             gamepad1.rumble(1000);
             gamepad2.rumble(1000);
         }
+
+        if(gamepad1.a && gamepad2.a){
+            robot.follower.setPose(new Pose(116.5,132,Math.toRadians(36)));
+        }
         //gamepad
         //driving
         //if(!autoDrive) {

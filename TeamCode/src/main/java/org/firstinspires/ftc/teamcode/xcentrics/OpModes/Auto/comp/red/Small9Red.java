@@ -9,6 +9,7 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroDrawing;
 import org.firstinspires.ftc.teamcode.xcentrics.OpModes.Auto.LiveAutoBase;
@@ -24,6 +25,7 @@ public class Small9Red extends LiveAutoBase {
             "", "#3F51B5", 0.75
     );
     FarBlueAutoPaths paths;
+    private static ElapsedTime timer = new ElapsedTime();
     public PathChain p1;
     public PathChain p2;
     public PathChain p3;
@@ -37,7 +39,8 @@ public class Small9Red extends LiveAutoBase {
     public void on_init() {
         paths = new FarBlueAutoPaths(robot.follower);
         robot.turret.far();
-        robot.follower.setStartingPose(new Pose(56.71148134046984, 8.514007076140375,Math.toRadians(90)));
+        robot.turret.turretOffset -= 10;
+        robot.follower.setStartingPose(new Pose(87.289, 8.514 ,Math.toRadians(90)));
         PedroDrawing.init();
         isRed = true;
         Follower follower = robot.follower;
@@ -185,12 +188,13 @@ public class Small9Red extends LiveAutoBase {
             case 5:
                 if(!robot.follower.isBusy()){
                     followPath(p6);
+                    timer.reset();
                     p++;
                     break;
                 }
 
             case 6:
-                if(!robot.follower.isBusy()){
+                if(!robot.follower.isBusy() || timer.seconds() >= 3){
                     robot.turret.aim();
                     followPath(p7);
                     p++;

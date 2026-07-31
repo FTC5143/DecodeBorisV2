@@ -41,6 +41,7 @@ class TurretConfig {
     // ------------------------------
     public static boolean shooterReady = false;
     public static boolean velocityReady = false;
+    public static double farSpeed = 1800,closeSpeed = 1300;
 
     // ------------------------------
     // Turret Encoder Configuration
@@ -69,7 +70,7 @@ class TurretConfig {
 @Configurable
 
 public class Turret extends Component {
-    public static double targetVelocity = 1200; // close is 1300, far is 1700
+    public static double targetVelocity = 1300; // close is 1300, far is 1700
     public static boolean aimTurret = false, spinFly = false;
     
     public static double a = -0.000139573,b = 0.0223807 ,c = 0.377289; //far triangle is 0.5, close is 0.7
@@ -348,10 +349,11 @@ public class Turret extends Component {
             manualTargetEnabled = false;
     }
     public void close(){
-        targetVelocity = 1300;
+        targetVelocity = closeSpeed;
+        servoPos = 0.8;
     }
     public void far(){
-        targetVelocity = 1900;
+        targetVelocity = farSpeed;
         servoPos = 0.2;
     }
     private void waitForFlywheelStable(double tolerance, double stableSeconds, double maxSeconds) {
