@@ -15,8 +15,6 @@ public abstract class LiveAutoBase extends LinearOpMode {
         robot = new LiveRobot(this);
         // Start up the robot as soon as the program is initialized
         robot.startup();
-        robot.turret.startup();
-        robot.intake.startup();
         on_init();
         waitForStart();
         on_start();

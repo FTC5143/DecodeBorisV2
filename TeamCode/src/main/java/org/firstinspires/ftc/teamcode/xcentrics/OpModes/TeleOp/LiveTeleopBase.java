@@ -21,8 +21,6 @@ public abstract class LiveTeleopBase extends LinearOpMode {
         LiveRobot.isAuto = false;
 
             robot.startup();
-            robot.intake.startup();
-            robot.turret.startup();
             robot.addData("WORKS","Works");
             on_init();
 

@@ -5,6 +5,8 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.xcentrics.components.live.Shooter;
+import org.firstinspires.ftc.teamcode.xcentrics.components.live.intake;
 
 
 import java.util.concurrent.TimeUnit;
@@ -12,15 +14,19 @@ import java.util.concurrent.TimeUnit;
 
 public class LiveRobot extends Robot{
     public Follower follower;
-    
+    public Shooter shooter;
+    public intake intake;
+
     public static Pose lastPose = new Pose(0,0,Math.toRadians(0));
     {
-        name = "CYPHER";
+        name = "BUMBULBEE";
     }
 
     public LiveRobot(LinearOpMode opMode) {
         super(opMode);
         follower    = Constants.createFollower(hwmap);
+        intake = new intake(this);
+        shooter = new Shooter(this);
     }
 
 
